@@ -1,8 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Wrench, CalendarDays, ShoppingBag, User, ShoppingCart, Leaf } from "lucide-react";
+import { Home, Wrench, CalendarDays, ShoppingBag, User, ShoppingCart } from "lucide-react";
 import type { ReactNode } from "react";
 import { useCart } from "@/lib/stores";
 import { Badge } from "@/components/ui/badge";
+import logoAsset from "@/assets/biosphere-logo.png.asset.json";
 
 export function Shell({ children, title }: { children: ReactNode; title?: string }) {
   const items = useCart((s) => s.items);
