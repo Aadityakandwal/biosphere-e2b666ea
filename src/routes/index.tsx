@@ -65,7 +65,6 @@ function Home() {
           <div key={o.id} className={`min-w-[75%] snap-start rounded-2xl ${o.tint} p-4`}>
             <p className="text-sm text-muted-foreground">Limited time</p>
             <p className="mt-1 font-display text-lg font-semibold">{o.title}</p>
-            <p className="mt-2 text-xs">Use code <span className="font-mono font-semibold">{o.code}</span></p>
           </div>
         ))}
       </div>
