@@ -20,44 +20,53 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-md pb-24">
-        <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+        <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border/60 bg-background/70 px-4 py-3 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+          <Link to="/" className="group flex items-center gap-2 press">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full gradient-leaf text-primary-foreground shadow-[0_6px_16px_-6px_oklch(0.42_0.12_155/0.6)] ring-1 ring-white/20 transition-transform duration-300 group-hover:rotate-[-6deg] group-hover:scale-105">
               <Leaf className="h-5 w-5" />
             </div>
             <span className="font-display text-xl font-semibold tracking-tight">Biosphere</span>
           </Link>
-          <div className="flex items-center gap-2">
-            <Link to="/orders" aria-label="Order history" className="rounded-full p-2 hover:bg-muted">
+          <div className="flex items-center gap-1">
+            <Link to="/orders" aria-label="Order history" className="rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-foreground press">
               <ClipboardList className="h-5 w-5" />
             </Link>
-            <Link to="/cart" aria-label="Cart" className="relative rounded-full p-2 hover:bg-muted">
+            <Link to="/cart" aria-label="Cart" className="relative rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-foreground press">
               <ShoppingCart className="h-5 w-5" />
               {count > 0 && (
-                <Badge className="absolute -right-1 -top-1 h-5 min-w-5 rounded-full px-1 text-[10px]">{count}</Badge>
+                <Badge className="absolute -right-0.5 -top-0.5 h-5 min-w-5 rounded-full px-1 text-[10px] shadow-md ring-2 ring-background animate-in zoom-in">{count}</Badge>
               )}
             </Link>
-            <Link to="/profile" aria-label="Profile" className="ml-1 h-9 w-9 overflow-hidden rounded-full bg-secondary ring-1 ring-border">
+            <Link to="/profile" aria-label="Profile" className="ml-1 h-9 w-9 overflow-hidden rounded-full bg-secondary ring-1 ring-border shadow-sm transition hover:ring-primary/40 hover:shadow-md press">
               <img alt="You" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80" className="h-full w-full object-cover" />
             </Link>
           </div>
         </header>
 
         {title && (
-          <h1 className="px-4 pt-4 font-display text-2xl font-semibold tracking-tight">{title}</h1>
+          <h1 className="px-4 pt-5 font-display text-2xl font-semibold tracking-tight animate-fade-in">{title}</h1>
         )}
 
-        <main className="px-4 pt-3">{children}</main>
+        <main className="px-4 pt-3 animate-fade-in">{children}</main>
       </div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 backdrop-blur">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto grid max-w-md grid-cols-5">
           {navItems.map((n) => {
             const active = n.to === "/" ? pathname === "/" : pathname === n.to || pathname.startsWith(n.to + "/");
             const Icon = n.icon;
             return (
-              <Link key={n.to} to={n.to} className={`flex flex-col items-center gap-1 py-2 text-[11px] ${active ? "text-primary" : "text-muted-foreground"}`}>
-                <Icon className={`h-5 w-5 ${active ? "stroke-[2.5]" : ""}`} />
+              <Link
+                key={n.to}
+                to={n.to}
+                className={`group relative flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors ${active ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                {active && (
+                  <span className="absolute inset-x-6 top-0 h-0.5 rounded-full bg-primary" />
+                )}
+                <span className={`flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 ${active ? "bg-primary/10 scale-110" : "group-hover:bg-muted"}`}>
+                  <Icon className={`h-[18px] w-[18px] ${active ? "stroke-[2.5]" : ""}`} />
+                </span>
                 {n.label}
               </Link>
             );
