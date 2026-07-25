@@ -99,9 +99,82 @@
   * {
     border-color: var(--color-border);
   }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
   body {
     background-color: var(--color-background);
+    background-image:
+      radial-gradient(1200px 600px at 100% -10%, oklch(0.88 0.08 130 / 0.35), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, oklch(0.93 0.05 145 / 0.4), transparent 55%);
     color: var(--color-foreground);
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
+  button, a {
+    transition: color 200ms var(--ease-out-soft),
+                background-color 200ms var(--ease-out-soft),
+                border-color 200ms var(--ease-out-soft),
+                box-shadow 250ms var(--ease-out-soft),
+                transform 200ms var(--ease-out-soft),
+                opacity 200ms var(--ease-out-soft);
+  }
+  button:not(:disabled):active, a:active {
+    transform: translateY(0.5px) scale(0.985);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
 }
+
+@layer components {
+  .card, [class*="rounded-2xl"], [class*="rounded-xl"] {
+    /* subtle default; individual components can override */
+  }
+}
+
+@utility surface {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow 250ms var(--ease-out-soft), transform 250ms var(--ease-out-soft), border-color 250ms var(--ease-out-soft);
+}
+
+@utility surface-hover {
+  &:hover {
+    box-shadow: var(--shadow-elevated);
+    transform: translateY(-2px);
+    border-color: color-mix(in oklch, var(--color-primary) 25%, var(--color-border));
+  }
+}
+
+@utility glow-primary {
+  box-shadow: var(--shadow-glow);
+}
+
+@utility gradient-leaf {
+  background-image: var(--gradient-leaf);
+}
+
+@utility press {
+  transition: transform 150ms var(--ease-out-soft), box-shadow 200ms var(--ease-out-soft);
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@utility shimmer {
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.5), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s var(--ease-out-soft) infinite;
+}
+
