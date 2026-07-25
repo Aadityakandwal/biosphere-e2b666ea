@@ -23,7 +23,7 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
       <div className="mx-auto max-w-md pb-24">
         <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border/60 bg-background/70 px-4 py-3 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
           <Link to="/" className="group press">
-            <img src={logoAsset.url} alt="Biosphere" className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
+            <img src={logoAsset.url} alt="Biosphere" className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
           </Link>
           <div className="flex items-center gap-1">
             <Link to="/cart" aria-label="Cart" className="relative rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-foreground press">
