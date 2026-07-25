@@ -22,11 +22,8 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-md pb-24">
         <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border/60 bg-background/70 px-4 py-3 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
-          <Link to="/" className="group flex items-center gap-2 press">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full gradient-leaf text-primary-foreground shadow-[0_6px_16px_-6px_oklch(0.42_0.12_155/0.6)] ring-1 ring-white/20 transition-transform duration-300 group-hover:rotate-[-6deg] group-hover:scale-105">
-              <Leaf className="h-5 w-5" />
-            </div>
-            <span className="font-display text-xl font-semibold tracking-tight">Biosphere</span>
+          <Link to="/" className="group press">
+            <img src={logoAsset.url} alt="Biosphere" className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
           </Link>
           <div className="flex items-center gap-1">
             <Link to="/cart" aria-label="Cart" className="relative rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-foreground press">
