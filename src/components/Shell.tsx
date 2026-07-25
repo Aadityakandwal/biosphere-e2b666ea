@@ -28,9 +28,6 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
             <span className="font-display text-xl font-semibold tracking-tight">Biosphere</span>
           </Link>
           <div className="flex items-center gap-1">
-            <Link to="/orders" aria-label="Order history" className="rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-foreground press">
-              <ClipboardList className="h-5 w-5" />
-            </Link>
             <Link to="/cart" aria-label="Cart" className="relative rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-foreground press">
               <ShoppingCart className="h-5 w-5" />
               {count > 0 && (
