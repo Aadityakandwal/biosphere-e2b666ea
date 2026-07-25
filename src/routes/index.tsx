@@ -60,11 +60,29 @@ function Home() {
 
       {/* Offers */}
       <SectionHeader title="Offers for you" />
-      <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-1">
+      <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2">
         {offers.map((o) => (
-          <div key={o.id} className={`min-w-[75%] snap-start rounded-2xl ${o.tint} p-4`}>
-            <p className="text-sm text-muted-foreground">Limited time</p>
-            <p className="mt-1 font-display text-lg font-semibold">{o.title}</p>
+          <div
+            key={o.id}
+            className={`group relative min-w-[82%] snap-start overflow-hidden rounded-3xl bg-gradient-to-br ${o.gradient} p-5 text-white shadow-elevated transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-glow`}
+          >
+            <div className="absolute -right-4 -top-4 text-7xl opacity-20 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110">
+              {o.emoji}
+            </div>
+            <div className="relative z-10">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
+                Limited time
+              </span>
+              <p className={`mt-3 font-display text-xl font-bold leading-tight ${o.text}`}>{o.title}</p>
+              <p className={`mt-1 text-sm opacity-90 ${o.text}`}>{o.subtitle}</p>
+              <div className="mt-4 flex items-center gap-1 text-sm font-semibold">
+                Claim now
+                <svg className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
           </div>
         ))}
       </div>

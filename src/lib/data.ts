@@ -115,9 +115,33 @@ export const products: Product[] = [
 ];
 
 export const offers = [
-  { id: "o1", title: "First booking 20% OFF", code: "BIO20", tint: "bg-leaf/15" },
-  { id: "o2", title: "Buy 2 Biovelocity get 1 free", code: "BIO3", tint: "bg-accent/40" },
-  { id: "o3", title: "Free consultation on setup", code: "FREEDR", tint: "bg-secondary" },
+  {
+    id: "o1",
+    title: "First booking 20% OFF",
+    subtitle: "Use code BIO20 on checkout",
+    code: "BIO20",
+    emoji: "🌿",
+    gradient: "from-leaf to-emerald-600",
+    text: "text-leaf-foreground",
+  },
+  {
+    id: "o2",
+    title: "Buy 2 Biovelocity get 1 free",
+    subtitle: "Stock up on Neerva & BioBloom",
+    code: "BIO3",
+    emoji: "🧪",
+    gradient: "from-amber-300 to-orange-400",
+    text: "text-amber-950",
+  },
+  {
+    id: "o3",
+    title: "Free consultation on setup",
+    subtitle: "Book any setup + video call FREE",
+    code: "FREEDR",
+    emoji: "📹",
+    gradient: "from-sky-300 to-blue-500",
+    text: "text-sky-950",
+  },
 ];
 
 export const reviews = [
