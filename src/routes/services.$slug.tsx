@@ -30,9 +30,9 @@ export const Route = createFileRoute("/services/$slug")({
 });
 
 function ServiceDetail() {
-  const { service } = Route.useLoaderData();
+  const { service } = Route.useLoaderData() as { service: import("@/lib/data").Service };
   const [picked, setPicked] = useState<string[]>([]);
-  const extra = service.subs?.filter((s) => picked.includes(s.id)).reduce((n, s) => n + s.price, 0) ?? 0;
+  const extra = service.subs?.filter((s) => picked.includes(s.id)).reduce((n: number, s) => n + s.price, 0) ?? 0;
   const total = service.price + extra;
 
   return (
