@@ -186,3 +186,31 @@
   animation: shimmer 1.6s var(--ease-out-soft) infinite;
 }
 
+
+/* ---------- Loading / splash animations ---------- */
+@keyframes splash-ring {
+  0% { transform: scale(0.7); opacity: 0.7; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+@keyframes splash-pop {
+  0% { transform: scale(0.8) translateY(8px); opacity: 0; }
+  60% { transform: scale(1.04) translateY(0); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+@keyframes splash-rise {
+  0% { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes splash-bar {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.splash-ring { animation: splash-ring 1.8s var(--ease-out-soft) infinite; }
+.splash-logo { animation: splash-pop 700ms var(--ease-out-soft) both; }
+.splash-word { animation: splash-rise 600ms var(--ease-out-soft) both; animation-delay: 150ms; }
+.splash-bar { animation: splash-bar 1.5s var(--ease-out-soft) forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-ring, .splash-logo, .splash-word, .splash-bar { animation-duration: 1ms; }
+}
