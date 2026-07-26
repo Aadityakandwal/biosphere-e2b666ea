@@ -92,7 +92,7 @@ function ServiceDetail() {
             <p className="text-xs text-muted-foreground">Total</p>
             <p className="text-lg font-semibold">₹{total}</p>
           </div>
-          <Link to="/services/$slug/book" params={{ slug: service.slug }}>
+          <Link to="/services/$slug/book" params={{ slug: service.slug }} search={{ subs: picked.length ? picked.join(",") : undefined }}>
             <Button size="lg">Book service</Button>
           </Link>
         </div>
