@@ -22,8 +22,7 @@ function ProfilePage() {
 
   const sections = [
     { to: "/profile/edit", icon: User, label: "My Profile", hint: "Edit personal info" },
-    { to: "/profile/bookings", icon: CalendarDays, label: "My Bookings", hint: `${bookings.length} total` },
-    { to: "/profile/orders", icon: Package, label: "My Orders", hint: `${orders.length} orders · track & invoices` },
+    { to: "/profile/activity", icon: CalendarDays, label: "My Bookings & Orders", hint: `${bookings.length} bookings · ${orders.length} orders` },
     { to: "/profile/green-points", icon: Leaf, label: "Redeem Green Points", hint: `${p.greenPoints} pts available` },
     { to: "/profile/membership", icon: Award, label: "Membership Pass", hint: "Basic · Pro · Elite" },
     { to: "/profile/settings", icon: Settings, label: "Settings", hint: "Notifications, privacy" },
