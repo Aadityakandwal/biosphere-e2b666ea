@@ -1,6 +1,8 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/Shell";
+import { SearchBar } from "@/components/SearchBar";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { services, products, reviews, seasonalTips } from "@/lib/data";
