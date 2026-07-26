@@ -19,7 +19,6 @@ import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ShopProductIdRouteImport } from './routes/shop.$productId'
-import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 import { Route as ProfileSupportRouteImport } from './routes/profile.support'
 import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
 import { Route as ProfileMembershipRouteImport } from './routes/profile.membership'
@@ -27,6 +26,7 @@ import { Route as ProfileGreenPointsRouteImport } from './routes/profile.green-p
 import { Route as ProfileEditRouteImport } from './routes/profile.edit'
 import { Route as ProfileBookingsRouteImport } from './routes/profile.bookings'
 import { Route as BookingsIdRouteImport } from './routes/bookings.$id'
+import { Route as ServicesSlugIndexRouteImport } from './routes/services.$slug.index'
 import { Route as ServicesSlugBookRouteImport } from './routes/services.$slug.book'
 
 const ShopRoute = ShopRouteImport.update({
@@ -79,11 +79,6 @@ const ShopProductIdRoute = ShopProductIdRouteImport.update({
   path: '/$productId',
   getParentRoute: () => ShopRoute,
 } as any)
-const ServicesSlugRoute = ServicesSlugRouteImport.update({
-  id: '/services/$slug',
-  path: '/services/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProfileSupportRoute = ProfileSupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -119,10 +114,15 @@ const BookingsIdRoute = BookingsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => BookingsRoute,
 } as any)
+const ServicesSlugIndexRoute = ServicesSlugIndexRouteImport.update({
+  id: '/services/$slug/',
+  path: '/services/$slug/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesSlugBookRoute = ServicesSlugBookRouteImport.update({
-  id: '/book',
-  path: '/book',
-  getParentRoute: () => ServicesSlugRoute,
+  id: '/services/$slug/book',
+  path: '/services/$slug/book',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -141,10 +141,10 @@ export interface FileRoutesByFullPath {
   '/profile/membership': typeof ProfileMembershipRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
-  '/services/$slug': typeof ServicesSlugRouteWithChildren
   '/shop/$productId': typeof ShopProductIdRoute
   '/services/': typeof ServicesIndexRoute
   '/services/$slug/book': typeof ServicesSlugBookRoute
+  '/services/$slug/': typeof ServicesSlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -162,10 +162,10 @@ export interface FileRoutesByTo {
   '/profile/membership': typeof ProfileMembershipRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
-  '/services/$slug': typeof ServicesSlugRouteWithChildren
   '/shop/$productId': typeof ShopProductIdRoute
   '/services': typeof ServicesIndexRoute
   '/services/$slug/book': typeof ServicesSlugBookRoute
+  '/services/$slug': typeof ServicesSlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -184,10 +184,10 @@ export interface FileRoutesById {
   '/profile/membership': typeof ProfileMembershipRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
-  '/services/$slug': typeof ServicesSlugRouteWithChildren
   '/shop/$productId': typeof ShopProductIdRoute
   '/services/': typeof ServicesIndexRoute
   '/services/$slug/book': typeof ServicesSlugBookRoute
+  '/services/$slug/': typeof ServicesSlugIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -207,10 +207,10 @@ export interface FileRouteTypes {
     | '/profile/membership'
     | '/profile/settings'
     | '/profile/support'
-    | '/services/$slug'
     | '/shop/$productId'
     | '/services/'
     | '/services/$slug/book'
+    | '/services/$slug/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -228,10 +228,10 @@ export interface FileRouteTypes {
     | '/profile/membership'
     | '/profile/settings'
     | '/profile/support'
-    | '/services/$slug'
     | '/shop/$productId'
     | '/services'
     | '/services/$slug/book'
+    | '/services/$slug'
   id:
     | '__root__'
     | '/'
@@ -249,10 +249,10 @@ export interface FileRouteTypes {
     | '/profile/membership'
     | '/profile/settings'
     | '/profile/support'
-    | '/services/$slug'
     | '/shop/$productId'
     | '/services/'
     | '/services/$slug/book'
+    | '/services/$slug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -264,8 +264,9 @@ export interface RootRouteChildren {
   PlantDoctorRoute: typeof PlantDoctorRoute
   ProfileRoute: typeof ProfileRouteWithChildren
   ShopRoute: typeof ShopRouteWithChildren
-  ServicesSlugRoute: typeof ServicesSlugRouteWithChildren
   ServicesIndexRoute: typeof ServicesIndexRoute
+  ServicesSlugBookRoute: typeof ServicesSlugBookRoute
+  ServicesSlugIndexRoute: typeof ServicesSlugIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -340,13 +341,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopProductIdRouteImport
       parentRoute: typeof ShopRoute
     }
-    '/services/$slug': {
-      id: '/services/$slug'
-      path: '/services/$slug'
-      fullPath: '/services/$slug'
-      preLoaderRoute: typeof ServicesSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/profile/support': {
       id: '/profile/support'
       path: '/support'
@@ -396,12 +390,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookingsIdRouteImport
       parentRoute: typeof BookingsRoute
     }
+    '/services/$slug/': {
+      id: '/services/$slug/'
+      path: '/services/$slug'
+      fullPath: '/services/$slug/'
+      preLoaderRoute: typeof ServicesSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services/$slug/book': {
       id: '/services/$slug/book'
-      path: '/book'
+      path: '/services/$slug/book'
       fullPath: '/services/$slug/book'
       preLoaderRoute: typeof ServicesSlugBookRouteImport
-      parentRoute: typeof ServicesSlugRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -449,18 +450,6 @@ const ShopRouteChildren: ShopRouteChildren = {
 
 const ShopRouteWithChildren = ShopRoute._addFileChildren(ShopRouteChildren)
 
-interface ServicesSlugRouteChildren {
-  ServicesSlugBookRoute: typeof ServicesSlugBookRoute
-}
-
-const ServicesSlugRouteChildren: ServicesSlugRouteChildren = {
-  ServicesSlugBookRoute: ServicesSlugBookRoute,
-}
-
-const ServicesSlugRouteWithChildren = ServicesSlugRoute._addFileChildren(
-  ServicesSlugRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BookingsRoute: BookingsRouteWithChildren,
@@ -470,9 +459,20 @@ const rootRouteChildren: RootRouteChildren = {
   PlantDoctorRoute: PlantDoctorRoute,
   ProfileRoute: ProfileRouteWithChildren,
   ShopRoute: ShopRouteWithChildren,
-  ServicesSlugRoute: ServicesSlugRouteWithChildren,
   ServicesIndexRoute: ServicesIndexRoute,
+  ServicesSlugBookRoute: ServicesSlugBookRoute,
+  ServicesSlugIndexRoute: ServicesSlugIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
