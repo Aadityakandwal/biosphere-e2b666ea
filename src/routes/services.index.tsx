@@ -132,20 +132,30 @@ function ServicesPage() {
             </div>
           </Link>
 
-          <div className="mt-3 grid grid-cols-2 gap-3">
+          <div className="mt-3 space-y-3">
             {restSetup.map((s) => (
-              <Link
-                key={s.slug}
-                to="/services/$slug"
-                params={{ slug: s.slug }}
-                className="surface surface-hover press flex flex-col rounded-3xl p-4"
-              >
-                <p className="text-sm font-semibold leading-snug">{s.name.replace(" Setup", "")}</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">{taglines[s.slug]}</p>
-                <span className="mt-3 text-[11px] font-bold tracking-widest text-foreground">VIEW DETAILS</span>
-              </Link>
+              <div key={s.slug} className="surface surface-hover flex items-center gap-4 rounded-3xl p-4">
+                <img src={s.image} alt={s.name} className="h-16 w-16 shrink-0 rounded-full object-cover" />
+                <div className="min-w-0 flex-1">
+                  <Link to="/services/$slug" params={{ slug: s.slug }} className="block">
+                    <p className="font-semibold leading-snug">{s.name}</p>
+                    <p className="mt-0.5 text-sm leading-snug text-muted-foreground">{taglines[s.slug]}</p>
+                  </Link>
+                  <div className="mt-2 flex items-center justify-between gap-3">
+                    <p className="font-display text-xl font-bold">₹{s.price}</p>
+                    <Link
+                      to="/services/$slug/book"
+                      params={{ slug: s.slug }}
+                      className="press rounded-full bg-primary px-5 py-2 text-[11px] font-bold tracking-widest text-primary-foreground shadow-soft hover:shadow-glow"
+                    >
+                      BOOK
+                    </Link>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
+
           <p className="mt-3 text-center text-xs italic text-muted-foreground">more setup services coming soon…</p>
         </section>
       )}
