@@ -14,6 +14,9 @@ import { ArrowLeft, MapPin, Plus, Check } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/services/$slug/book")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    subs: typeof search.subs === "string" ? search.subs : undefined,
+  }),
   loader: ({ params }) => {
     const s = services.find((x) => x.slug === params.slug);
     if (!s) throw notFound();
@@ -26,6 +29,13 @@ export const Route = createFileRoute("/services/$slug/book")({
 });
 
 const SLOTS = ["9:00 AM", "10:30 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM"];
+
+// Deterministic per-date availability so slots feel real.
+function slotAvailability(date?: Date) {
+  const seed = date ? date.getDate() + date.getMonth() * 31 : 0;
+  return SLOTS.map((s, i) => ({ slot: s, available: (seed + i * 3) % 5 !== 0 }));
+}
+
 
 function BookPage() {
   const { service } = Route.useLoaderData();
