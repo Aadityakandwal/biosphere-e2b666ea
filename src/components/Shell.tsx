@@ -47,7 +47,7 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
           <h1 className="px-4 pt-5 font-display text-2xl font-semibold tracking-tight animate-fade-in">{title}</h1>
         )}
 
-        <main className="px-4 pt-3 animate-fade-in">{children}</main>
+        <main className="page-enter space-y-6 px-4 pt-3">{children}</main>
       </div>
 
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-background/80 backdrop-blur-xl">
