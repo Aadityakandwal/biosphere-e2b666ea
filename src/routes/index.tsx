@@ -3,7 +3,7 @@ import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { services, products, reviews, seasonalTips } from "@/lib/data";
-import { Search, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, FlaskConical, Flower2 } from "lucide-react";
+import { Search, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, FlaskConical, Flower2, Users } from "lucide-react";
 import { useCart } from "@/lib/stores";
 import { toast } from "sonner";
 
@@ -39,6 +39,12 @@ function Home() {
   const hero = services.find((s) => s.slug === "balcony-garden")!;
   const featured = services.find((s) => s.slug === "garden-care")!;
   const secondary = [services.find((s) => s.slug === "lawn-garden")!, services.find((s) => s.slug === "basic-maintenance")!];
+
+  const serviceTiles = [
+    { name: "Plant Setup", cat: "setup", Icon: Sprout },
+    { name: "Care & Maintenance", cat: "care", Icon: Leaf },
+    { name: "Consultation", cat: "consult", Icon: Users },
+  ];
 
   const catTiles = [
     { name: "Plants", cat: "plants", Icon: Sprout },
@@ -107,6 +113,24 @@ function Home() {
               <Icon className="h-5 w-5" />
             </span>
             <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/80">{name}</span>
+          </Link>
+        ))}
+      </div>
+
+      {/* Service categories */}
+      <SectionRow title="Service Categories" href="/services" />
+      <div className="grid grid-cols-3 gap-3">
+        {serviceTiles.map(({ name, cat, Icon }) => (
+          <Link
+            key={cat}
+            to="/services"
+            search={{ cat }}
+            className="flex flex-col items-center gap-2 rounded-3xl border border-border bg-card px-2 py-4 text-center shadow-soft transition hover:-translate-y-1 hover:border-primary/30 hover:shadow-elevated press"
+          >
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-primary">
+              <Icon className="h-5 w-5" />
+            </span>
+            <span className="text-[10px] font-bold uppercase leading-tight tracking-wider text-foreground/80">{name}</span>
           </Link>
         ))}
       </div>

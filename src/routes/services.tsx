@@ -5,6 +5,9 @@ import { services } from "@/lib/data";
 import { ChevronRight, Video, ClipboardCheck, FlaskConical } from "lucide-react";
 
 export const Route = createFileRoute("/services")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    cat: typeof search.cat === "string" ? search.cat : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Services — Biosphere" },
@@ -53,7 +56,11 @@ function SectionTitle({ title, count }: { title: string; count: number }) {
 }
 
 function ServicesPage() {
-  const [tab, setTab] = useState("all");
+  const { cat } = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const tab = cat ?? "all";
+  const setTab = (next: string) =>
+    navigate({ search: { cat: next === "all" ? undefined : next }, replace: true });
   const show = (cat: string) => tab === "all" || tab === cat;
 
   const setup = services.filter((s) => s.category === "setup");
