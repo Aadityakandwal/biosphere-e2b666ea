@@ -87,38 +87,80 @@ export type Product = {
   category: "plants" | "tools" | "biovelocity" | "pots";
   image: string;
   short: string;
+  /** Long-form product story shown on the detail page. */
+  description: string;
+  /** Quick bullet highlights shown as a spec list. */
+  highlights: string[];
+  /** Care / usage guidance shown under the description. */
+  care?: string;
   popular?: boolean;
 };
 
 export const products: Product[] = [
   { id: "neerva", name: "Neerva — Bio Growth Tonic (1L)", price: 249, category: "biovelocity", popular: true,
     image: neervaAsset.url,
-    short: "Microbial bio-formula for foliar, soil, and drip application." },
+    short: "Microbial bio-formula for foliar, soil, and drip application.",
+    description: "Neerva Biovelocity is a live microbial bio-liquid that rebuilds soil biology instead of force-feeding the plant. The consortium of beneficial bacteria fixes nitrogen, unlocks bound phosphorus and potassium, and improves root uptake — so leaves green up, flowering improves and stress recovery is faster. Safe for edibles, indoor pots and full field use.",
+    highlights: ["1 litre concentrate — up to 12 L of spray", "Works as foliar spray, soil drench or drip", "100% organic, residue-free, safe for edibles", "Visible response in 10–14 days"],
+    care: "Shake well, dilute with non-chlorinated water and apply early morning or late evening every 7–15 days." },
+
   { id: "monstera", name: "Monstera Deliciosa", price: 649, category: "plants",
     image: "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=800",
-    short: "Iconic split-leaf indoor plant." },
+    short: "Iconic split-leaf indoor plant.",
+    description: "The Monstera Deliciosa is the statement plant of Indian living rooms — glossy, deeply fenestrated leaves that keep getting bigger as the plant matures. Ours are nursery-grown for at least 8 months, hardened for indoor light, and shipped in a nursery pot with well-draining aroid mix.",
+    highlights: ["Height 40–55 cm at delivery", "Bright indirect light", "Air-purifying, pet-caution (mildly toxic if chewed)", "Comes in a nursery pot with aroid mix"],
+    care: "Water when the top 2 inches of soil feel dry, wipe leaves fortnightly and feed once a month during monsoon and summer." },
+
   { id: "snake", name: "Snake Plant", price: 349, category: "plants",
     image: snakePlantImg,
-    short: "Low-light hardy indoor purifier." },
+    short: "Low-light hardy indoor purifier.",
+    description: "Sansevieria — the plant that forgives everything. It survives low light, irregular watering and air-conditioned rooms, while releasing oxygen at night, which makes it a favourite for bedrooms and study corners. Upright architectural leaves with soft golden margins.",
+    highlights: ["Height 30–45 cm at delivery", "Thrives in low to medium light", "Releases oxygen at night", "Needs watering only every 10–15 days"],
+    care: "Let the soil dry out fully between waterings. Never let water sit in the saucer — root rot is the only thing that kills it." },
+
   { id: "pruner", name: "Bypass Pruner", price: 499, category: "tools",
     image: prunerImg,
-    short: "Precision pruning for stems up to 20mm." },
+    short: "Precision pruning for stems up to 20mm.",
+    description: "A bypass pruner cuts like scissors rather than crushing the stem, so cuts heal cleanly and disease doesn't get a foothold. Hardened carbon-steel blade with a non-stick coating, ergonomic non-slip handles and a safety lock for storage — comfortable enough for a full afternoon of deadheading.",
+    highlights: ["Cuts green stems up to 20 mm", "Non-stick hardened carbon steel blade", "Cushioned anti-slip grip with safety lock", "Replaceable spring, sharpenable blade"],
+    care: "Wipe the blade dry after every use and oil the pivot monthly to keep the action smooth." },
+
   { id: "trowel", name: "Steel Hand Trowel", price: 249, category: "tools",
     image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800",
-    short: "Ergonomic grip, forged steel." },
+    short: "Ergonomic grip, forged steel.",
+    description: "A single-piece forged steel trowel that won't bend at the neck like pressed-metal ones do. The narrow scoop is sized for potting, transplanting seedlings and mixing compost into pots, with depth markings on the blade so you can plant bulbs at the right depth.",
+    highlights: ["One-piece forged steel head", "Depth markings on the blade", "Rust-resistant powder coating", "Hanging loop on the handle"],
+    care: "Rinse off soil and dry after use; store indoors during monsoon." },
+
   { id: "biobloom", name: "BioBloom Flower Booster", price: 349, category: "biovelocity",
     image: "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=800",
-    short: "Organic bloom accelerator." },
+    short: "Organic bloom accelerator.",
+    description: "BioBloom is a potassium- and phosphorus-rich organic bloom stimulant for flowering and fruiting plants. It encourages more flower buds, deeper petal colour and better fruit set in hibiscus, rose, jasmine, chilli and tomato — without the salt build-up you get from chemical bloom boosters.",
+    highlights: ["500 ml concentrate", "Boosts bud count and petal colour", "Organic, residue-free on edibles", "Best used through the flowering cycle"],
+    care: "Mix 5 ml per litre of water and apply every 10 days from bud formation until flowering ends." },
+
   { id: "biorooter", name: "BioRooter Starter", price: 199, category: "biovelocity",
     image: "https://images.unsplash.com/photo-1462530260150-162092dbf011?w=800",
-    short: "Microbial root activator." },
+    short: "Microbial root activator.",
+    description: "BioRooter is a mycorrhiza and beneficial-bacteria blend for the first weeks of a plant's life in your garden. Use it at planting, repotting or on cuttings to trigger faster white-root development, reduce transplant shock and improve water uptake in poor or compacted soil.",
+    highlights: ["250 ml root activator", "Ideal for cuttings, seedlings and repotting", "Reduces transplant shock", "Improves water and nutrient uptake"],
+    care: "Dilute 10 ml per litre and drench the root zone at planting, then repeat once after 15 days." },
+
   { id: "terracotta", name: "Terracotta Pot (Medium)", price: 179, category: "pots",
     image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800",
-    short: "Breathable classic clay pot." },
+    short: "Breathable classic clay pot.",
+    description: "Hand-thrown natural terracotta that breathes — clay walls wick away excess moisture, which is exactly what succulents, herbs and root-rot-prone plants need. Unglazed finish that ages into a beautiful patina, with a wide drainage hole at the base.",
+    highlights: ["8 inch diameter, 7 inch depth", "Natural unglazed breathable clay", "Single wide drainage hole", "Suits herbs, succulents and small foliage"],
+    care: "Soak a new pot in water for an hour before first planting so it doesn't pull moisture from the soil." },
+
   { id: "ceramic", name: "Matte Ceramic Planter", price: 549, category: "pots",
     image: "https://images.unsplash.com/photo-1509423350716-97f9360b4e09?w=800",
-    short: "Minimalist indoor planter." },
+    short: "Minimalist indoor planter.",
+    description: "A matte-glazed ceramic planter made for indoor styling — soft neutral finish, clean silhouette and a weighted base that keeps top-heavy plants stable. Comes with a matching saucer so it can sit safely on wooden furniture.",
+    highlights: ["7 inch diameter with matching saucer", "Matte glaze, neutral finish", "Drainage hole with removable plug", "Stable weighted base for tall plants"],
+    care: "Wipe with a damp cloth; keep the drainage plug out when the plant is actively growing." },
 ];
+
 
 export const offers = [
   {
