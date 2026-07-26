@@ -49,7 +49,7 @@ function ProfilePage() {
 
       {/* Stats */}
       <div className="mt-6 grid grid-cols-3 gap-3">
-        <Stat value={`${orders.length + 8}`} label="My Plants" />
+        <Stat value={`${p.greenPoints}`} label="Green Points" />
         <Stat value="12" label="Care Streak" accent />
         <Stat value="92%" label="Garden Health" accent />
       </div>
