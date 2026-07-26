@@ -1,9 +1,10 @@
+import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { services, products, reviews, seasonalTips } from "@/lib/data";
-import { Search, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, FlaskConical, Flower2 } from "lucide-react";
+import { Search, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, FlaskConical, Flower2, ChevronDown } from "lucide-react";
 import { useCart } from "@/lib/stores";
 import { toast } from "sonner";
 
@@ -34,7 +35,7 @@ function SectionRow({ title, href }: { title: string; href?: string }) {
 
 function Home() {
   const add = useCart((s) => s.add);
-  const tip = seasonalTips[new Date().getDate() % seasonalTips.length];
+  const [showAllTips, setShowAllTips] = React.useState(false);
 
   const hero = services.find((s) => s.slug === "balcony-garden")!;
   const featured = services.find((s) => s.slug === "indoor-setup")!;
@@ -147,19 +148,37 @@ function Home() {
 
       {/* Seasonal tips */}
       <SectionRow title="Seasonal Tips" />
-      <div className="flex items-center gap-4 rounded-3xl bg-muted p-4">
-        <div className="flex-1">
-          <span className="rounded-full bg-leaf/25 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">Season Care</span>
-          <p className="mt-2 font-display text-base font-semibold leading-snug">{tip}</p>
-          <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Clock className="h-3.5 w-3.5" /> 4 min read
-          </p>
-        </div>
-        <img
-          src="https://images.unsplash.com/photo-1483794344563-d27a8d18014e?w=400"
-          alt=""
-          className="h-24 w-24 flex-none rounded-2xl object-cover"
-        />
+      <div className="flex flex-col gap-3">
+        {(showAllTips ? seasonalTips : seasonalTips.slice(0, 2)).map((tip) => (
+          <div
+            key={tip.id}
+            className="flex items-center gap-4 rounded-3xl bg-muted p-4 transition hover:bg-muted/80"
+          >
+            <div className="flex-1">
+              <span className="rounded-full bg-leaf/25 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+                {tip.tag}
+              </span>
+              <p className="mt-2 font-display text-base font-semibold leading-snug">{tip.title}</p>
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{tip.description}</p>
+              <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Clock className="h-3.5 w-3.5" /> {tip.readTime}
+              </p>
+            </div>
+            <img
+              src={tip.image}
+              alt={tip.title}
+              className="h-24 w-24 flex-none rounded-2xl object-cover"
+            />
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => setShowAllTips((v) => !v)}
+          className="mx-auto mt-1 flex items-center gap-1.5 rounded-full bg-card px-4 py-2 text-sm font-semibold text-primary shadow-soft transition hover:shadow-elevated press"
+        >
+          {showAllTips ? "View less" : "View more"}
+          <ChevronDown className={`h-4 w-4 transition-transform ${showAllTips ? "rotate-180" : ""}`} />
+        </button>
       </div>
 
       {/* Reviews */}

@@ -155,11 +155,80 @@ export const reviews = [
   { name: "Rohan D.", rating: 4, service: "Lawn Mowing", text: "Neat job, edges done properly. Just wish they carried away the clippings, small thing." },
 ];
 
-export const seasonalTips = [
-  "Monsoon tip: check pot drainage holes weekly — waterlogged roots are the #1 killer this season.",
-  "Winter tip: move tropicals away from cold window glass at night.",
-  "Summer tip: water early morning or after sunset to avoid leaf scorch.",
-  "Autumn tip: reduce fertiliser as growth naturally slows down.",
+export type SeasonalTip = {
+  id: string;
+  tag: string;
+  title: string;
+  description: string;
+  readTime: string;
+  image: string;
+};
+
+export const seasonalTips: SeasonalTip[] = [
+  {
+    id: "t1",
+    tag: "Summer Care",
+    title: "Beat the heat without burning leaves",
+    description: "Water early morning or after sunset to avoid leaf scorch and evaporation loss.",
+    readTime: "3 min read",
+    image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=400",
+  },
+  {
+    id: "t2",
+    tag: "Monsoon Care",
+    title: "Drainage is everything",
+    description: "Check pot drainage holes weekly — waterlogged roots are the #1 killer this season.",
+    readTime: "4 min read",
+    image: "https://images.unsplash.com/photo-1459156212016-c812468e2115?w=400",
+  },
+  {
+    id: "t3",
+    tag: "Winter Care",
+    title: "Keep tropicals cosy",
+    description: "Move tropical plants away from cold window glass at night and avoid overwatering.",
+    readTime: "3 min read",
+    image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400",
+  },
+  {
+    id: "t4",
+    tag: "Autumn Prep",
+    title: "Slow down on fertiliser",
+    description: "Reduce fertiliser as growth naturally slows down; let plants rest before winter.",
+    readTime: "2 min read",
+    image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400",
+  },
+  {
+    id: "t5",
+    tag: "Pest Control",
+    title: "Spot pests before they spread",
+    description: "Inspect leaf undersides every few days; neem oil works wonders on early infestations.",
+    readTime: "5 min read",
+    image: "https://images.unsplash.com/photo-1416772331340-e5b74319a1ce?w=400",
+  },
+  {
+    id: "t6",
+    tag: "Repotting",
+    title: "Roots need room to breathe",
+    description: "If roots peek through the drainage hole, it's time to repot in fresh, airy soil.",
+    readTime: "4 min read",
+    image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=400",
+  },
+  {
+    id: "t7",
+    tag: "Indoor Plants",
+    title: "Rotate for even growth",
+    description: "Give your pots a quarter turn every week so all sides get balanced light.",
+    readTime: "2 min read",
+    image: "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=400",
+  },
+  {
+    id: "t8",
+    tag: "Kitchen Garden",
+    title: "Harvest herbs the right way",
+    description: "Snip herbs from the top to encourage bushier growth and a longer harvest window.",
+    readTime: "3 min read",
+    image: "https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=400",
+  },
 ];
 
 export const initialBookings = [
