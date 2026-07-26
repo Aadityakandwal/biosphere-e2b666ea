@@ -1,9 +1,10 @@
+import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { services, products, reviews, seasonalTips } from "@/lib/data";
-import { Search, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, FlaskConical, Flower2 } from "lucide-react";
+import { Search, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, FlaskConical, Flower2, ChevronDown } from "lucide-react";
 import { useCart } from "@/lib/stores";
 import { toast } from "sonner";
 
