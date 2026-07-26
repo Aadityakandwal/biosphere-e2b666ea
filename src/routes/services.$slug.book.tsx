@@ -10,7 +10,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { services, products, initialBookings } from "@/lib/data";
 import { useAddresses, useBookings, useCart, useProfile } from "@/lib/stores";
-import { ArrowLeft, MapPin, Plus, Check } from "lucide-react";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ArrowLeft, MapPin, Plus, Check, CalendarDays, Clock, Home } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/services/$slug/book")({
@@ -31,6 +32,12 @@ export const Route = createFileRoute("/services/$slug/book")({
 const SLOTS = ["9:00 AM", "10:30 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM"];
 
 // Deterministic per-date availability so slots feel real.
+function sameDay(a: Date, b: Date) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+
+const EMPTY_FORM = { label: "Home", name: "", phone: "", house: "", area: "", locality: "", landmark: "", city: "", state: "", pincode: "" };
+
 function slotAvailability(date?: Date) {
   const seed = date ? date.getDate() + date.getMonth() * 31 : 0;
   return SLOTS.map((s, i) => ({ slot: s, available: (seed + i * 3) % 5 !== 0 }));
@@ -47,7 +54,31 @@ function BookPage() {
   const [slot, setSlot] = useState<string>(SLOTS[1]);
   const { addresses, add: addAddr } = useAddresses();
   const [addrId, setAddrId] = useState(addresses[0]?.id);
-  const [newAddr, setNewAddr] = useState("");
+  const [newAddr] = useState("");
+  const [addrOpen, setAddrOpen] = useState(false);
+  const [form, setForm] = useState(EMPTY_FORM);
+
+  const quickDates = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + i);
+    return { label: i === 0 ? "Today" : i === 1 ? "Tmrw" : d.toLocaleDateString(undefined, { weekday: "short" }), date: d };
+  });
+
+  const saveAddress = () => {
+    if (!form.house.trim() || !form.area.trim() || !form.city.trim() || form.pincode.length !== 6) {
+      toast.error("Add house, area, city and a 6-digit pincode.");
+      return;
+    }
+    const line = [form.house, form.area, form.locality, form.landmark && `near ${form.landmark}`, form.city, form.state, form.pincode]
+      .filter(Boolean).join(", ");
+    const id = "a" + Date.now();
+    addAddr({ id, label: form.label, line });
+    setAddrId(id);
+    setForm(EMPTY_FORM);
+    setAddrOpen(false);
+    toast.success("Address added");
+  };
   const [note, setNote] = useState("");
   const [extend, setExtend] = useState<string | null>(null);
   const [extras, setExtras] = useState<string[]>([]);
