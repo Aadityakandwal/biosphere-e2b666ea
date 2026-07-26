@@ -14,6 +14,9 @@ import { ArrowLeft, MapPin, Plus, Check } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/services/$slug/book")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    subs: typeof search.subs === "string" ? search.subs : undefined,
+  }),
   loader: ({ params }) => {
     const s = services.find((x) => x.slug === params.slug);
     if (!s) throw notFound();
@@ -27,11 +30,20 @@ export const Route = createFileRoute("/services/$slug/book")({
 
 const SLOTS = ["9:00 AM", "10:30 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM"];
 
+// Deterministic per-date availability so slots feel real.
+function slotAvailability(date?: Date) {
+  const seed = date ? date.getDate() + date.getMonth() * 31 : 0;
+  return SLOTS.map((s, i) => ({ slot: s, available: (seed + i * 3) % 5 !== 0 }));
+}
+
+
 function BookPage() {
   const { service } = Route.useLoaderData();
+  const { subs: subsParam } = Route.useSearch();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [date, setDate] = useState<Date | undefined>(new Date(Date.now() + 86400000));
+  const slots = slotAvailability(date);
   const [slot, setSlot] = useState<string>(SLOTS[1]);
   const { addresses, add: addAddr } = useAddresses();
   const [addrId, setAddrId] = useState(addresses[0]?.id);
@@ -44,9 +56,13 @@ function BookPage() {
   const addBook = useBookings((s) => s.add);
   const profile = useProfile();
 
+  const pickedSubs = ((service.subs ?? []) as { id: string; name: string; price: number }[]).filter((s) => (subsParam?.split(",") ?? []).includes(s.id));
+  const subsTotal = pickedSubs.reduce((n: number, s) => n + s.price, 0);
+
   const extrasTotal = bio.filter(p => extras.includes(p.id)).reduce((n, p) => n + p.price, 0);
-  const taxes = Math.round(service.price * 0.05);
-  const total = service.price + extrasTotal + taxes;
+  const taxes = Math.round((service.price + subsTotal) * 0.05);
+  const total = service.price + subsTotal + extrasTotal + taxes;
+
 
   const past = initialBookings.filter(b => b.status === "past").slice(0, 5);
 
@@ -90,10 +106,23 @@ function BookPage() {
           <Card className="p-3">
             <p className="mb-2 text-sm font-medium">Available slots</p>
             <div className="grid grid-cols-3 gap-2">
-              {SLOTS.map(s => (
-                <button key={s} onClick={() => setSlot(s)} className={`rounded-lg border p-2 text-sm ${slot === s ? "border-primary bg-primary/10 text-primary" : "border-border"}`}>{s}</button>
+              {slots.map(({ slot: s, available }) => (
+                <button
+                  key={s}
+                  disabled={!available}
+                  onClick={() => setSlot(s)}
+                  className={`rounded-lg border p-2 text-sm transition ${
+                    !available
+                      ? "cursor-not-allowed border-dashed border-border text-muted-foreground/50 line-through"
+                      : slot === s
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border"
+                  }`}
+                >{s}</button>
               ))}
             </div>
+            <p className="mt-2 text-xs text-muted-foreground">Struck-out slots are fully booked for this date.</p>
+
           </Card>
           <Card className="p-3">
             <p className="mb-2 text-sm font-medium">Service address</p>
@@ -172,6 +201,10 @@ function BookPage() {
             <p className="text-sm font-medium">Order summary</p>
             <div className="mt-3 space-y-2 text-sm">
               <Row label={service.name} value={`₹${service.price}`} />
+              {pickedSubs.map((s) => (
+                <Row key={s.id} label={<span className="text-muted-foreground">+ {s.name}</span>} value={`₹${s.price}`} />
+              ))}
+
               {extras.map(id => {
                 const p = bio.find(x => x.id === id)!;
                 return <Row key={id} label={p.name} value={`₹${p.price}`} />;
