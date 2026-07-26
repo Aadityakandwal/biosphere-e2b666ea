@@ -1,3 +1,5 @@
+import neervaAsset from "@/assets/neerva-bottle.png.asset.json";
+
 export type Sub = { id: string; name: string; price: number };
 export type Service = {
   slug: string;
