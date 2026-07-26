@@ -91,8 +91,8 @@ function Home() {
       </div>
 
       {/* AI Plant Doctor banner */}
-      <button
-        onClick={() => setShowDoctor((v) => !v)}
+      <Link
+        to="/plant-doctor"
         className="mt-4 flex w-full items-center gap-4 rounded-3xl bg-[oklch(0.26_0.05_155)] p-4 text-left text-primary-foreground shadow-elevated press hover:shadow-glow"
       >
         <span className="flex h-12 w-12 flex-none items-center justify-center rounded-full bg-leaf text-leaf-foreground">
@@ -106,48 +106,8 @@ function Home() {
           <span className="mt-0.5 block text-sm opacity-75">Instant health diagnosis & care plans</span>
         </span>
         <ArrowRight className="h-5 w-5 opacity-70" />
-      </button>
+      </Link>
 
-      {showDoctor && (
-        <Card className="mt-3 overflow-hidden p-4">
-          <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <Sparkles className="h-5 w-5" />
-            </div>
-            <div className="flex-1">
-              <p className="font-medium">Diagnose in seconds</p>
-              <p className="text-sm text-muted-foreground">Upload a leaf photo — get a diagnosis and a Biovelocity solution.</p>
-            </div>
-          </div>
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <Button variant="outline" onClick={runScan} disabled={scanning}><Camera className="mr-1 h-4 w-4" /> Take photo</Button>
-            <Button onClick={runScan} disabled={scanning}><Upload className="mr-1 h-4 w-4" /> Upload</Button>
-          </div>
-          {scanning && <p className="mt-3 animate-pulse text-center text-sm text-muted-foreground">Analyzing your plant…</p>}
-          {scan && (
-            <div className="mt-4 space-y-3">
-              <div className="rounded-xl bg-muted p-3">
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">Diagnosis</p>
-                <p className="mt-1 text-sm font-medium">{scan.plant}</p>
-                <p className="mt-1 text-sm">{scan.issue}</p>
-              </div>
-              <div className="rounded-xl bg-leaf/10 p-3">
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">Recommended treatment</p>
-                <p className="mt-1 text-sm">{scan.solution}</p>
-              </div>
-              <div className="flex items-center gap-3 rounded-xl border border-border p-3">
-                <img src={products[0].image} alt="Neerva" className="h-14 w-14 rounded-lg object-cover" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{products[0].name}</p>
-                  <p className="text-xs text-muted-foreground">Recommended for your plant</p>
-                  <p className="text-sm font-semibold">₹{products[0].price}</p>
-                </div>
-                <Button size="sm" onClick={() => { add({ id: products[0].id, name: products[0].name, price: products[0].price, image: products[0].image }); toast.success("Added to cart"); }}>Add</Button>
-              </div>
-            </div>
-          )}
-        </Card>
-      )}
 
       {/* Shop categories */}
       <SectionRow title="Shop Categories" href="/shop" />

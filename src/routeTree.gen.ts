@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PlantDoctorRouteImport } from './routes/plant-doctor'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as ConsultRouteImport } from './routes/consult'
 import { Route as CartRouteImport } from './routes/cart'
@@ -41,6 +42,11 @@ const ServicesRoute = ServicesRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlantDoctorRoute = PlantDoctorRouteImport.update({
+  id: '/plant-doctor',
+  path: '/plant-doctor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrdersRoute = OrdersRouteImport.update({
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
+  '/plant-doctor': typeof PlantDoctorRoute
   '/profile': typeof ProfileRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
   '/shop': typeof ShopRouteWithChildren
@@ -145,6 +152,7 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
+  '/plant-doctor': typeof PlantDoctorRoute
   '/profile': typeof ProfileRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
   '/shop': typeof ShopRouteWithChildren
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
+  '/plant-doctor': typeof PlantDoctorRoute
   '/profile': typeof ProfileRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
   '/shop': typeof ShopRouteWithChildren
@@ -188,6 +197,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/consult'
     | '/orders'
+    | '/plant-doctor'
     | '/profile'
     | '/services'
     | '/shop'
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/consult'
     | '/orders'
+    | '/plant-doctor'
     | '/profile'
     | '/services'
     | '/shop'
@@ -228,6 +239,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/consult'
     | '/orders'
+    | '/plant-doctor'
     | '/profile'
     | '/services'
     | '/shop'
@@ -249,6 +261,7 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   ConsultRoute: typeof ConsultRoute
   OrdersRoute: typeof OrdersRoute
+  PlantDoctorRoute: typeof PlantDoctorRoute
   ProfileRoute: typeof ProfileRouteWithChildren
   ServicesRoute: typeof ServicesRouteWithChildren
   ShopRoute: typeof ShopRouteWithChildren
@@ -275,6 +288,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plant-doctor': {
+      id: '/plant-doctor'
+      path: '/plant-doctor'
+      fullPath: '/plant-doctor'
+      preLoaderRoute: typeof PlantDoctorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/orders': {
@@ -458,6 +478,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   ConsultRoute: ConsultRoute,
   OrdersRoute: OrdersRoute,
+  PlantDoctorRoute: PlantDoctorRoute,
   ProfileRoute: ProfileRouteWithChildren,
   ServicesRoute: ServicesRouteWithChildren,
   ShopRoute: ShopRouteWithChildren,
