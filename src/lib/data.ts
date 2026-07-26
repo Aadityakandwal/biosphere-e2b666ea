@@ -1,4 +1,8 @@
 import neervaAsset from "@/assets/neerva-bottle.png.asset.json";
+import snakePlantImg from "@/assets/product-snake-plant.jpg";
+import prunerImg from "@/assets/product-pruner.jpg";
+import lawnCareImg from "@/assets/service-lawn-care.jpg";
+import gardenCareImg from "@/assets/service-garden-care.jpg";
 
 export type Sub = { id: string; name: string; price: number };
 export type Service = {
@@ -49,7 +53,7 @@ export const services: Service[] = [
     ] },
   { slug: "garden-care", name: "Garden Care", category: "care", emoji: "🌾", price: 799, duration: "1-2 hrs", rating: 4.8, reviews: 289,
     description: "Deeper care for established gardens with health-first practices.",
-    image: "https://images.unsplash.com/photo-1416772331340-e5b74319a1ce?w=800",
+    image: gardenCareImg,
     subs: [
       { id: "fertilizer", name: "Fertilizer Application", price: 349 },
       { id: "pest", name: "Pest Control", price: 499 },
@@ -58,7 +62,7 @@ export const services: Service[] = [
     ] },
   { slug: "lawn-garden", name: "Lawn & Garden Care", category: "care", emoji: "🌱", price: 899, duration: "2 hrs", rating: 4.6, reviews: 156,
     description: "Keep your lawn and edges sharp season after season.",
-    image: "https://images.unsplash.com/photo-1560749003-f4b1e17e2dfd?w=800",
+    image: lawnCareImg,
     subs: [
       { id: "mowing", name: "Lawn Mowing", price: 399 },
       { id: "hedge", name: "Hedge Trimming", price: 449 },
@@ -94,10 +98,10 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=800",
     short: "Iconic split-leaf indoor plant." },
   { id: "snake", name: "Snake Plant", price: 349, category: "plants",
-    image: "https://images.unsplash.com/photo-1593482892290-f54c7f8ec4d3?w=800",
+    image: snakePlantImg,
     short: "Low-light hardy indoor purifier." },
   { id: "pruner", name: "Bypass Pruner", price: 499, category: "tools",
-    image: "https://images.unsplash.com/photo-1585513553738-84fdca1bcabf?w=800",
+    image: prunerImg,
     short: "Precision pruning for stems up to 20mm." },
   { id: "trowel", name: "Steel Hand Trowel", price: 249, category: "tools",
     image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800",
@@ -203,7 +207,7 @@ export const seasonalTips: SeasonalTip[] = [
     title: "Spot pests before they spread",
     description: "Inspect leaf undersides every few days; neem oil works wonders on early infestations.",
     readTime: "5 min read",
-    image: "https://images.unsplash.com/photo-1416772331340-e5b74319a1ce?w=400",
+    image: gardenCareImg,
   },
   {
     id: "t6",
