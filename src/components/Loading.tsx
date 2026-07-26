@@ -38,19 +38,18 @@ export function Skeleton({ className = "" }: { className?: string }) {
 
 /** Full-screen branded splash shown once per browser session. */
 export function Splash() {
-  const [visible, setVisible] = useState(false);
+  // Rendered on the server too, so it covers the app from the very first paint.
+  const [visible, setVisible] = useState(true);
   const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.getItem("bio-splash-seen")) return;
-    sessionStorage.setItem("bio-splash-seen", "1");
-    setVisible(true);
-    const t1 = setTimeout(() => setLeaving(true), 1500);
-    const t2 = setTimeout(() => setVisible(false), 2100);
+    const t1 = setTimeout(() => setLeaving(true), 1400);
+    const t2 = setTimeout(() => setVisible(false), 2000);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   if (!visible) return null;
+
 
   return (
     <div
