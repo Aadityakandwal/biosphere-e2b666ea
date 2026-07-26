@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import logoAsset from "@/assets/biosphere-logo.png.asset.json";
+import { useApplyReducedMotion } from "@/lib/motion";
 
 /** Small inline spinner: growing leaf ring. */
 export function LeafSpinner({ size = 44 }: { size?: number }) {
@@ -41,12 +42,13 @@ export function Splash() {
   // Rendered on the server too, so it covers the app from the very first paint.
   const [visible, setVisible] = useState(true);
   const [leaving, setLeaving] = useState(false);
+  const reduced = useApplyReducedMotion();
 
   useEffect(() => {
-    const t1 = setTimeout(() => setLeaving(true), 1400);
-    const t2 = setTimeout(() => setVisible(false), 2000);
+    const t1 = setTimeout(() => setLeaving(true), reduced ? 250 : 1400);
+    const t2 = setTimeout(() => setVisible(false), reduced ? 500 : 2000);
     return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, []);
+  }, [reduced]);
 
   if (!visible) return null;
 
@@ -54,17 +56,22 @@ export function Splash() {
   return (
     <div
       aria-hidden
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background transition-all duration-500 ${
-        leaving ? "pointer-events-none scale-105 opacity-0" : "opacity-100"
-      }`}
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background transition-all ${
+        reduced ? "duration-200" : "duration-500"
+      } ${leaving ? `pointer-events-none opacity-0 ${reduced ? "" : "scale-105"}` : "opacity-100"}`}
     >
       {/* soft botanical glow */}
-      <div className="pointer-events-none absolute h-72 w-72 rounded-full bg-primary/15 blur-3xl animate-pulse" />
+      <div className={`pointer-events-none absolute h-72 w-72 rounded-full bg-primary/15 blur-3xl ${reduced ? "" : "animate-pulse"}`} />
 
       <div className="relative flex flex-col items-center">
         {/* pulsing rings */}
-        <span className="splash-ring absolute h-28 w-28 rounded-full border border-primary/30" />
-        <span className="splash-ring absolute h-28 w-28 rounded-full border border-primary/30 [animation-delay:0.8s]" />
+        {!reduced && (
+          <>
+            <span className="splash-ring absolute h-28 w-28 rounded-full border border-primary/30" />
+            <span className="splash-ring absolute h-28 w-28 rounded-full border border-primary/30 [animation-delay:0.8s]" />
+          </>
+        )}
+
 
         <img
           src={logoAsset.url}
