@@ -37,8 +37,8 @@ function Home() {
   const tip = seasonalTips[new Date().getDate() % seasonalTips.length];
 
   const hero = services.find((s) => s.slug === "balcony-garden")!;
-  const featured = services.find((s) => s.slug === "garden-care")!;
-  const secondary = [services.find((s) => s.slug === "lawn-garden")!, services.find((s) => s.slug === "basic-maintenance")!];
+  const featured = services.find((s) => s.slug === "indoor-setup")!;
+  const secondary = [services.find((s) => s.slug === "kitchen-garden")!, services.find((s) => s.slug === "video-consult")!];
 
   const catTiles = [
     { name: "Plants", cat: "plants", Icon: Sprout },
@@ -135,8 +135,8 @@ function Home() {
         {secondary.map((s) => (
           <Link key={s.slug} to="/services/$slug" params={{ slug: s.slug }}>
             <Card className="h-full p-4 shadow-soft transition hover:-translate-y-1 hover:shadow-elevated">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-primary">
-                <Sprout className="h-4 w-4" />
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-base">
+                {s.emoji}
               </span>
               <p className="mt-3 font-display text-base font-semibold leading-tight">{s.name}</p>
               <p className="mt-1 text-xs text-muted-foreground">From ₹{s.price}</p>
