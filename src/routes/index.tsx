@@ -1,6 +1,8 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/Shell";
+import { SearchBar } from "@/components/SearchBar";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { services, products, reviews, seasonalTips } from "@/lib/data";
@@ -51,13 +53,8 @@ function Home() {
   return (
     <Shell>
       {/* Search */}
-      <label className="mt-2 flex items-center gap-3 rounded-full border border-border bg-card px-5 py-3.5 shadow-soft transition focus-within:border-primary/40 focus-within:shadow-elevated">
-        <Search className="h-4 w-4 text-muted-foreground" />
-        <input
-          placeholder="Find services..."
-          className="w-full border-0 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground"
-        />
-      </label>
+      <SearchBar />
+
 
       {/* Seasonal promo hero */}
       <div className="group relative mt-5 overflow-hidden rounded-3xl shadow-elevated">
