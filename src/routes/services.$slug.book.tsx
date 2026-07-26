@@ -56,8 +56,9 @@ function BookPage() {
   const addBook = useBookings((s) => s.add);
   const profile = useProfile();
 
-  const pickedSubs = (service.subs ?? []).filter(s => (subsParam?.split(",") ?? []).includes(s.id));
-  const subsTotal = pickedSubs.reduce((n, s) => n + s.price, 0);
+  const pickedSubs = ((service.subs ?? []) as { id: string; name: string; price: number }[]).filter((s) => (subsParam?.split(",") ?? []).includes(s.id));
+  const subsTotal = pickedSubs.reduce((n: number, s) => n + s.price, 0);
+
   const extrasTotal = bio.filter(p => extras.includes(p.id)).reduce((n, p) => n + p.price, 0);
   const taxes = Math.round((service.price + subsTotal) * 0.05);
   const total = service.price + subsTotal + extrasTotal + taxes;
