@@ -1,3 +1,5 @@
+import neervaAsset from "@/assets/neerva-bottle.png.asset.json";
+
 export type Sub = { id: string; name: string; price: number };
 export type Service = {
   slug: string;
@@ -86,7 +88,7 @@ export type Product = {
 
 export const products: Product[] = [
   { id: "neerva", name: "Neerva — Bio Growth Tonic (1L)", price: 249, category: "biovelocity", popular: true,
-    image: "https://images.unsplash.com/photo-1611175694989-4870fafa4494?w=800",
+    image: neervaAsset.url,
     short: "Microbial bio-formula for foliar, soil, and drip application." },
   { id: "monstera", name: "Monstera Deliciosa", price: 649, category: "plants",
     image: "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=800",
