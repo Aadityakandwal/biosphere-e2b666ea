@@ -5,7 +5,7 @@ import { services } from "@/lib/data";
 import { ChevronRight, Video, ClipboardCheck, FlaskConical } from "lucide-react";
 
 export const Route = createFileRoute("/services/")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { cat?: string } => ({
     cat: typeof search.cat === "string" ? search.cat : undefined,
   }),
   head: () => ({

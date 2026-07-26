@@ -7,7 +7,7 @@ import { Search, Sprout, Hammer, FlaskConical, Flower2, LayoutGrid, Plus, Chevro
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/shop/")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { cat?: string } => ({
     cat: typeof search.cat === "string" ? search.cat : undefined,
   }),
   head: () => ({

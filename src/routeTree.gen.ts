@@ -75,44 +75,44 @@ const BookingsIndexRoute = BookingsIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopProductIdRoute = ShopProductIdRouteImport.update({
-  id: '/$productId',
-  path: '/$productId',
-  getParentRoute: () => ShopRoute,
+  id: '/shop/$productId',
+  path: '/shop/$productId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileSupportRoute = ProfileSupportRouteImport.update({
-  id: '/support',
-  path: '/support',
-  getParentRoute: () => ProfileRoute,
+  id: '/profile/support',
+  path: '/profile/support',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => ProfileRoute,
+  id: '/profile/settings',
+  path: '/profile/settings',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileMembershipRoute = ProfileMembershipRouteImport.update({
-  id: '/membership',
-  path: '/membership',
-  getParentRoute: () => ProfileRoute,
+  id: '/profile/membership',
+  path: '/profile/membership',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileGreenPointsRoute = ProfileGreenPointsRouteImport.update({
-  id: '/green-points',
-  path: '/green-points',
-  getParentRoute: () => ProfileRoute,
+  id: '/profile/green-points',
+  path: '/profile/green-points',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileEditRoute = ProfileEditRouteImport.update({
-  id: '/edit',
-  path: '/edit',
-  getParentRoute: () => ProfileRoute,
+  id: '/profile/edit',
+  path: '/profile/edit',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileBookingsRoute = ProfileBookingsRouteImport.update({
-  id: '/bookings',
-  path: '/bookings',
-  getParentRoute: () => ProfileRoute,
+  id: '/profile/bookings',
+  path: '/profile/bookings',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BookingsIdRoute = BookingsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => BookingsRoute,
+  id: '/bookings/$id',
+  path: '/bookings/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesSlugIndexRoute = ServicesSlugIndexRouteImport.update({
   id: '/services/$slug/',
@@ -261,6 +261,14 @@ export interface RootRouteChildren {
   ConsultRoute: typeof ConsultRoute
   OrdersRoute: typeof OrdersRoute
   PlantDoctorRoute: typeof PlantDoctorRoute
+  BookingsIdRoute: typeof BookingsIdRoute
+  ProfileBookingsRoute: typeof ProfileBookingsRoute
+  ProfileEditRoute: typeof ProfileEditRoute
+  ProfileGreenPointsRoute: typeof ProfileGreenPointsRoute
+  ProfileMembershipRoute: typeof ProfileMembershipRoute
+  ProfileSettingsRoute: typeof ProfileSettingsRoute
+  ProfileSupportRoute: typeof ProfileSupportRoute
+  ShopProductIdRoute: typeof ShopProductIdRoute
   BookingsIndexRoute: typeof BookingsIndexRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
@@ -336,59 +344,59 @@ declare module '@tanstack/react-router' {
     }
     '/shop/$productId': {
       id: '/shop/$productId'
-      path: '/$productId'
+      path: '/shop/$productId'
       fullPath: '/shop/$productId'
       preLoaderRoute: typeof ShopProductIdRouteImport
-      parentRoute: typeof ShopRoute
+      parentRoute: typeof rootRouteImport
     }
     '/profile/support': {
       id: '/profile/support'
-      path: '/support'
+      path: '/profile/support'
       fullPath: '/profile/support'
       preLoaderRoute: typeof ProfileSupportRouteImport
-      parentRoute: typeof ProfileRoute
+      parentRoute: typeof rootRouteImport
     }
     '/profile/settings': {
       id: '/profile/settings'
-      path: '/settings'
+      path: '/profile/settings'
       fullPath: '/profile/settings'
       preLoaderRoute: typeof ProfileSettingsRouteImport
-      parentRoute: typeof ProfileRoute
+      parentRoute: typeof rootRouteImport
     }
     '/profile/membership': {
       id: '/profile/membership'
-      path: '/membership'
+      path: '/profile/membership'
       fullPath: '/profile/membership'
       preLoaderRoute: typeof ProfileMembershipRouteImport
-      parentRoute: typeof ProfileRoute
+      parentRoute: typeof rootRouteImport
     }
     '/profile/green-points': {
       id: '/profile/green-points'
-      path: '/green-points'
+      path: '/profile/green-points'
       fullPath: '/profile/green-points'
       preLoaderRoute: typeof ProfileGreenPointsRouteImport
-      parentRoute: typeof ProfileRoute
+      parentRoute: typeof rootRouteImport
     }
     '/profile/edit': {
       id: '/profile/edit'
-      path: '/edit'
+      path: '/profile/edit'
       fullPath: '/profile/edit'
       preLoaderRoute: typeof ProfileEditRouteImport
-      parentRoute: typeof ProfileRoute
+      parentRoute: typeof rootRouteImport
     }
     '/profile/bookings': {
       id: '/profile/bookings'
-      path: '/bookings'
+      path: '/profile/bookings'
       fullPath: '/profile/bookings'
       preLoaderRoute: typeof ProfileBookingsRouteImport
-      parentRoute: typeof ProfileRoute
+      parentRoute: typeof rootRouteImport
     }
     '/bookings/$id': {
       id: '/bookings/$id'
-      path: '/$id'
+      path: '/bookings/$id'
       fullPath: '/bookings/$id'
       preLoaderRoute: typeof BookingsIdRouteImport
-      parentRoute: typeof BookingsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/services/$slug/': {
       id: '/services/$slug/'
@@ -413,6 +421,14 @@ const rootRouteChildren: RootRouteChildren = {
   ConsultRoute: ConsultRoute,
   OrdersRoute: OrdersRoute,
   PlantDoctorRoute: PlantDoctorRoute,
+  BookingsIdRoute: BookingsIdRoute,
+  ProfileBookingsRoute: ProfileBookingsRoute,
+  ProfileEditRoute: ProfileEditRoute,
+  ProfileGreenPointsRoute: ProfileGreenPointsRoute,
+  ProfileMembershipRoute: ProfileMembershipRoute,
+  ProfileSettingsRoute: ProfileSettingsRoute,
+  ProfileSupportRoute: ProfileSupportRoute,
+  ShopProductIdRoute: ShopProductIdRoute,
   BookingsIndexRoute: BookingsIndexRoute,
   ProfileIndexRoute: ProfileIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
@@ -423,13 +439,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
