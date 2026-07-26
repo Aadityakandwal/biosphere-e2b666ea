@@ -78,7 +78,7 @@ function Home() {
       {/* AI Plant Doctor banner */}
       <Link
         to="/plant-doctor"
-        className="mt-4 flex w-full items-center gap-4 rounded-3xl bg-[oklch(0.26_0.05_155)] p-4 text-left text-primary-foreground shadow-elevated press hover:shadow-glow"
+        className="mt-4 flex w-full items-center gap-4 rounded-3xl bg-[oklch(0.26_0.05_155)] p-4 text-left text-primary-foreground shadow-elevated press sheen hover:shadow-glow"
       >
         <span className="flex h-12 w-12 flex-none items-center justify-center rounded-full bg-leaf text-leaf-foreground">
           <Leaf className="h-6 w-6" />
@@ -115,7 +115,7 @@ function Home() {
       {/* Popular services */}
       <SectionRow title="Popular Services" href="/services" />
       <Card className="flex gap-0 overflow-hidden p-0 shadow-soft transition hover:shadow-elevated">
-        <img src={featured.image} alt="" className="h-auto w-28 flex-none object-cover" />
+        <span className="media-zoom flex w-28 flex-none"><img src={featured.image} alt="" className="h-auto w-full object-cover" /></span>
         <div className="flex flex-1 flex-col p-4">
           <div className="flex items-start justify-between gap-2">
             <p className="font-display text-lg font-semibold leading-snug">{featured.name}</p>
