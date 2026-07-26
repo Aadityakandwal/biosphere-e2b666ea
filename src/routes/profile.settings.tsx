@@ -6,6 +6,8 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import { usePrefs } from "@/lib/stores";
+import { useReducedMotion } from "@/lib/motion";
 
 export const Route = createFileRoute("/profile/settings")({
   head: () => ({ meta: [{ title: "Settings — Biosphere" }] }),
@@ -17,6 +19,10 @@ function SettingsPage() {
     notifications: true, marketing: false, location: true, dark: false, biometric: false,
   });
   const toggle = (k: keyof typeof s) => setS({ ...s, [k]: !s[k] });
+
+  const motionPref = usePrefs((st) => st.reducedMotion);
+  const setMotionPref = usePrefs((st) => st.setReducedMotion);
+  const reduced = useReducedMotion();
 
   const rows: { k: keyof typeof s; label: string; hint: string }[] = [
     { k: "notifications", label: "Push notifications", hint: "Booking updates and reminders" },
@@ -42,6 +48,24 @@ function SettingsPage() {
           </Card>
         ))}
       </div>
+
+      <Card className="mt-3 flex items-center justify-between p-3">
+        <div className="pr-3">
+          <p className="text-sm font-medium">Reduce motion</p>
+          <p className="text-xs text-muted-foreground">
+            {motionPref === "system"
+              ? `Following your device setting (currently ${reduced ? "reduced" : "full motion"})`
+              : "Turns off the splash animation and other motion effects"}
+          </p>
+        </div>
+        <Switch
+          checked={reduced}
+          onCheckedChange={(v) => {
+            setMotionPref(v ? "on" : "off");
+            toast.success(v ? "Motion reduced" : "Animations enabled");
+          }}
+        />
+      </Card>
 
       <div className="mt-6 space-y-2">
         <Button variant="outline" className="w-full" onClick={() => toast.info("Data exported to your email")}>Export my data</Button>
