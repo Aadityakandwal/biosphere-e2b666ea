@@ -34,7 +34,7 @@ function SectionRow({ title, href }: { title: string; href?: string }) {
 
 function Home() {
   const add = useCart((s) => s.add);
-  const tip = seasonalTips[new Date().getDate() % seasonalTips.length];
+  const [showAllTips, setShowAllTips] = React.useState(false);
 
   const hero = services.find((s) => s.slug === "balcony-garden")!;
   const featured = services.find((s) => s.slug === "indoor-setup")!;
