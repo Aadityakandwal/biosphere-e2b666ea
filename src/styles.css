@@ -214,3 +214,21 @@
 @media (prefers-reduced-motion: reduce) {
   .splash-ring, .splash-logo, .splash-word, .splash-bar { animation-duration: 1ms; }
 }
+
+/* ---------- Reduced motion (user preference or OS setting) ---------- */
+.reduce-motion .splash-ring,
+.reduce-motion .splash-logo,
+.reduce-motion .splash-word,
+.reduce-motion .splash-bar,
+.reduce-motion .shimmer {
+  animation: none !important;
+}
+.reduce-motion .splash-bar { width: 100%; }
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import logoAsset from "@/assets/biosphere-logo.png.asset.json";
+import { useApplyReducedMotion } from "@/lib/motion";
 
 /** Small inline spinner: growing leaf ring. */
 export function LeafSpinner({ size = 44 }: { size?: number }) {
