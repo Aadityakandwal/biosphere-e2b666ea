@@ -3,6 +3,9 @@ import snakePlantImg from "@/assets/product-snake-plant.jpg";
 import prunerImg from "@/assets/product-pruner.jpg";
 import lawnCareImg from "@/assets/service-lawn-care.jpg";
 import gardenCareImg from "@/assets/service-garden-care.jpg";
+import videoConsultImg from "@/assets/service-video-consult.jpg";
+import gardenInspectionImg from "@/assets/service-garden-inspection.jpg";
+import soilTestingImg from "@/assets/service-soil-testing.jpg";
 
 export type Sub = { id: string; name: string; price: number };
 export type Service = {
@@ -71,13 +74,13 @@ export const services: Service[] = [
   // Consultation
   { slug: "video-consult", name: "Video Consultation", category: "consult", emoji: "📹", price: 299, duration: "30 min", rating: 4.9, reviews: 620,
     description: "One-on-one video call with a certified botanist.",
-    image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=800" },
+    image: videoConsultImg },
   { slug: "garden-inspection", name: "Garden Inspection", category: "consult", emoji: "🔍", price: 599, duration: "1 hr", rating: 4.8, reviews: 143,
     description: "In-person walkthrough with a detailed report on soil, pests, and layout.",
-    image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=800" },
+    image: gardenInspectionImg },
   { slug: "soil-testing", name: "Soil Testing Guidance", category: "consult", emoji: "🧪", price: 449, duration: "45 min", rating: 4.7, reviews: 87,
     description: "Guided sampling and lab-grade analysis of your soil health.",
-    image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800" },
+    image: soilTestingImg },
 ];
 
 export type Product = {
