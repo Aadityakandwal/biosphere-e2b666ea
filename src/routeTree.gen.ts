@@ -21,11 +21,10 @@ import { Route as BookingsIndexRouteImport } from './routes/bookings.index'
 import { Route as ShopProductIdRouteImport } from './routes/shop.$productId'
 import { Route as ProfileSupportRouteImport } from './routes/profile.support'
 import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
-import { Route as ProfileOrdersRouteImport } from './routes/profile.orders'
 import { Route as ProfileMembershipRouteImport } from './routes/profile.membership'
 import { Route as ProfileGreenPointsRouteImport } from './routes/profile.green-points'
 import { Route as ProfileEditRouteImport } from './routes/profile.edit'
-import { Route as ProfileBookingsRouteImport } from './routes/profile.bookings'
+import { Route as ProfileActivityRouteImport } from './routes/profile.activity'
 import { Route as BookingsIdRouteImport } from './routes/bookings.$id'
 import { Route as ServicesSlugIndexRouteImport } from './routes/services.$slug.index'
 import { Route as ServicesSlugBookRouteImport } from './routes/services.$slug.book'
@@ -90,11 +89,6 @@ const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
   path: '/profile/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileOrdersRoute = ProfileOrdersRouteImport.update({
-  id: '/profile/orders',
-  path: '/profile/orders',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProfileMembershipRoute = ProfileMembershipRouteImport.update({
   id: '/profile/membership',
   path: '/profile/membership',
@@ -110,9 +104,9 @@ const ProfileEditRoute = ProfileEditRouteImport.update({
   path: '/profile/edit',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileBookingsRoute = ProfileBookingsRouteImport.update({
-  id: '/profile/bookings',
-  path: '/profile/bookings',
+const ProfileActivityRoute = ProfileActivityRouteImport.update({
+  id: '/profile/activity',
+  path: '/profile/activity',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookingsIdRoute = BookingsIdRouteImport.update({
@@ -138,11 +132,10 @@ export interface FileRoutesByFullPath {
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/bookings/$id': typeof BookingsIdRoute
-  '/profile/bookings': typeof ProfileBookingsRoute
+  '/profile/activity': typeof ProfileActivityRoute
   '/profile/edit': typeof ProfileEditRoute
   '/profile/green-points': typeof ProfileGreenPointsRoute
   '/profile/membership': typeof ProfileMembershipRoute
-  '/profile/orders': typeof ProfileOrdersRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
@@ -160,11 +153,10 @@ export interface FileRoutesByTo {
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/bookings/$id': typeof BookingsIdRoute
-  '/profile/bookings': typeof ProfileBookingsRoute
+  '/profile/activity': typeof ProfileActivityRoute
   '/profile/edit': typeof ProfileEditRoute
   '/profile/green-points': typeof ProfileGreenPointsRoute
   '/profile/membership': typeof ProfileMembershipRoute
-  '/profile/orders': typeof ProfileOrdersRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
@@ -183,11 +175,10 @@ export interface FileRoutesById {
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/bookings/$id': typeof BookingsIdRoute
-  '/profile/bookings': typeof ProfileBookingsRoute
+  '/profile/activity': typeof ProfileActivityRoute
   '/profile/edit': typeof ProfileEditRoute
   '/profile/green-points': typeof ProfileGreenPointsRoute
   '/profile/membership': typeof ProfileMembershipRoute
-  '/profile/orders': typeof ProfileOrdersRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
@@ -207,11 +198,10 @@ export interface FileRouteTypes {
     | '/orders'
     | '/plant-doctor'
     | '/bookings/$id'
-    | '/profile/bookings'
+    | '/profile/activity'
     | '/profile/edit'
     | '/profile/green-points'
     | '/profile/membership'
-    | '/profile/orders'
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
@@ -229,11 +219,10 @@ export interface FileRouteTypes {
     | '/orders'
     | '/plant-doctor'
     | '/bookings/$id'
-    | '/profile/bookings'
+    | '/profile/activity'
     | '/profile/edit'
     | '/profile/green-points'
     | '/profile/membership'
-    | '/profile/orders'
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
@@ -251,11 +240,10 @@ export interface FileRouteTypes {
     | '/orders'
     | '/plant-doctor'
     | '/bookings/$id'
-    | '/profile/bookings'
+    | '/profile/activity'
     | '/profile/edit'
     | '/profile/green-points'
     | '/profile/membership'
-    | '/profile/orders'
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
@@ -274,11 +262,10 @@ export interface RootRouteChildren {
   OrdersRoute: typeof OrdersRoute
   PlantDoctorRoute: typeof PlantDoctorRoute
   BookingsIdRoute: typeof BookingsIdRoute
-  ProfileBookingsRoute: typeof ProfileBookingsRoute
+  ProfileActivityRoute: typeof ProfileActivityRoute
   ProfileEditRoute: typeof ProfileEditRoute
   ProfileGreenPointsRoute: typeof ProfileGreenPointsRoute
   ProfileMembershipRoute: typeof ProfileMembershipRoute
-  ProfileOrdersRoute: typeof ProfileOrdersRoute
   ProfileSettingsRoute: typeof ProfileSettingsRoute
   ProfileSupportRoute: typeof ProfileSupportRoute
   ShopProductIdRoute: typeof ShopProductIdRoute
@@ -376,13 +363,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile/orders': {
-      id: '/profile/orders'
-      path: '/profile/orders'
-      fullPath: '/profile/orders'
-      preLoaderRoute: typeof ProfileOrdersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/profile/membership': {
       id: '/profile/membership'
       path: '/profile/membership'
@@ -404,11 +384,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileEditRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile/bookings': {
-      id: '/profile/bookings'
-      path: '/profile/bookings'
-      fullPath: '/profile/bookings'
-      preLoaderRoute: typeof ProfileBookingsRouteImport
+    '/profile/activity': {
+      id: '/profile/activity'
+      path: '/profile/activity'
+      fullPath: '/profile/activity'
+      preLoaderRoute: typeof ProfileActivityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bookings/$id': {
@@ -442,11 +422,10 @@ const rootRouteChildren: RootRouteChildren = {
   OrdersRoute: OrdersRoute,
   PlantDoctorRoute: PlantDoctorRoute,
   BookingsIdRoute: BookingsIdRoute,
-  ProfileBookingsRoute: ProfileBookingsRoute,
+  ProfileActivityRoute: ProfileActivityRoute,
   ProfileEditRoute: ProfileEditRoute,
   ProfileGreenPointsRoute: ProfileGreenPointsRoute,
   ProfileMembershipRoute: ProfileMembershipRoute,
-  ProfileOrdersRoute: ProfileOrdersRoute,
   ProfileSettingsRoute: ProfileSettingsRoute,
   ProfileSupportRoute: ProfileSupportRoute,
   ShopProductIdRoute: ShopProductIdRoute,
