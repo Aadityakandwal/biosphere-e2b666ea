@@ -111,24 +111,6 @@ function Home() {
         ))}
       </div>
 
-      {/* Service categories */}
-      <SectionRow title="Service Categories" href="/services" />
-      <div className="grid grid-cols-3 gap-3">
-        {serviceTiles.map(({ name, cat, Icon }) => (
-          <Link
-            key={cat}
-            to="/services"
-            search={{ cat }}
-            className="flex flex-col items-center gap-2 rounded-3xl border border-border bg-card px-2 py-4 text-center shadow-soft transition hover:-translate-y-1 hover:border-primary/30 hover:shadow-elevated press"
-          >
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-primary">
-              <Icon className="h-5 w-5" />
-            </span>
-            <span className="text-[10px] font-bold uppercase leading-tight tracking-wider text-foreground/80">{name}</span>
-          </Link>
-        ))}
-      </div>
-
       {/* Popular services */}
       <SectionRow title="Popular Services" href="/services" />
       <Card className="flex gap-0 overflow-hidden p-0 shadow-soft transition hover:shadow-elevated">
