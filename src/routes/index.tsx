@@ -1,12 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Shell, SectionHeader } from "@/components/Shell";
-import { Input } from "@/components/ui/input";
+import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { services, products, offers, reviews, seasonalTips, categories } from "@/lib/data";
-import { Search, Camera, Upload, Sparkles, Video, Star, Sun } from "lucide-react";
+import { services, products, reviews, seasonalTips } from "@/lib/data";
+import { Search, Camera, Upload, Sparkles, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, Droplets, Flower2 } from "lucide-react";
 import { useCart } from "@/lib/stores";
 import { toast } from "sonner";
 
@@ -24,9 +22,21 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
+function SectionRow({ title, href }: { title: string; href?: string }) {
+  return (
+    <div className="mb-3 mt-7 flex items-center justify-between">
+      <h2 className="font-display text-xl font-semibold tracking-tight">{title}</h2>
+      {href && (
+        <Link to={href} className="text-sm font-semibold text-primary hover:underline">View All</Link>
+      )}
+    </div>
+  );
+}
+
 function Home() {
   const [scan, setScan] = useState<null | { plant: string; issue: string; solution: string }>(null);
   const [scanning, setScanning] = useState(false);
+  const [showDoctor, setShowDoctor] = useState(false);
   const add = useCart((s) => s.add);
   const tip = seasonalTips[new Date().getDate() % seasonalTips.length];
 
@@ -42,154 +52,187 @@ function Home() {
     }, 1200);
   };
 
-  const popular = [services.find(s => s.slug === "balcony-garden")!, services.find(s => s.slug === "basic-maintenance")!, services.find(s => s.slug === "video-consult")!];
+  const hero = services.find((s) => s.slug === "balcony-garden")!;
+  const featured = services.find((s) => s.slug === "garden-care")!;
+  const secondary = [services.find((s) => s.slug === "lawn-garden")!, services.find((s) => s.slug === "basic-maintenance")!];
+
   const catTiles = [
-    { name: "Plants", to: "/shop", tint: "bg-leaf/15", emoji: "🪴" },
-    { name: "Tools", to: "/shop", tint: "bg-accent/40", emoji: "🛠️" },
-    { name: "Biovelocity", to: "/shop", tint: "bg-secondary", emoji: "🧪" },
-    { name: "Pots", to: "/shop", tint: "bg-sand", emoji: "🏺" },
+    { name: "Plants", to: "/shop", Icon: Sprout },
+    { name: "Tools", to: "/shop", Icon: Hammer },
+    { name: "Soil", to: "/shop", Icon: Droplets },
+    { name: "Seeds", to: "/shop", Icon: Flower2 },
   ];
 
   return (
     <Shell>
       {/* Search */}
-      <div className="mt-2 flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 shadow-sm">
+      <label className="mt-2 flex items-center gap-3 rounded-full border border-border bg-card px-5 py-3.5 shadow-soft transition focus-within:border-primary/40 focus-within:shadow-elevated">
         <Search className="h-4 w-4 text-muted-foreground" />
-        <Input placeholder="Search services or products…" className="border-0 bg-transparent p-0 focus-visible:ring-0" />
-      </div>
+        <input
+          placeholder="Find services..."
+          className="w-full border-0 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground"
+        />
+      </label>
 
-      {/* Offers */}
-      <SectionHeader title="Offers for you" />
-      <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2">
-        {offers.map((o) => (
-          <div
-            key={o.id}
-            className={`group relative min-w-[82%] snap-start overflow-hidden rounded-3xl bg-gradient-to-br ${o.gradient} p-5 text-white shadow-elevated transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-glow`}
-          >
-            <div className="absolute -right-4 -top-4 text-7xl opacity-20 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110">
-              {o.emoji}
-            </div>
-            <div className="relative z-10">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium backdrop-blur-sm">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
-                Limited time
-              </span>
-              <p className={`mt-3 font-display text-xl font-bold leading-tight ${o.text}`}>{o.title}</p>
-              <p className={`mt-1 text-sm opacity-90 ${o.text}`}>{o.subtitle}</p>
-              <div className="mt-4 flex items-center gap-1 text-sm font-semibold">
-                Claim now
-                <svg className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* AI Plant Doctor */}
-      <SectionHeader title="AI Plant Doctor" />
-      <Card className="overflow-hidden p-4">
-        <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <div className="flex-1">
-            <p className="font-medium">Diagnose in seconds</p>
-            <p className="text-sm text-muted-foreground">Upload a leaf photo — get a diagnosis and a Biovelocity solution.</p>
+      {/* Seasonal promo hero */}
+      <div className="group relative mt-5 overflow-hidden rounded-3xl shadow-elevated">
+        <img src={hero.image} alt="" className="h-52 w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[oklch(0.24_0.05_155)] via-[oklch(0.24_0.05_155)]/80 to-transparent" />
+        <div className="absolute inset-0 flex flex-col justify-center gap-2 p-5 text-primary-foreground">
+          <p className="text-xs font-bold uppercase tracking-[0.18em]">Seasonal Promo</p>
+          <p className="font-display text-3xl font-bold leading-tight">Spring Garden Refresh</p>
+          <div className="mt-2 flex items-center gap-3">
+            <span className="rounded-full bg-leaf/30 px-3 py-1 text-xs font-bold backdrop-blur-sm">20% OFF</span>
+            <Link to="/services" className="inline-flex items-center gap-1.5 text-sm font-semibold">
+              Book Now <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <Button variant="outline" onClick={runScan} disabled={scanning}><Camera className="mr-1 h-4 w-4" /> Take photo</Button>
-          <Button onClick={runScan} disabled={scanning}><Upload className="mr-1 h-4 w-4" /> Upload</Button>
-        </div>
-        {scanning && <p className="mt-3 animate-pulse text-center text-sm text-muted-foreground">Analyzing your plant…</p>}
-        {scan && (
-          <div className="mt-4 space-y-3">
-            <div className="rounded-xl bg-muted p-3">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">Diagnosis</p>
-              <p className="mt-1 text-sm font-medium">{scan.plant}</p>
-              <p className="mt-1 text-sm">{scan.issue}</p>
-            </div>
-            <div className="rounded-xl bg-leaf/10 p-3">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">Recommended treatment</p>
-              <p className="mt-1 text-sm">{scan.solution}</p>
-            </div>
-            <div className="flex items-center gap-3 rounded-xl border border-border p-3">
-              <img src={products[0].image} alt="Neerva" className="h-14 w-14 rounded-lg object-cover" />
-              <div className="flex-1">
-                <p className="text-sm font-medium">{products[0].name}</p>
-                <p className="text-xs text-muted-foreground">Recommended for your plant</p>
-                <p className="text-sm font-semibold">₹{products[0].price}</p>
-              </div>
-              <Button size="sm" onClick={() => { add({ id: products[0].id, name: products[0].name, price: products[0].price, image: products[0].image }); toast.success("Added to cart"); }}>Add</Button>
-            </div>
-          </div>
-        )}
-      </Card>
+      </div>
 
-      {/* Virtual botanist */}
-      <SectionHeader title="Virtual Botanist" />
-      <Link to="/consult">
-        <Card className="flex items-center gap-3 p-4">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-accent-foreground">
-            <Video className="h-5 w-5" />
+      {/* AI Plant Doctor banner */}
+      <button
+        onClick={() => setShowDoctor((v) => !v)}
+        className="mt-4 flex w-full items-center gap-4 rounded-3xl bg-[oklch(0.26_0.05_155)] p-4 text-left text-primary-foreground shadow-elevated press hover:shadow-glow"
+      >
+        <span className="flex h-12 w-12 flex-none items-center justify-center rounded-full bg-leaf text-leaf-foreground">
+          <Leaf className="h-6 w-6" />
+        </span>
+        <span className="flex-1">
+          <span className="flex flex-wrap items-center gap-2">
+            <span className="font-display text-lg font-semibold">AI Plant Doctor</span>
+            <span className="rounded-full bg-leaf/25 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider">Analyze Plant</span>
+          </span>
+          <span className="mt-0.5 block text-sm opacity-75">Instant health diagnosis & care plans</span>
+        </span>
+        <ArrowRight className="h-5 w-5 opacity-70" />
+      </button>
+
+      {showDoctor && (
+        <Card className="mt-3 overflow-hidden p-4">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <p className="font-medium">Diagnose in seconds</p>
+              <p className="text-sm text-muted-foreground">Upload a leaf photo — get a diagnosis and a Biovelocity solution.</p>
+            </div>
           </div>
-          <div className="flex-1">
-            <p className="font-medium">Book a video consultation</p>
-            <p className="text-sm text-muted-foreground">30-min session with a certified expert</p>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <Button variant="outline" onClick={runScan} disabled={scanning}><Camera className="mr-1 h-4 w-4" /> Take photo</Button>
+            <Button onClick={runScan} disabled={scanning}><Upload className="mr-1 h-4 w-4" /> Upload</Button>
           </div>
-          <Badge variant="secondary">from ₹299</Badge>
+          {scanning && <p className="mt-3 animate-pulse text-center text-sm text-muted-foreground">Analyzing your plant…</p>}
+          {scan && (
+            <div className="mt-4 space-y-3">
+              <div className="rounded-xl bg-muted p-3">
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">Diagnosis</p>
+                <p className="mt-1 text-sm font-medium">{scan.plant}</p>
+                <p className="mt-1 text-sm">{scan.issue}</p>
+              </div>
+              <div className="rounded-xl bg-leaf/10 p-3">
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">Recommended treatment</p>
+                <p className="mt-1 text-sm">{scan.solution}</p>
+              </div>
+              <div className="flex items-center gap-3 rounded-xl border border-border p-3">
+                <img src={products[0].image} alt="Neerva" className="h-14 w-14 rounded-lg object-cover" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{products[0].name}</p>
+                  <p className="text-xs text-muted-foreground">Recommended for your plant</p>
+                  <p className="text-sm font-semibold">₹{products[0].price}</p>
+                </div>
+                <Button size="sm" onClick={() => { add({ id: products[0].id, name: products[0].name, price: products[0].price, image: products[0].image }); toast.success("Added to cart"); }}>Add</Button>
+              </div>
+            </div>
+          )}
         </Card>
-      </Link>
+      )}
 
       {/* Shop categories */}
-      <SectionHeader title="Shop by category" actionHref="/shop" />
-      <div className="grid grid-cols-4 gap-2">
-        {catTiles.map((c) => (
-          <Link key={c.name} to={c.to} className={`flex flex-col items-center gap-1 rounded-2xl ${c.tint} p-3 text-center`}>
-            <span className="text-2xl">{c.emoji}</span>
-            <span className="text-xs font-medium">{c.name}</span>
+      <SectionRow title="Shop Categories" href="/shop" />
+      <div className="grid grid-cols-4 gap-3">
+        {catTiles.map(({ name, to, Icon }) => (
+          <Link
+            key={name}
+            to={to}
+            className="flex flex-col items-center gap-2 rounded-3xl border border-border bg-card py-4 shadow-soft transition hover:-translate-y-1 hover:border-primary/30 hover:shadow-elevated press"
+          >
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-primary">
+              <Icon className="h-5 w-5" />
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/80">{name}</span>
           </Link>
         ))}
       </div>
 
       {/* Popular services */}
-      <SectionHeader title="Popular services" actionHref="/services" />
-      <div className="space-y-3">
-        {popular.map((s) => (
+      <SectionRow title="Popular Services" href="/services" />
+      <Card className="flex gap-0 overflow-hidden p-0 shadow-soft transition hover:shadow-elevated">
+        <img src={featured.image} alt="" className="h-auto w-28 flex-none object-cover" />
+        <div className="flex flex-1 flex-col p-4">
+          <div className="flex items-start justify-between gap-2">
+            <p className="font-display text-lg font-semibold leading-snug">{featured.name}</p>
+            <p className="whitespace-nowrap text-sm font-bold text-primary">₹{featured.price}</p>
+          </div>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{featured.description}</p>
+          <Link
+            to="/services/$slug"
+            params={{ slug: featured.slug }}
+            className="mt-3 inline-flex w-fit items-center rounded-full border border-border px-4 py-1.5 text-sm font-semibold transition hover:border-primary hover:bg-primary hover:text-primary-foreground press"
+          >
+            Book Now
+          </Link>
+        </div>
+      </Card>
+
+      <div className="mt-3 grid grid-cols-2 gap-3">
+        {secondary.map((s) => (
           <Link key={s.slug} to="/services/$slug" params={{ slug: s.slug }}>
-            <Card className="flex gap-3 overflow-hidden p-0">
-              <img src={s.image} alt="" className="h-24 w-24 flex-none object-cover" />
-              <div className="flex flex-1 flex-col justify-center p-3">
-                <p className="font-medium">{s.name}</p>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Star className="h-3 w-3 fill-current text-yellow-500" /> {s.rating} ({s.reviews}) · {s.duration}
-                </div>
-                <p className="mt-1 text-sm font-semibold">₹{s.price}</p>
-              </div>
+            <Card className="h-full p-4 shadow-soft transition hover:-translate-y-1 hover:shadow-elevated">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-primary">
+                <Sprout className="h-4 w-4" />
+              </span>
+              <p className="mt-3 font-display text-base font-semibold leading-tight">{s.name}</p>
+              <p className="mt-1 text-xs text-muted-foreground">From ₹{s.price}</p>
             </Card>
           </Link>
         ))}
       </div>
 
       {/* Seasonal tips */}
-      <SectionHeader title="Seasonal tip" />
-      <Card className="flex items-start gap-3 p-4">
-        <Sun className="mt-0.5 h-5 w-5 text-yellow-500" />
-        <p className="text-sm">{tip}</p>
-      </Card>
+      <SectionRow title="Seasonal Tips" />
+      <div className="flex items-center gap-4 rounded-3xl bg-muted p-4">
+        <div className="flex-1">
+          <span className="rounded-full bg-leaf/25 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">Season Care</span>
+          <p className="mt-2 font-display text-base font-semibold leading-snug">{tip}</p>
+          <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Clock className="h-3.5 w-3.5" /> 4 min read
+          </p>
+        </div>
+        <img
+          src="https://images.unsplash.com/photo-1483794344563-d27a8d18014e?w=400"
+          alt=""
+          className="h-24 w-24 flex-none rounded-2xl object-cover"
+        />
+      </div>
 
       {/* Reviews */}
-      <SectionHeader title="What people say" />
+      <SectionRow title="Recent Reviews" />
       <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
         {reviews.map((r) => (
-          <Card key={r.name} className="min-w-[80%] snap-start p-4">
-            <div className="flex items-center gap-1 text-yellow-500">
+          <Card key={r.name} className="min-w-[72%] snap-start p-4 shadow-soft">
+            <div className="flex items-center gap-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-bold text-primary">
+                {r.name.charAt(0)}
+              </span>
+              <p className="font-semibold">{r.name}</p>
+            </div>
+            <div className="mt-2 flex items-center gap-0.5 text-primary">
               {Array.from({ length: r.rating }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-current" />)}
             </div>
-            <p className="mt-2 text-sm leading-relaxed">{r.text}</p>
-            <p className="mt-3 text-xs text-muted-foreground">— {r.name} · {r.service}</p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">"{r.text}"</p>
+            <p className="mt-3 text-xs text-muted-foreground/80">{r.service}</p>
           </Card>
         ))}
       </div>

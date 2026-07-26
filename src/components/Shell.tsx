@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Wrench, CalendarDays, ShoppingBag, User, ShoppingCart } from "lucide-react";
+import { Home, Wrench, CalendarDays, ShoppingBag, User, ShoppingCart, MapPin } from "lucide-react";
 import type { ReactNode } from "react";
 import { useCart } from "@/lib/stores";
 import { Badge } from "@/components/ui/badge";
@@ -23,9 +23,13 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
       <div className="mx-auto max-w-md pb-24">
         <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border/60 bg-background/70 px-4 py-3 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
           <Link to="/" className="group press flex items-center gap-2">
-            <img src={logoAsset.url} alt="Biosphere" className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
-            <span className="font-display text-xl font-semibold tracking-tight text-foreground">Biosphere</span>
+            <img src={logoAsset.url} alt="Biosphere" className="h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
+            <span className="leading-tight">
+              <span className="block font-display text-xl font-semibold tracking-tight text-foreground">Biosphere</span>
+              <span className="flex items-center gap-1 text-[11px] text-muted-foreground"><MapPin className="h-3 w-3" /> Greenwich, NY</span>
+            </span>
           </Link>
+
           <div className="flex items-center gap-1">
             <Link to="/cart" aria-label="Cart" className="relative rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-foreground press">
               <ShoppingCart className="h-5 w-5" />
