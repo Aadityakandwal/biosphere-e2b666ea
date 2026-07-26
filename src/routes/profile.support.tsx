@@ -17,7 +17,7 @@ function SupportPage() {
 
   const faqs = [
     { q: "How do I reschedule a booking?", a: "Open Bookings → your booking → Reschedule. A 10% fee applies and new slot must be 24h+ from the original." },
-    { q: "When do I get Green Points?", a: "Instantly after a service or order is confirmed. 50 pts per ₹100 spent." },
+    { q: "When do I get Green Points?", a: "Instantly after a service booking is confirmed — 50 pts per ₹100 of service value (1 pt = ₹0.10). Shop product purchases don't earn points." },
     { q: "Can I return Biovelocity products?", a: "Sealed bottles within 7 days are eligible. Opened bottles are non-returnable." },
   ];
 

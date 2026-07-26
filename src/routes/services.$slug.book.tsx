@@ -62,6 +62,8 @@ function BookPage() {
   const extrasTotal = bio.filter(p => extras.includes(p.id)).reduce((n, p) => n + p.price, 0);
   const taxes = Math.round((service.price + subsTotal) * 0.05);
   const total = service.price + subsTotal + extrasTotal + taxes;
+  // Green Points are earned on service value only (not products/taxes): 50 pts per ₹100
+  const pointsEarned = Math.floor((service.price + subsTotal) / 100) * 50;
 
 
   const past = initialBookings.filter(b => b.status === "past").slice(0, 5);
@@ -77,7 +79,7 @@ function BookPage() {
       time: slot, gardener: extend ? past.find(p => p.id === extend)!.gardener : "Auto-assigned",
       address: addresses.find(a => a.id === addrId)?.line ?? newAddr, status: "upcoming", price: total, note,
     });
-    profile.addPoints(Math.floor(total / 100) * 50);
+    profile.addPoints(pointsEarned);
     toast.success("Booking confirmed! Green points added.");
     navigate({ to: "/bookings" });
   };
@@ -216,7 +218,7 @@ function BookPage() {
             <div className="mt-4 rounded-lg bg-muted p-3 text-xs">
               <p>📅 {date?.toDateString()} · {slot}</p>
               <p className="mt-1">📍 {addresses.find(a => a.id === addrId)?.line ?? newAddr}</p>
-              <p className="mt-1">🌱 Earn {Math.floor(total / 100) * 50} Green Points</p>
+              <p className="mt-1">🌱 Earn {pointsEarned} Green Points on service value (1 pt = ₹0.10)</p>
             </div>
           </Card>
         </div>
