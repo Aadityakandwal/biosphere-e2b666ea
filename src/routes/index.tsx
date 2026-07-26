@@ -40,12 +40,6 @@ function Home() {
   const featured = services.find((s) => s.slug === "garden-care")!;
   const secondary = [services.find((s) => s.slug === "lawn-garden")!, services.find((s) => s.slug === "basic-maintenance")!];
 
-  const serviceTiles = [
-    { name: "Plant Setup", cat: "setup", Icon: Sprout },
-    { name: "Care & Maintenance", cat: "care", Icon: Leaf },
-    { name: "Consultation", cat: "consult", Icon: Users },
-  ];
-
   const catTiles = [
     { name: "Plants", cat: "plants", Icon: Sprout },
     { name: "Tools", cat: "tools", Icon: Hammer },
