@@ -7,6 +7,9 @@ import { Search, Sprout, Hammer, FlaskConical, Flower2, LayoutGrid, Plus, Chevro
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/shop")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    cat: typeof search.cat === "string" ? search.cat : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Shop — Biosphere" },
@@ -36,8 +39,12 @@ const CAT_LABEL: Record<string, string> = {
 };
 
 function ShopPage() {
+  const { cat: catParam } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const [q, setQ] = useState("");
-  const [cat, setCat] = useState<string>("all");
+  const cat = catParam ?? "all";
+  const setCat = (next: string) =>
+    navigate({ search: { cat: next === "all" ? undefined : next }, replace: true });
   const add = useCart((s) => s.add);
 
   const filtered = products.filter(

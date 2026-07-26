@@ -3,7 +3,7 @@ import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { services, products, reviews, seasonalTips } from "@/lib/data";
-import { Search, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, Droplets, Flower2 } from "lucide-react";
+import { Search, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, FlaskConical, Flower2 } from "lucide-react";
 import { useCart } from "@/lib/stores";
 import { toast } from "sonner";
 
@@ -41,10 +41,10 @@ function Home() {
   const secondary = [services.find((s) => s.slug === "lawn-garden")!, services.find((s) => s.slug === "basic-maintenance")!];
 
   const catTiles = [
-    { name: "Plants", to: "/shop", Icon: Sprout },
-    { name: "Tools", to: "/shop", Icon: Hammer },
-    { name: "Soil", to: "/shop", Icon: Droplets },
-    { name: "Seeds", to: "/shop", Icon: Flower2 },
+    { name: "Plants", cat: "plants", Icon: Sprout },
+    { name: "Tools", cat: "tools", Icon: Hammer },
+    { name: "Biovelocity", cat: "biovelocity", Icon: FlaskConical },
+    { name: "Pots", cat: "pots", Icon: Flower2 },
   ];
 
   return (
@@ -96,10 +96,11 @@ function Home() {
       {/* Shop categories */}
       <SectionRow title="Shop Categories" href="/shop" />
       <div className="grid grid-cols-4 gap-3">
-        {catTiles.map(({ name, to, Icon }) => (
+        {catTiles.map(({ name, cat, Icon }) => (
           <Link
             key={name}
-            to={to}
+            to="/shop"
+            search={{ cat }}
             className="flex flex-col items-center gap-2 rounded-3xl border border-border bg-card py-4 shadow-soft transition hover:-translate-y-1 hover:border-primary/30 hover:shadow-elevated press"
           >
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-primary">
