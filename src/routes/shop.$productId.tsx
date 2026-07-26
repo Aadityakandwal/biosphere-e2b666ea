@@ -17,9 +17,9 @@ export const Route = createFileRoute("/shop/$productId")({
   head: ({ loaderData }) => ({
     meta: [
       { title: `${loaderData?.product.name ?? "Product"} — Biosphere Shop` },
-      { name: "description", content: loaderData?.product.short ?? "" },
+      { name: "description", content: (loaderData?.product.description ?? loaderData?.product.short ?? "").slice(0, 155) },
       { property: "og:title", content: `${loaderData?.product.name ?? "Product"} — Biosphere Shop` },
-      { property: "og:description", content: loaderData?.product.short ?? "" },
+      { property: "og:description", content: (loaderData?.product.description ?? loaderData?.product.short ?? "").slice(0, 155) },
       ...(loaderData?.product.image ? [
         { property: "og:image", content: loaderData.product.image },
         { name: "twitter:image", content: loaderData.product.image },
@@ -49,6 +49,8 @@ function ProductPage() {
         </div>
       </div>
 
+      <ProductDetails product={product} />
+
       {isNeerva && <NeervaGuide />}
 
       <div className="fixed inset-x-0 bottom-14 z-30">
@@ -59,6 +61,36 @@ function ProductPage() {
       </div>
       <div className="h-20" />
     </Shell>
+  );
+}
+
+function ProductDetails({ product }: { product: (typeof products)[number] }) {
+  return (
+    <div className="mt-6 space-y-4">
+      <Card className="p-4">
+        <h2 className="font-display text-lg font-semibold">About this product</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{product.description}</p>
+      </Card>
+
+      <Card className="p-4">
+        <h3 className="font-medium">Highlights</h3>
+        <ul className="mt-3 space-y-2 text-sm">
+          {product.highlights.map((h) => (
+            <li key={h} className="flex gap-2">
+              <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+              <span className="text-muted-foreground">{h}</span>
+            </li>
+          ))}
+        </ul>
+      </Card>
+
+      {product.care && (
+        <Card className="p-4">
+          <h3 className="font-medium">Care &amp; usage</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{product.care}</p>
+        </Card>
+      )}
+    </div>
   );
 }
 
