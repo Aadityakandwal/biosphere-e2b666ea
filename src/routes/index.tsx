@@ -188,9 +188,9 @@ function Home() {
 
       {/* Reviews */}
       <SectionRow title="Recent Reviews" />
-      <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
+      <div className="flex flex-col gap-3">
         {reviews.map((r) => (
-          <Card key={r.name} className="min-w-[72%] snap-start p-4 shadow-soft">
+          <Card key={r.name} className="p-4 shadow-soft">
             <div className="flex items-center gap-2">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-bold text-primary">
                 {r.name.charAt(0)}
