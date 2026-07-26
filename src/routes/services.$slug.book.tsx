@@ -201,6 +201,10 @@ function BookPage() {
             <p className="text-sm font-medium">Order summary</p>
             <div className="mt-3 space-y-2 text-sm">
               <Row label={service.name} value={`₹${service.price}`} />
+              {pickedSubs.map((s) => (
+                <Row key={s.id} label={<span className="text-muted-foreground">+ {s.name}</span>} value={`₹${s.price}`} />
+              ))}
+
               {extras.map(id => {
                 const p = bio.find(x => x.id === id)!;
                 return <Row key={id} label={p.name} value={`₹${p.price}`} />;
