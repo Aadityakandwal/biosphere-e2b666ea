@@ -21,6 +21,7 @@ import { Route as BookingsIndexRouteImport } from './routes/bookings.index'
 import { Route as ShopProductIdRouteImport } from './routes/shop.$productId'
 import { Route as ProfileSupportRouteImport } from './routes/profile.support'
 import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
+import { Route as ProfileOrdersRouteImport } from './routes/profile.orders'
 import { Route as ProfileMembershipRouteImport } from './routes/profile.membership'
 import { Route as ProfileGreenPointsRouteImport } from './routes/profile.green-points'
 import { Route as ProfileEditRouteImport } from './routes/profile.edit'
@@ -89,6 +90,11 @@ const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
   path: '/profile/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileOrdersRoute = ProfileOrdersRouteImport.update({
+  id: '/profile/orders',
+  path: '/profile/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileMembershipRoute = ProfileMembershipRouteImport.update({
   id: '/profile/membership',
   path: '/profile/membership',
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/profile/edit': typeof ProfileEditRoute
   '/profile/green-points': typeof ProfileGreenPointsRoute
   '/profile/membership': typeof ProfileMembershipRoute
+  '/profile/orders': typeof ProfileOrdersRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/profile/edit': typeof ProfileEditRoute
   '/profile/green-points': typeof ProfileGreenPointsRoute
   '/profile/membership': typeof ProfileMembershipRoute
+  '/profile/orders': typeof ProfileOrdersRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/profile/edit': typeof ProfileEditRoute
   '/profile/green-points': typeof ProfileGreenPointsRoute
   '/profile/membership': typeof ProfileMembershipRoute
+  '/profile/orders': typeof ProfileOrdersRoute
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
@@ -202,6 +211,7 @@ export interface FileRouteTypes {
     | '/profile/edit'
     | '/profile/green-points'
     | '/profile/membership'
+    | '/profile/orders'
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
     | '/profile/edit'
     | '/profile/green-points'
     | '/profile/membership'
+    | '/profile/orders'
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/profile/edit'
     | '/profile/green-points'
     | '/profile/membership'
+    | '/profile/orders'
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
@@ -266,6 +278,7 @@ export interface RootRouteChildren {
   ProfileEditRoute: typeof ProfileEditRoute
   ProfileGreenPointsRoute: typeof ProfileGreenPointsRoute
   ProfileMembershipRoute: typeof ProfileMembershipRoute
+  ProfileOrdersRoute: typeof ProfileOrdersRoute
   ProfileSettingsRoute: typeof ProfileSettingsRoute
   ProfileSupportRoute: typeof ProfileSupportRoute
   ShopProductIdRoute: typeof ShopProductIdRoute
@@ -363,6 +376,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile/orders': {
+      id: '/profile/orders'
+      path: '/profile/orders'
+      fullPath: '/profile/orders'
+      preLoaderRoute: typeof ProfileOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile/membership': {
       id: '/profile/membership'
       path: '/profile/membership'
@@ -426,6 +446,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileEditRoute: ProfileEditRoute,
   ProfileGreenPointsRoute: ProfileGreenPointsRoute,
   ProfileMembershipRoute: ProfileMembershipRoute,
+  ProfileOrdersRoute: ProfileOrdersRoute,
   ProfileSettingsRoute: ProfileSettingsRoute,
   ProfileSupportRoute: ProfileSupportRoute,
   ShopProductIdRoute: ShopProductIdRoute,

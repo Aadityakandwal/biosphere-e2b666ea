@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/Shell";
 import { useProfile, useBookings, useOrders } from "@/lib/stores";
-import { ChevronRight, User, CalendarDays, Leaf, Award, Settings, HelpCircle, LogOut } from "lucide-react";
+import { ChevronRight, User, CalendarDays, Package, Leaf, Award, Settings, HelpCircle, LogOut } from "lucide-react";
 
 export const Route = createFileRoute("/profile/")({
   head: () => ({
