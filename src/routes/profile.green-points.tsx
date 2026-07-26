@@ -25,9 +25,6 @@ type Reward = { id: string; name: string; sub: string; cost: number; image: stri
 
 const rewards: Reward[] = [
   { id: "neerva", name: "Neerva — Bio Growth Tonic (1L)", sub: "Biovelocity", cost: 2500, image: products.find((x) => x.id === "neerva")!.image },
-  { id: "biorooter", name: "BioRooter Starter", sub: "Biovelocity", cost: 1800, image: products.find((x) => x.id === "biorooter")!.image },
-  { id: "terracotta", name: "Terracotta Pot (Medium)", sub: "Pots", cost: 1500, image: products.find((x) => x.id === "terracotta")!.image },
-  { id: "video-consult", name: "Free Video Consultation", sub: "30 min with a botanist", cost: 1200, image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400" },
 ];
 
 function GreenPointsPage() {
