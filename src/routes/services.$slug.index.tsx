@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { services, reviews } from "@/lib/data";
 import { Clock, Star, ArrowLeft } from "lucide-react";
 
-export const Route = createFileRoute("/services/$slug")({
+export const Route = createFileRoute("/services/$slug/")({
   loader: ({ params }) => {
     const s = services.find((x) => x.slug === params.slug);
     if (!s) throw notFound();
