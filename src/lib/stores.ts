@@ -116,3 +116,20 @@ export const useAddresses = create<AddrState>()(
     { name: "bio-addresses" }
   )
 );
+
+/* ---------- UI preferences (reduced motion) ---------- */
+type PrefsState = {
+  /** "system" follows prefers-reduced-motion; "on"/"off" override it. */
+  reducedMotion: "system" | "on" | "off";
+  setReducedMotion: (v: "system" | "on" | "off") => void;
+};
+
+export const usePrefs = create<PrefsState>()(
+  persist(
+    (set) => ({
+      reducedMotion: "system",
+      setReducedMotion: (v) => set({ reducedMotion: v }),
+    }),
+    { name: "bio-prefs" }
+  )
+);
