@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/Shell";
-import { Card } from "@/components/ui/card";
 import { useProfile, useBookings, useOrders } from "@/lib/stores";
-import { ChevronRight, User, CalendarDays, Leaf, Crown, Settings, HelpCircle } from "lucide-react";
+import { ChevronRight, User, CalendarDays, Leaf, Award, Settings, HelpCircle, LogOut } from "lucide-react";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -25,50 +24,73 @@ function ProfilePage() {
     { to: "/profile/edit", icon: User, label: "My Profile", hint: "Edit personal info" },
     { to: "/profile/bookings", icon: CalendarDays, label: "My Bookings", hint: `${bookings.length} total` },
     { to: "/profile/green-points", icon: Leaf, label: "Redeem Green Points", hint: `${p.greenPoints} pts available` },
-    { to: "/profile/membership", icon: Crown, label: "Membership Pass", hint: "Basic · Pro · Elite" },
+    { to: "/profile/membership", icon: Award, label: "Membership Pass", hint: "Basic · Pro · Elite" },
     { to: "/profile/settings", icon: Settings, label: "Settings", hint: "Notifications, privacy" },
     { to: "/profile/support", icon: HelpCircle, label: "Help & Support", hint: "WhatsApp · Email · Phone" },
   ] as const;
 
   return (
     <Shell>
-      <div className="mt-3 flex items-center gap-4">
-        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120" alt="" className="h-16 w-16 rounded-full object-cover ring-2 ring-primary/20" />
-        <div>
-          <p className="font-display text-xl font-semibold">{p.name}</p>
-          <p className="text-sm text-muted-foreground">{p.email}</p>
+      {/* Avatar + badge */}
+      <div className="mt-6 flex flex-col items-center">
+        <div className="relative">
+          <img
+            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=240"
+            alt={p.name}
+            className="h-28 w-28 rounded-full object-cover ring-4 ring-primary/90 ring-offset-2 ring-offset-background"
+          />
+          <span className="absolute -bottom-3 left-1/2 w-max -translate-x-1/2 rounded-full bg-primary px-4 py-1.5 text-center text-[11px] font-semibold leading-tight text-primary-foreground shadow-[var(--shadow-elevated)]">
+            Elite<br />Caretaker
+          </span>
         </div>
+        <h1 className="mt-7 font-display text-3xl font-bold tracking-tight">{p.name}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Gardening enthusiast since 2021</p>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-2">
-        <Stat label="Green Points" value={p.greenPoints} />
-        <Stat label="Bookings" value={bookings.length} />
-        <Stat label="Orders" value={orders.length} />
+      {/* Stats */}
+      <div className="mt-6 grid grid-cols-3 gap-3">
+        <Stat value={`${orders.length + 8}`} label="My Plants" />
+        <Stat value="12" label="Care Streak" accent />
+        <Stat value="92%" label="Garden Health" accent />
       </div>
 
-      <div className="mt-6 space-y-2">
+      <h2 className="mt-8 font-display text-2xl font-bold tracking-tight">Settings &amp; Tools</h2>
+
+      <div className="mt-4 space-y-3">
         {sections.map(s => (
-          <Link key={s.to} to={s.to}>
-            <Card className="flex items-center gap-3 p-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary"><s.icon className="h-5 w-5" /></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">{s.label}</p>
-                <p className="text-xs text-muted-foreground">{s.hint}</p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            </Card>
+          <Link
+            key={s.to}
+            to={s.to}
+            className="flex items-center gap-4 rounded-[28px] border border-border/40 bg-card px-4 py-4 shadow-[var(--shadow-soft)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-elevated)] active:scale-[0.99]"
+          >
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <s.icon className="h-5 w-5" />
+            </span>
+            <span className="flex-1">
+              <span className="block font-display text-base font-semibold leading-tight">{s.label}</span>
+              <span className="block text-xs text-muted-foreground">{s.hint}</span>
+            </span>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </Link>
         ))}
       </div>
+
+      <button
+        type="button"
+        className="mx-auto mt-8 flex items-center gap-2 rounded-full px-4 py-2 text-base font-medium text-destructive transition-colors hover:bg-destructive/10"
+      >
+        <LogOut className="h-5 w-5" />
+        Sign Out
+      </button>
     </Shell>
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+function Stat({ value, label, accent }: { value: string; label: string; accent?: boolean }) {
   return (
-    <Card className="p-3 text-center">
-      <p className="font-display text-xl font-semibold">{value}</p>
-      <p className="text-[11px] text-muted-foreground">{label}</p>
-    </Card>
+    <div className="rounded-3xl border border-border/40 bg-card px-2 py-4 text-center shadow-[var(--shadow-soft)]">
+      <p className={`font-display text-2xl font-bold ${accent ? "text-primary" : ""}`}>{value}</p>
+      <p className="mt-1 text-xs leading-tight text-muted-foreground">{label}</p>
+    </div>
   );
 }
