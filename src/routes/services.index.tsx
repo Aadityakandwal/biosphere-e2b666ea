@@ -134,7 +134,7 @@ function ServicesPage() {
 
           <div className="mt-3 space-y-3">
             {restSetup.map((s) => (
-              <div key={s.slug} className="surface surface-hover flex items-center gap-4 rounded-3xl p-4">
+              <div key={s.slug} className="surface surface-hover media-zoom flex items-center gap-4 rounded-3xl p-4">
                 <img src={s.image} alt={s.name} className="h-16 w-16 shrink-0 rounded-full object-cover" />
                 <div className="min-w-0 flex-1">
                   <Link to="/services/$slug" params={{ slug: s.slug }} className="block">
@@ -166,7 +166,7 @@ function ServicesPage() {
           <SectionTitle title="Care & Maintenance" count={care.length} />
           <div className="space-y-3">
             {care.map((s) => (
-              <div key={s.slug} className="surface surface-hover flex items-center gap-4 rounded-3xl p-4">
+              <div key={s.slug} className="surface surface-hover media-zoom flex items-center gap-4 rounded-3xl p-4">
                 <img src={s.image} alt={s.name} className="h-16 w-16 shrink-0 rounded-full object-cover" />
                 <div className="min-w-0 flex-1">
                   <Link to="/services/$slug" params={{ slug: s.slug }} className="block">
@@ -219,7 +219,7 @@ function ServicesPage() {
             <Link
               to="/services/$slug"
               params={{ slug: soil.slug }}
-              className="press mt-3 flex items-center gap-3 rounded-3xl bg-secondary/70 p-4 shadow-soft transition hover:shadow-elevated"
+              className="press sheen mt-3 flex items-center gap-3 rounded-3xl bg-secondary/70 p-4 shadow-soft transition hover:shadow-elevated"
             >
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-card">
                 <FlaskConical className="h-5 w-5 text-primary" />

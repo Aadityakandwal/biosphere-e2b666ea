@@ -161,9 +161,12 @@
 }
 
 @utility press {
-  transition: transform 150ms var(--ease-out-soft), box-shadow 200ms var(--ease-out-soft);
+  transition: transform 220ms cubic-bezier(0.2, 0.9, 0.25, 1), box-shadow 220ms var(--ease-out-soft), filter 220ms var(--ease-out-soft);
+  &:hover {
+    filter: saturate(1.03);
+  }
   &:active {
-    transform: scale(0.97);
+    transform: scale(0.965);
   }
 }
 
@@ -186,6 +189,64 @@
   animation: shimmer 1.6s var(--ease-out-soft) infinite;
 }
 
+
+/* ---------- Page & element motion ---------- */
+@keyframes rise-in {
+  0% { opacity: 0; transform: translateY(14px) scale(0.995); }
+  100% { opacity: 1; transform: none; }
+}
+
+@utility page-enter {
+  & > * {
+    animation: rise-in 520ms var(--ease-out-soft) both;
+  }
+  & > *:nth-child(1) { animation-delay: 0ms; }
+  & > *:nth-child(2) { animation-delay: 60ms; }
+  & > *:nth-child(3) { animation-delay: 120ms; }
+  & > *:nth-child(4) { animation-delay: 180ms; }
+  & > *:nth-child(5) { animation-delay: 240ms; }
+  & > *:nth-child(6) { animation-delay: 300ms; }
+  & > *:nth-child(n+7) { animation-delay: 340ms; }
+}
+
+@utility rise {
+  animation: rise-in 520ms var(--ease-out-soft) both;
+}
+
+/* Smooth media zoom inside hover cards */
+@utility media-zoom {
+  overflow: hidden;
+  & img {
+    transition: transform 600ms var(--ease-out-soft);
+  }
+  &:hover img {
+    transform: scale(1.06);
+  }
+}
+
+/* Soft sheen sweep for premium CTAs */
+@keyframes sheen {
+  0% { transform: translateX(-120%) skewX(-18deg); }
+  100% { transform: translateX(220%) skewX(-18deg); }
+}
+
+@utility sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.28), transparent);
+    transform: translateX(-120%) skewX(-18deg);
+    pointer-events: none;
+  }
+  &:hover::after {
+    animation: sheen 900ms var(--ease-out-soft);
+  }
+}
 
 /* ---------- Loading / splash animations ---------- */
 @keyframes splash-ring {
@@ -220,6 +281,8 @@
 .reduce-motion .splash-logo,
 .reduce-motion .splash-word,
 .reduce-motion .splash-bar,
+.reduce-motion .page-enter > *,
+.reduce-motion .rise,
 .reduce-motion .shimmer {
   animation: none !important;
 }

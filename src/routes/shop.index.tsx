@@ -71,7 +71,7 @@ function ShopPage() {
       <Link
         to="/shop/$productId"
         params={{ productId: p.id }}
-        className="relative block overflow-hidden rounded-3xl shadow-soft ring-1 ring-border/40 transition-shadow duration-300 group-hover:shadow-elevated"
+        className="media-zoom relative block overflow-hidden rounded-3xl shadow-soft ring-1 ring-border/40 transition-shadow duration-300 group-hover:shadow-elevated"
       >
         <img
           src={p.image}
