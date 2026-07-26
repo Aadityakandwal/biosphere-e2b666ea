@@ -4,7 +4,7 @@ import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { services, products, reviews, seasonalTips } from "@/lib/data";
-import { Search, Camera, Upload, Sparkles, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, Droplets, Flower2 } from "lucide-react";
+import { Search, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, Droplets, Flower2 } from "lucide-react";
 import { useCart } from "@/lib/stores";
 import { toast } from "sonner";
 
@@ -34,23 +34,8 @@ function SectionRow({ title, href }: { title: string; href?: string }) {
 }
 
 function Home() {
-  const [scan, setScan] = useState<null | { plant: string; issue: string; solution: string }>(null);
-  const [scanning, setScanning] = useState(false);
-  const [showDoctor, setShowDoctor] = useState(false);
   const add = useCart((s) => s.add);
   const tip = seasonalTips[new Date().getDate() % seasonalTips.length];
-
-  const runScan = () => {
-    setScanning(true);
-    setTimeout(() => {
-      setScan({
-        plant: "Money Plant (Epipremnum aureum)",
-        issue: "Mild nitrogen deficiency & early root stress. Leaves show yellowing between veins.",
-        solution: "Foliar spray with a microbial bio-tonic, improve drainage, and reduce watering frequency to every 5–6 days.",
-      });
-      setScanning(false);
-    }, 1200);
-  };
 
   const hero = services.find((s) => s.slug === "balcony-garden")!;
   const featured = services.find((s) => s.slug === "garden-care")!;
