@@ -4,7 +4,7 @@ import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { services, products, reviews, seasonalTips } from "@/lib/data";
-import { Search, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, FlaskConical, Flower2, ChevronDown } from "lucide-react";
+import { Search, Star, ArrowRight, Clock, Leaf, Sprout, Hammer, FlaskConical, Flower2, ChevronDown, Quote } from "lucide-react";
 import { useCart } from "@/lib/stores";
 import { toast } from "sonner";
 
@@ -183,22 +183,47 @@ function Home() {
 
       {/* Reviews */}
       <SectionRow title="Recent Reviews" />
-      <div className="flex flex-col gap-3">
-        {reviews.map((r) => (
-          <Card key={r.name} className="p-4 shadow-soft">
-            <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-bold text-primary">
-                {r.name.charAt(0)}
-              </span>
-              <p className="font-semibold">{r.name}</p>
-            </div>
-            <div className="mt-2 flex items-center gap-0.5 text-primary">
-              {Array.from({ length: r.rating }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-current" />)}
-            </div>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">"{r.text}"</p>
-            <p className="mt-3 text-xs text-muted-foreground/80">{r.service}</p>
-          </Card>
-        ))}
+      <div className="relative -mx-4">
+        <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-6 scrollbar-hide">
+          {reviews.map((r, idx) => (
+            <Card
+              key={r.name}
+              className="relative w-[280px] flex-none snap-start overflow-hidden border-0 bg-gradient-to-br from-card to-muted p-5 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-elevated"
+            >
+              <Quote className="absolute right-4 top-4 h-8 w-8 text-primary/10" />
+              <div className="flex items-center gap-3">
+                <span
+                  className="flex h-11 w-11 flex-none items-center justify-center rounded-full text-sm font-bold"
+                  style={{
+                    background: `oklch(0.88 0.06 ${130 + (idx * 25) % 90})`,
+                    color: `oklch(0.28 0.07 ${130 + (idx * 25) % 90})`,
+                  }}
+                >
+                  {r.name.charAt(0)}
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate font-display font-semibold">{r.name}</p>
+                  <div className="flex items-center gap-0.5 text-primary">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`h-3 w-3 ${i < r.rating ? "fill-current" : "text-muted-foreground/30"}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                “{r.text}”
+              </p>
+              <div className="mt-5 flex items-center gap-2">
+                <span className="rounded-full bg-leaf/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+                  {r.service}
+                </span>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
     </Shell>
   );
