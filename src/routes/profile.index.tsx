@@ -3,7 +3,7 @@ import { Shell } from "@/components/Shell";
 import { useProfile, useBookings, useOrders } from "@/lib/stores";
 import { ChevronRight, User, CalendarDays, Leaf, Award, Settings, HelpCircle, LogOut } from "lucide-react";
 
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/profile/")({
   head: () => ({
     meta: [
       { title: "Profile — Biosphere" },

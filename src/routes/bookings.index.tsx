@@ -5,7 +5,7 @@ import { useBookings } from "@/lib/stores";
 import { services, categories } from "@/lib/data";
 import { CalendarDays, Clock, Star, CheckCircle2, RotateCw, Plus, Leaf } from "lucide-react";
 
-export const Route = createFileRoute("/bookings")({
+export const Route = createFileRoute("/bookings/")({
   head: () => ({
     meta: [
       { title: "My Bookings — Biosphere" },
