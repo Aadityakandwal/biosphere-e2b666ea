@@ -179,7 +179,7 @@ export const seasonalTips: SeasonalTip[] = [
     title: "Drainage is everything",
     description: "Check pot drainage holes weekly — waterlogged roots are the #1 killer this season.",
     readTime: "4 min read",
-    image: "https://images.unsplash.com/photo-1518531939917-3b140c0f1d72?w=400",
+    image: "https://images.unsplash.com/photo-1459156212016-c812468e2115?w=400",
   },
   {
     id: "t3",
@@ -187,7 +187,7 @@ export const seasonalTips: SeasonalTip[] = [
     title: "Keep tropicals cosy",
     description: "Move tropical plants away from cold window glass at night and avoid overwatering.",
     readTime: "3 min read",
-    image: "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=400",
+    image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400",
   },
   {
     id: "t4",
@@ -195,7 +195,7 @@ export const seasonalTips: SeasonalTip[] = [
     title: "Slow down on fertiliser",
     description: "Reduce fertiliser as growth naturally slows down; let plants rest before winter.",
     readTime: "2 min read",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400",
   },
   {
     id: "t5",
@@ -203,7 +203,7 @@ export const seasonalTips: SeasonalTip[] = [
     title: "Spot pests before they spread",
     description: "Inspect leaf undersides every few days; neem oil works wonders on early infestations.",
     readTime: "5 min read",
-    image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eebd?w=400",
+    image: "https://images.unsplash.com/photo-1416772331340-e5b74319a1ce?w=400",
   },
   {
     id: "t6",
@@ -211,7 +211,7 @@ export const seasonalTips: SeasonalTip[] = [
     title: "Roots need room to breathe",
     description: "If roots peek through the drainage hole, it's time to repot in fresh, airy soil.",
     readTime: "4 min read",
-    image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400",
+    image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=400",
   },
   {
     id: "t7",
@@ -219,7 +219,7 @@ export const seasonalTips: SeasonalTip[] = [
     title: "Rotate for even growth",
     description: "Give your pots a quarter turn every week so all sides get balanced light.",
     readTime: "2 min read",
-    image: "https://images.unsplash.com/photo-1545241047-6083a3684587?w=400",
+    image: "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=400",
   },
   {
     id: "t8",
