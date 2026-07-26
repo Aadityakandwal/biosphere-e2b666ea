@@ -10,7 +10,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { services, products, initialBookings } from "@/lib/data";
 import { useAddresses, useBookings, useCart, useProfile } from "@/lib/stores";
-import { ArrowLeft, MapPin, Plus, Check } from "lucide-react";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ArrowLeft, MapPin, Plus, Check, CalendarDays, Clock, Home } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/services/$slug/book")({
@@ -31,6 +32,12 @@ export const Route = createFileRoute("/services/$slug/book")({
 const SLOTS = ["9:00 AM", "10:30 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM"];
 
 // Deterministic per-date availability so slots feel real.
+function sameDay(a: Date, b: Date) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+
+const EMPTY_FORM = { label: "Home", name: "", phone: "", house: "", area: "", locality: "", landmark: "", city: "", state: "", pincode: "" };
+
 function slotAvailability(date?: Date) {
   const seed = date ? date.getDate() + date.getMonth() * 31 : 0;
   return SLOTS.map((s, i) => ({ slot: s, available: (seed + i * 3) % 5 !== 0 }));
@@ -47,7 +54,31 @@ function BookPage() {
   const [slot, setSlot] = useState<string>(SLOTS[1]);
   const { addresses, add: addAddr } = useAddresses();
   const [addrId, setAddrId] = useState(addresses[0]?.id);
-  const [newAddr, setNewAddr] = useState("");
+  const [newAddr] = useState("");
+  const [addrOpen, setAddrOpen] = useState(false);
+  const [form, setForm] = useState(EMPTY_FORM);
+
+  const quickDates = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + i);
+    return { label: i === 0 ? "Today" : i === 1 ? "Tmrw" : d.toLocaleDateString(undefined, { weekday: "short" }), date: d };
+  });
+
+  const saveAddress = () => {
+    if (!form.house.trim() || !form.area.trim() || !form.city.trim() || form.pincode.length !== 6) {
+      toast.error("Add house, area, city and a 6-digit pincode.");
+      return;
+    }
+    const line = [form.house, form.area, form.locality, form.landmark && `near ${form.landmark}`, form.city, form.state, form.pincode]
+      .filter(Boolean).join(", ");
+    const id = "a" + Date.now();
+    addAddr({ id, label: form.label, line });
+    setAddrId(id);
+    setForm(EMPTY_FORM);
+    setAddrOpen(false);
+    toast.success("Address added");
+  };
   const [note, setNote] = useState("");
   const [extend, setExtend] = useState<string | null>(null);
   const [extras, setExtras] = useState<string[]>([]);
@@ -100,58 +131,149 @@ function BookPage() {
       <p className="mt-2 text-xs text-muted-foreground">Step {step} of 3 · {["Date & Address", "Notes & Extras", "Payment"][step-1]}</p>
 
       {step === 1 && (
-        <div className="mt-4 space-y-4">
-          <Card className="p-3">
-            <p className="mb-2 text-sm font-medium">Select date</p>
-            <Calendar mode="single" selected={date} onSelect={setDate} disabled={(d) => d < new Date(Date.now() - 86400000)} className="pointer-events-auto" />
+        <div key="step1" className="page-enter mt-4 space-y-4">
+          <Card className="overflow-hidden p-0">
+            <div className="flex items-center justify-between gap-3 bg-gradient-to-r from-primary/10 to-transparent px-4 py-3">
+              <div className="flex items-center gap-2">
+                <CalendarDays className="h-4 w-4 text-primary" />
+                <p className="text-sm font-semibold">Select date</p>
+              </div>
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                {date ? date.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" }) : "Pick a day"}
+              </span>
+            </div>
+
+            <div className="scrollbar-hide flex gap-2 overflow-x-auto px-4 pt-3">
+              {quickDates.map((q) => {
+                const active = date && sameDay(date, q.date);
+                return (
+                  <button
+                    key={q.label}
+                    onClick={() => setDate(q.date)}
+                    className={`press flex min-w-[76px] flex-col items-center rounded-2xl border px-3 py-2 transition-all duration-300 ${
+                      active ? "border-primary bg-primary text-primary-foreground shadow-glow" : "border-border bg-card hover:border-primary/40"
+                    }`}
+                  >
+                    <span className="text-[10px] uppercase tracking-wide opacity-80">{q.label}</span>
+                    <span className="text-base font-semibold leading-tight">{q.date.getDate()}</span>
+                    <span className="text-[10px] opacity-80">{q.date.toLocaleDateString(undefined, { month: "short" })}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="px-2 pb-3">
+              <Calendar mode="single" selected={date} onSelect={setDate} disabled={(d) => d < new Date(Date.now() - 86400000)} className="pointer-events-auto mx-auto" />
+            </div>
           </Card>
-          <Card className="p-3">
-            <p className="mb-2 text-sm font-medium">Available slots</p>
+
+          <Card className="p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-primary" />
+                <p className="text-sm font-semibold">Available slots</p>
+              </div>
+              <span className="text-xs text-muted-foreground">{slots.filter((s) => s.available).length} open</span>
+            </div>
             <div className="grid grid-cols-3 gap-2">
-              {slots.map(({ slot: s, available }) => (
+              {slots.map(({ slot: s, available }, i) => (
                 <button
                   key={s}
                   disabled={!available}
                   onClick={() => setSlot(s)}
-                  className={`rounded-lg border p-2 text-sm transition ${
+                  style={{ animationDelay: `${i * 45}ms` }}
+                  className={`rise press rounded-xl border px-2 py-2.5 text-sm font-medium transition-all duration-300 ${
                     !available
                       ? "cursor-not-allowed border-dashed border-border text-muted-foreground/50 line-through"
                       : slot === s
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border"
+                        ? "border-primary bg-primary text-primary-foreground shadow-glow"
+                        : "border-border bg-card hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-soft"
                   }`}
                 >{s}</button>
               ))}
             </div>
-            <p className="mt-2 text-xs text-muted-foreground">Struck-out slots are fully booked for this date.</p>
-
+            <p className="mt-3 text-xs text-muted-foreground">Struck-out slots are fully booked for this date.</p>
           </Card>
-          <Card className="p-3">
-            <p className="mb-2 text-sm font-medium">Service address</p>
-            <div className="space-y-2">
-              {addresses.map(a => (
-                <label key={a.id} className="flex cursor-pointer items-start gap-3 rounded-lg border border-border p-3">
-                  <input type="radio" name="addr" checked={addrId === a.id} onChange={() => setAddrId(a.id)} />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{a.label}</p>
-                    <p className="text-xs text-muted-foreground">{a.line}</p>
-                  </div>
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                </label>
-              ))}
-              <div className="flex gap-2">
-                <Input placeholder="Add new address…" value={newAddr} onChange={(e) => setNewAddr(e.target.value)} />
-                <Button variant="outline" size="icon" onClick={() => {
-                  if (!newAddr.trim()) return;
-                  const id = "a" + Date.now();
-                  addAddr({ id, label: "New", line: newAddr });
-                  setAddrId(id); setNewAddr("");
-                }}><Plus className="h-4 w-4" /></Button>
+
+          <Card className="p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-primary" />
+                <p className="text-sm font-semibold">Service address</p>
               </div>
+              <button
+                onClick={() => setAddrOpen(true)}
+                className="press inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary hover:text-primary-foreground"
+              >
+                <Plus className="h-3.5 w-3.5" /> Add address
+              </button>
+            </div>
+            <div className="space-y-2.5">
+              {addresses.map((a, i) => {
+                const active = addrId === a.id;
+                return (
+                  <button
+                    key={a.id}
+                    onClick={() => setAddrId(a.id)}
+                    style={{ animationDelay: `${i * 60}ms` }}
+                    className={`rise press flex w-full items-start gap-3 rounded-2xl border p-3.5 text-left transition-all duration-300 ${
+                      active ? "border-primary bg-primary/5 shadow-soft" : "border-border bg-card hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-soft"
+                    }`}
+                  >
+                    <span className={`mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full border transition-all duration-300 ${active ? "border-primary bg-primary" : "border-border"}`}>
+                      {active && <Check className="h-3 w-3 text-primary-foreground" />}
+                    </span>
+                    <span className="flex-1">
+                      <span className="flex items-center gap-2">
+                        <span className="text-sm font-semibold">{a.label}</span>
+                        {i === 0 && <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-secondary-foreground">Default</span>}
+                      </span>
+                      <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{a.line}</span>
+                    </span>
+                    <Home className="h-4 w-4 flex-none text-muted-foreground" />
+                  </button>
+                );
+              })}
             </div>
           </Card>
         </div>
       )}
+
+      <Dialog open={addrOpen} onOpenChange={setAddrOpen}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto rounded-3xl">
+          <DialogHeader>
+            <DialogTitle className="font-display">Add a new address</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="flex gap-2">
+              {(["Home", "Office", "Other"] as const).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setForm((f) => ({ ...f, label: l }))}
+                  className={`press flex-1 rounded-full border px-3 py-2 text-xs font-semibold transition ${
+                    form.label === l ? "border-primary bg-primary text-primary-foreground" : "border-border"
+                  }`}
+                >{l}</button>
+              ))}
+            </div>
+            <Input placeholder="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <Input placeholder="Phone number" inputMode="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            <Input placeholder="House / Flat / Building no." value={form.house} onChange={(e) => setForm({ ...form, house: e.target.value })} />
+            <Input placeholder="Area / Street / Sector" value={form.area} onChange={(e) => setForm({ ...form, area: e.target.value })} />
+            <Input placeholder="Locality / Colony" value={form.locality} onChange={(e) => setForm({ ...form, locality: e.target.value })} />
+            <Input placeholder="Landmark (optional)" value={form.landmark} onChange={(e) => setForm({ ...form, landmark: e.target.value })} />
+            <div className="grid grid-cols-2 gap-2">
+              <Input placeholder="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+              <Input placeholder="State" value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} />
+            </div>
+            <Input placeholder="Pincode" inputMode="numeric" maxLength={6} value={form.pincode} onChange={(e) => setForm({ ...form, pincode: e.target.value.replace(/\D/g, "") })} />
+          </div>
+          <DialogFooter>
+            <Button className="w-full" onClick={saveAddress}>Save address</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
 
       {step === 2 && (
         <div className="mt-4 space-y-4">
