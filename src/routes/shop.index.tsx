@@ -6,8 +6,8 @@ import { useCart } from "@/lib/stores";
 import { Search, Sprout, Hammer, FlaskConical, Flower2, LayoutGrid, Plus, ChevronRight, SlidersHorizontal } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/shop")({
-  validateSearch: (search: Record<string, unknown>) => ({
+export const Route = createFileRoute("/shop/")({
+  validateSearch: (search: Record<string, unknown>): { cat?: string } => ({
     cat: typeof search.cat === "string" ? search.cat : undefined,
   }),
   head: () => ({

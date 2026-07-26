@@ -14,7 +14,7 @@ import { ArrowLeft, MapPin, Plus, Check } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/services/$slug/book")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { subs?: string } => ({
     subs: typeof search.subs === "string" ? search.subs : undefined,
   }),
   loader: ({ params }) => {
