@@ -110,9 +110,10 @@ function BookingsPage() {
 
           <Link
             to="/services"
-            className="press mt-4 flex items-center justify-center gap-2 rounded-full bg-primary py-4 text-sm font-semibold text-primary-foreground shadow-glow"
+            className="press fixed bottom-20 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow"
+            aria-label="Book new service"
           >
-            <Plus className="h-4 w-4" /> Book New Service
+            <Plus className="h-5 w-5" />
           </Link>
         </section>
       ) : (
