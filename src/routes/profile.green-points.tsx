@@ -31,7 +31,7 @@ function GreenPointsPage() {
       <Card className="mt-4 bg-leaf/10 p-6 text-center">
         <Leaf className="mx-auto h-8 w-8 text-primary" />
         <p className="mt-2 font-display text-4xl font-semibold">{p.greenPoints}</p>
-        <p className="text-sm text-muted-foreground">≈ ₹{(p.greenPoints * 0.1).toFixed(0)} value</p>
+        
       </Card>
 
       <Card className="mt-4 p-4 text-sm">
