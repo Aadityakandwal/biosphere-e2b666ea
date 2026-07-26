@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/Shell";
 import { useProfile, useBookings, useOrders } from "@/lib/stores";
-import { ChevronRight, User, CalendarDays, Leaf, Award, Settings, HelpCircle, LogOut } from "lucide-react";
+import { ChevronRight, User, CalendarDays, Package, Leaf, Award, Settings, HelpCircle, LogOut } from "lucide-react";
 
 export const Route = createFileRoute("/profile/")({
   head: () => ({
@@ -23,6 +23,7 @@ function ProfilePage() {
   const sections = [
     { to: "/profile/edit", icon: User, label: "My Profile", hint: "Edit personal info" },
     { to: "/profile/bookings", icon: CalendarDays, label: "My Bookings", hint: `${bookings.length} total` },
+    { to: "/profile/orders", icon: Package, label: "My Orders", hint: `${orders.length} orders · track & invoices` },
     { to: "/profile/green-points", icon: Leaf, label: "Redeem Green Points", hint: `${p.greenPoints} pts available` },
     { to: "/profile/membership", icon: Award, label: "Membership Pass", hint: "Basic · Pro · Elite" },
     { to: "/profile/settings", icon: Settings, label: "Settings", hint: "Notifications, privacy" },

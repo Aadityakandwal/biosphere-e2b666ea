@@ -239,9 +239,58 @@ export const initialBookings = [
 ];
 
 export const initialOrders = [
-  { id: "ord-1042", date: "2026-07-12", total: 498, items: ["Neerva x2"], status: "Delivered" },
-  { id: "ord-1039", date: "2026-06-28", total: 1198, items: ["Monstera", "Ceramic Planter"], status: "Delivered" },
+  {
+    id: "ord-1051",
+    date: "2026-07-24",
+    total: 747,
+    items: ["Neerva — Bio Growth Tonic (1L) x2", "BioRooter Starter"],
+    status: "Out for delivery",
+    eta: "Arriving today by 7 PM",
+    stage: 2,
+    address: "Flat 402, Green Meadows, Greenwich",
+    images: [neervaAsset.url, "https://images.unsplash.com/photo-1462530260150-162092dbf011?w=400"],
+  },
+  {
+    id: "ord-1048",
+    date: "2026-07-21",
+    total: 1198,
+    items: ["Monstera Deliciosa", "Matte Ceramic Planter"],
+    status: "Shipped",
+    eta: "Arriving Tue, 28 Jul",
+    stage: 1,
+    address: "Flat 402, Green Meadows, Greenwich",
+    images: [
+      "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=400",
+      "https://images.unsplash.com/photo-1509423350716-97f9360b4e09?w=400",
+    ],
+  },
+  {
+    id: "ord-1042",
+    date: "2026-07-12",
+    total: 498,
+    items: ["Neerva — Bio Growth Tonic (1L) x2"],
+    status: "Delivered",
+    deliveredOn: "Delivered on Sat, 14 Jul",
+    stage: 3,
+    address: "Flat 402, Green Meadows, Greenwich",
+    images: [neervaAsset.url],
+  },
+  {
+    id: "ord-1039",
+    date: "2026-06-28",
+    total: 1198,
+    items: ["Monstera Deliciosa", "Matte Ceramic Planter"],
+    status: "Delivered",
+    deliveredOn: "Delivered on Mon, 30 Jun",
+    stage: 3,
+    address: "Flat 402, Green Meadows, Greenwich",
+    images: [
+      "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=400",
+      "https://images.unsplash.com/photo-1509423350716-97f9360b4e09?w=400",
+    ],
+  },
 ];
+
 
 export const membershipPlans = [
   { id: "basic", name: "Basic", price: 199, perks: ["6 AI Scans/day", "5% OFF paid gardener visits", "1 Free Video Call/mo", "Green Points"] },

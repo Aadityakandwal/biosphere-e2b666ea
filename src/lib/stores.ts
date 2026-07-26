@@ -54,7 +54,18 @@ export const useBookings = create<BookingState>()(
   )
 );
 
-type Order = { id: string; date: string; total: number; items: string[]; status: string };
+type Order = {
+  id: string;
+  date: string;
+  total: number;
+  items: string[];
+  status: string;
+  eta?: string;
+  deliveredOn?: string;
+  stage?: number;
+  address?: string;
+  images?: string[];
+};
 type OrderState = { orders: Order[]; add: (o: Order) => void };
 
 export const useOrders = create<OrderState>()(
@@ -63,7 +74,7 @@ export const useOrders = create<OrderState>()(
       orders: initialOrders,
       add: (o) => set((s) => ({ orders: [o, ...s.orders] })),
     }),
-    { name: "bio-orders" }
+    { name: "bio-orders-v2" }
   )
 );
 
