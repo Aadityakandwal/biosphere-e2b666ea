@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Wrench, CalendarDays, ShoppingBag, User, ShoppingCart } from "lucide-react";
+import { Home, Wrench, CalendarDays, ShoppingBag, User, ShoppingCart, MapPin } from "lucide-react";
 import type { ReactNode } from "react";
 import { useCart } from "@/lib/stores";
 import { Badge } from "@/components/ui/badge";
