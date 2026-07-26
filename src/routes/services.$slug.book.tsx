@@ -62,6 +62,8 @@ function BookPage() {
   const extrasTotal = bio.filter(p => extras.includes(p.id)).reduce((n, p) => n + p.price, 0);
   const taxes = Math.round((service.price + subsTotal) * 0.05);
   const total = service.price + subsTotal + extrasTotal + taxes;
+  // Green Points are earned on service value only (not products/taxes): 50 pts per ₹100
+  const pointsEarned = Math.floor((service.price + subsTotal) / 100) * 50;
 
 
   const past = initialBookings.filter(b => b.status === "past").slice(0, 5);
