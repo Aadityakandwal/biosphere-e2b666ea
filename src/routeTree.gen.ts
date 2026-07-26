@@ -9,15 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ShopRouteImport } from './routes/shop'
-import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PlantDoctorRouteImport } from './routes/plant-doctor'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as ConsultRouteImport } from './routes/consult'
 import { Route as CartRouteImport } from './routes/cart'
-import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ShopIndexRouteImport } from './routes/shop.index'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
+import { Route as ProfileIndexRouteImport } from './routes/profile.index'
+import { Route as BookingsIndexRouteImport } from './routes/bookings.index'
 import { Route as ShopProductIdRouteImport } from './routes/shop.$productId'
 import { Route as ProfileSupportRouteImport } from './routes/profile.support'
 import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
@@ -29,16 +29,6 @@ import { Route as BookingsIdRouteImport } from './routes/bookings.$id'
 import { Route as ServicesSlugIndexRouteImport } from './routes/services.$slug.index'
 import { Route as ServicesSlugBookRouteImport } from './routes/services.$slug.book'
 
-const ShopRoute = ShopRouteImport.update({
-  id: '/shop',
-  path: '/shop',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PlantDoctorRoute = PlantDoctorRouteImport.update({
   id: '/plant-doctor',
   path: '/plant-doctor',
@@ -59,19 +49,29 @@ const CartRoute = CartRouteImport.update({
   path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BookingsRoute = BookingsRouteImport.update({
-  id: '/bookings',
-  path: '/bookings',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopIndexRoute = ShopIndexRouteImport.update({
+  id: '/shop/',
+  path: '/shop/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesIndexRoute = ServicesIndexRouteImport.update({
   id: '/services/',
   path: '/services/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileIndexRoute = ProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingsIndexRoute = BookingsIndexRouteImport.update({
+  id: '/bookings/',
+  path: '/bookings/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopProductIdRoute = ShopProductIdRouteImport.update({
@@ -127,13 +127,10 @@ const ServicesSlugBookRoute = ServicesSlugBookRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/bookings': typeof BookingsRouteWithChildren
   '/cart': typeof CartRoute
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
-  '/profile': typeof ProfileRouteWithChildren
-  '/shop': typeof ShopRouteWithChildren
   '/bookings/$id': typeof BookingsIdRoute
   '/profile/bookings': typeof ProfileBookingsRoute
   '/profile/edit': typeof ProfileEditRoute
@@ -142,19 +139,19 @@ export interface FileRoutesByFullPath {
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
+  '/bookings/': typeof BookingsIndexRoute
+  '/profile/': typeof ProfileIndexRoute
   '/services/': typeof ServicesIndexRoute
+  '/shop/': typeof ShopIndexRoute
   '/services/$slug/book': typeof ServicesSlugBookRoute
   '/services/$slug/': typeof ServicesSlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/bookings': typeof BookingsRouteWithChildren
   '/cart': typeof CartRoute
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
-  '/profile': typeof ProfileRouteWithChildren
-  '/shop': typeof ShopRouteWithChildren
   '/bookings/$id': typeof BookingsIdRoute
   '/profile/bookings': typeof ProfileBookingsRoute
   '/profile/edit': typeof ProfileEditRoute
@@ -163,20 +160,20 @@ export interface FileRoutesByTo {
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
+  '/bookings': typeof BookingsIndexRoute
+  '/profile': typeof ProfileIndexRoute
   '/services': typeof ServicesIndexRoute
+  '/shop': typeof ShopIndexRoute
   '/services/$slug/book': typeof ServicesSlugBookRoute
   '/services/$slug': typeof ServicesSlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/bookings': typeof BookingsRouteWithChildren
   '/cart': typeof CartRoute
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
-  '/profile': typeof ProfileRouteWithChildren
-  '/shop': typeof ShopRouteWithChildren
   '/bookings/$id': typeof BookingsIdRoute
   '/profile/bookings': typeof ProfileBookingsRoute
   '/profile/edit': typeof ProfileEditRoute
@@ -185,7 +182,10 @@ export interface FileRoutesById {
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
+  '/bookings/': typeof BookingsIndexRoute
+  '/profile/': typeof ProfileIndexRoute
   '/services/': typeof ServicesIndexRoute
+  '/shop/': typeof ShopIndexRoute
   '/services/$slug/book': typeof ServicesSlugBookRoute
   '/services/$slug/': typeof ServicesSlugIndexRoute
 }
@@ -193,13 +193,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/bookings'
     | '/cart'
     | '/consult'
     | '/orders'
     | '/plant-doctor'
-    | '/profile'
-    | '/shop'
     | '/bookings/$id'
     | '/profile/bookings'
     | '/profile/edit'
@@ -208,19 +205,19 @@ export interface FileRouteTypes {
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
+    | '/bookings/'
+    | '/profile/'
     | '/services/'
+    | '/shop/'
     | '/services/$slug/book'
     | '/services/$slug/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/bookings'
     | '/cart'
     | '/consult'
     | '/orders'
     | '/plant-doctor'
-    | '/profile'
-    | '/shop'
     | '/bookings/$id'
     | '/profile/bookings'
     | '/profile/edit'
@@ -229,19 +226,19 @@ export interface FileRouteTypes {
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
+    | '/bookings'
+    | '/profile'
     | '/services'
+    | '/shop'
     | '/services/$slug/book'
     | '/services/$slug'
   id:
     | '__root__'
     | '/'
-    | '/bookings'
     | '/cart'
     | '/consult'
     | '/orders'
     | '/plant-doctor'
-    | '/profile'
-    | '/shop'
     | '/bookings/$id'
     | '/profile/bookings'
     | '/profile/edit'
@@ -250,41 +247,30 @@ export interface FileRouteTypes {
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
+    | '/bookings/'
+    | '/profile/'
     | '/services/'
+    | '/shop/'
     | '/services/$slug/book'
     | '/services/$slug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BookingsRoute: typeof BookingsRouteWithChildren
   CartRoute: typeof CartRoute
   ConsultRoute: typeof ConsultRoute
   OrdersRoute: typeof OrdersRoute
   PlantDoctorRoute: typeof PlantDoctorRoute
-  ProfileRoute: typeof ProfileRouteWithChildren
-  ShopRoute: typeof ShopRouteWithChildren
+  BookingsIndexRoute: typeof BookingsIndexRoute
+  ProfileIndexRoute: typeof ProfileIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
+  ShopIndexRoute: typeof ShopIndexRoute
   ServicesSlugBookRoute: typeof ServicesSlugBookRoute
   ServicesSlugIndexRoute: typeof ServicesSlugIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/shop': {
-      id: '/shop'
-      path: '/shop'
-      fullPath: '/shop'
-      preLoaderRoute: typeof ShopRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/plant-doctor': {
       id: '/plant-doctor'
       path: '/plant-doctor'
@@ -313,13 +299,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/bookings': {
-      id: '/bookings'
-      path: '/bookings'
-      fullPath: '/bookings'
-      preLoaderRoute: typeof BookingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -327,11 +306,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop/': {
+      id: '/shop/'
+      path: '/shop'
+      fullPath: '/shop/'
+      preLoaderRoute: typeof ShopIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services/': {
       id: '/services/'
       path: '/services'
       fullPath: '/services/'
       preLoaderRoute: typeof ServicesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/': {
+      id: '/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProfileIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookings/': {
+      id: '/bookings/'
+      path: '/bookings'
+      fullPath: '/bookings/'
+      preLoaderRoute: typeof BookingsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop/$productId': {
@@ -407,62 +407,29 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface BookingsRouteChildren {
-  BookingsIdRoute: typeof BookingsIdRoute
-}
-
-const BookingsRouteChildren: BookingsRouteChildren = {
-  BookingsIdRoute: BookingsIdRoute,
-}
-
-const BookingsRouteWithChildren = BookingsRoute._addFileChildren(
-  BookingsRouteChildren,
-)
-
-interface ProfileRouteChildren {
-  ProfileBookingsRoute: typeof ProfileBookingsRoute
-  ProfileEditRoute: typeof ProfileEditRoute
-  ProfileGreenPointsRoute: typeof ProfileGreenPointsRoute
-  ProfileMembershipRoute: typeof ProfileMembershipRoute
-  ProfileSettingsRoute: typeof ProfileSettingsRoute
-  ProfileSupportRoute: typeof ProfileSupportRoute
-}
-
-const ProfileRouteChildren: ProfileRouteChildren = {
-  ProfileBookingsRoute: ProfileBookingsRoute,
-  ProfileEditRoute: ProfileEditRoute,
-  ProfileGreenPointsRoute: ProfileGreenPointsRoute,
-  ProfileMembershipRoute: ProfileMembershipRoute,
-  ProfileSettingsRoute: ProfileSettingsRoute,
-  ProfileSupportRoute: ProfileSupportRoute,
-}
-
-const ProfileRouteWithChildren =
-  ProfileRoute._addFileChildren(ProfileRouteChildren)
-
-interface ShopRouteChildren {
-  ShopProductIdRoute: typeof ShopProductIdRoute
-}
-
-const ShopRouteChildren: ShopRouteChildren = {
-  ShopProductIdRoute: ShopProductIdRoute,
-}
-
-const ShopRouteWithChildren = ShopRoute._addFileChildren(ShopRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BookingsRoute: BookingsRouteWithChildren,
   CartRoute: CartRoute,
   ConsultRoute: ConsultRoute,
   OrdersRoute: OrdersRoute,
   PlantDoctorRoute: PlantDoctorRoute,
-  ProfileRoute: ProfileRouteWithChildren,
-  ShopRoute: ShopRouteWithChildren,
+  BookingsIndexRoute: BookingsIndexRoute,
+  ProfileIndexRoute: ProfileIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
+  ShopIndexRoute: ShopIndexRoute,
   ServicesSlugBookRoute: ServicesSlugBookRoute,
   ServicesSlugIndexRoute: ServicesSlugIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
