@@ -4,6 +4,8 @@ import { Shell } from "@/components/Shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useBookings, useOrders } from "@/lib/stores";
+import { useHydrated } from "@/lib/motion";
+import { BookingsSkeleton, OrdersSkeleton } from "@/components/Skeletons";
 import { services } from "@/lib/data";
 import {
   ArrowLeft, Download, Truck, PackageCheck, Package, MapPin, Repeat2, Star,
@@ -31,6 +33,7 @@ function ActivityPage() {
   const bookings = useBookings((s) => s.bookings);
   const orders = useOrders((s) => s.orders);
   const [tab, setTab] = useState<"bookings" | "orders">("bookings");
+  const hydrated = useHydrated();
 
   return (
     <Shell>

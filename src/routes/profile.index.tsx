@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/Shell";
 import { useProfile, useBookings, useOrders } from "@/lib/stores";
+import { useHydrated } from "@/lib/motion";
+import { ProfileSkeleton } from "@/components/Skeletons";
 import { ChevronRight, User, CalendarDays, Leaf, Award, Settings, HelpCircle, LogOut } from "lucide-react";
 
 export const Route = createFileRoute("/profile/")({
@@ -19,6 +21,7 @@ function ProfilePage() {
   const p = useProfile();
   const bookings = useBookings(s => s.bookings);
   const orders = useOrders(s => s.orders);
+  const hydrated = useHydrated();
 
   const sections = [
     { to: "/profile/edit", icon: User, label: "My Profile", hint: "Edit personal info" },
@@ -28,6 +31,14 @@ function ProfilePage() {
     { to: "/profile/settings", icon: Settings, label: "Settings", hint: "Notifications, privacy" },
     { to: "/profile/support", icon: HelpCircle, label: "Help & Support", hint: "WhatsApp · Email · Phone" },
   ] as const;
+
+  if (!hydrated) {
+    return (
+      <Shell>
+        <ProfileSkeleton />
+      </Shell>
+    );
+  }
 
   return (
     <Shell>

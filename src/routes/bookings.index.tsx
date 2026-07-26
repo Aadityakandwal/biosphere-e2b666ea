@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Shell } from "@/components/Shell";
 import { useBookings } from "@/lib/stores";
+import { useHydrated } from "@/lib/motion";
+import { BookingsSkeleton } from "@/components/Skeletons";
 import { services, categories } from "@/lib/data";
 import { CalendarDays, Clock, Star, CheckCircle2, RotateCw, Plus, Leaf } from "lucide-react";
 
@@ -24,6 +26,15 @@ function BookingsPage() {
   const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
   const upcoming = bookings.filter((b) => b.status === "upcoming");
   const past = bookings.filter((b) => b.status === "past");
+  const hydrated = useHydrated();
+
+  if (!hydrated) {
+    return (
+      <Shell>
+        <BookingsSkeleton />
+      </Shell>
+    );
+  }
 
   return (
     <Shell>
