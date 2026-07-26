@@ -4,7 +4,7 @@ import { Shell } from "@/components/Shell";
 import { services } from "@/lib/data";
 import { ChevronRight, Video, ClipboardCheck, FlaskConical } from "lucide-react";
 
-export const Route = createFileRoute("/services")({
+export const Route = createFileRoute("/services/")({
   validateSearch: (search: Record<string, unknown>) => ({
     cat: typeof search.cat === "string" ? search.cat : undefined,
   }),
