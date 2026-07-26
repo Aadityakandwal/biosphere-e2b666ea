@@ -62,7 +62,14 @@ function ActivityPage() {
         ))}
       </div>
 
-      {tab === "bookings" ? <BookingsPanel /> : <OrdersPanel />}
+      {!hydrated ? (
+        tab === "bookings" ? <BookingsSkeleton /> : <OrdersSkeleton />
+      ) : tab === "bookings" ? (
+        <BookingsPanel />
+      ) : (
+        <OrdersPanel />
+      )}
+
     </Shell>
   );
 }
