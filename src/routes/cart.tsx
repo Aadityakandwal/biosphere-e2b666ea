@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Shell } from "@/components/Shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useCart, useOrders, useProfile } from "@/lib/stores";
+import { useCart, useOrders } from "@/lib/stores";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
