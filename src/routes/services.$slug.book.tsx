@@ -39,9 +39,11 @@ function slotAvailability(date?: Date) {
 
 function BookPage() {
   const { service } = Route.useLoaderData();
+  const { subs: subsParam } = Route.useSearch();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [date, setDate] = useState<Date | undefined>(new Date(Date.now() + 86400000));
+  const slots = slotAvailability(date);
   const [slot, setSlot] = useState<string>(SLOTS[1]);
   const { addresses, add: addAddr } = useAddresses();
   const [addrId, setAddrId] = useState(addresses[0]?.id);
@@ -54,9 +56,12 @@ function BookPage() {
   const addBook = useBookings((s) => s.add);
   const profile = useProfile();
 
+  const pickedSubs = (service.subs ?? []).filter(s => (subsParam?.split(",") ?? []).includes(s.id));
+  const subsTotal = pickedSubs.reduce((n, s) => n + s.price, 0);
   const extrasTotal = bio.filter(p => extras.includes(p.id)).reduce((n, p) => n + p.price, 0);
-  const taxes = Math.round(service.price * 0.05);
-  const total = service.price + extrasTotal + taxes;
+  const taxes = Math.round((service.price + subsTotal) * 0.05);
+  const total = service.price + subsTotal + extrasTotal + taxes;
+
 
   const past = initialBookings.filter(b => b.status === "past").slice(0, 5);
 
