@@ -1,11 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { Shell } from "@/components/Shell";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useBookings } from "@/lib/stores";
-import { services } from "@/lib/data";
-import { CalendarDays, MapPin, User, Star } from "lucide-react";
+import { services, categories } from "@/lib/data";
+import { CalendarDays, Clock, Star, CheckCircle2, RotateCw, Plus, Leaf } from "lucide-react";
 
 export const Route = createFileRoute("/bookings")({
   head: () => ({
@@ -14,6 +12,8 @@ export const Route = createFileRoute("/bookings")({
       { name: "description", content: "Track upcoming and past gardening bookings." },
       { property: "og:title", content: "My Bookings — Biosphere" },
       { property: "og:description", content: "Track upcoming and past gardening bookings." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: BookingsPage,
@@ -21,64 +21,181 @@ export const Route = createFileRoute("/bookings")({
 
 function BookingsPage() {
   const bookings = useBookings((s) => s.bookings);
-  const upcoming = bookings.filter(b => b.status === "upcoming");
-  const past = bookings.filter(b => b.status === "past");
+  const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
+  const upcoming = bookings.filter((b) => b.status === "upcoming");
+  const past = bookings.filter((b) => b.status === "past");
 
   return (
-    <Shell title="Bookings">
-      <Tabs defaultValue="upcoming" className="mt-3">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="upcoming">Upcoming ({upcoming.length})</TabsTrigger>
-          <TabsTrigger value="past">Past ({past.length})</TabsTrigger>
-        </TabsList>
-        <TabsContent value="upcoming" className="mt-4 space-y-3">
-          {upcoming.length === 0 && <Empty text="No upcoming bookings" />}
-          {upcoming.map(b => {
-            const s = services.find(x => x.slug === b.serviceSlug);
-            return (
-              <Card key={b.id} className="p-4">
-                <p className="font-medium">{s?.name}</p>
-                <Meta icon={CalendarDays}>{b.date} · {b.time}</Meta>
-                <Meta icon={User}>{b.gardener}</Meta>
-                <Meta icon={MapPin}>{b.address}</Meta>
-                <div className="mt-3 flex gap-2">
-                  <Link to="/bookings/$id" params={{ id: b.id }} className="flex-1"><Button variant="outline" className="w-full">Manage details</Button></Link>
-                  <Link to="/bookings/$id" params={{ id: b.id }} search={{ reschedule: 1 }} className="flex-1"><Button className="w-full">Reschedule</Button></Link>
-                </div>
-              </Card>
-            );
-          })}
-        </TabsContent>
-        <TabsContent value="past" className="mt-4 space-y-3">
-          {past.length === 0 && <Empty text="No past bookings" />}
-          {past.map(b => {
-            const s = services.find(x => x.slug === b.serviceSlug);
-            return (
-              <Card key={b.id} className="p-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-medium">{s?.name}</p>
-                    <Meta icon={CalendarDays}>{b.date}</Meta>
-                    <Meta icon={User}>{b.gardener}</Meta>
+    <Shell>
+      {/* Segmented tabs */}
+      <div className="mt-3 grid grid-cols-2 gap-1 rounded-full bg-muted/70 p-1">
+        {(["upcoming", "past"] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`press rounded-full py-3 text-sm font-semibold capitalize transition-all ${
+              tab === t ? "bg-primary text-primary-foreground shadow-glow" : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {t}
+          </button>
+        ))}
+      </div>
+
+      {tab === "upcoming" ? (
+        <section className="pb-6">
+          <h2 className="mt-6 font-display text-2xl font-semibold tracking-tight">Active Appointments</h2>
+
+          {upcoming.length === 0 && (
+            <p className="surface mt-4 rounded-3xl p-8 text-center text-sm text-muted-foreground">No upcoming bookings</p>
+          )}
+
+          <div className="mt-4 space-y-4">
+            {upcoming.map((b) => {
+              const s = services.find((x) => x.slug === b.serviceSlug);
+              const cat = categories.find((c) => c.id === s?.category);
+              return (
+                <div key={b.id} className="overflow-hidden rounded-3xl bg-card shadow-elevated">
+                  <div className="relative">
+                    <img src={s?.image} alt={s?.name ?? "Booking"} className="h-48 w-full object-cover" />
+                    <span className="absolute right-4 top-4 flex items-center gap-2 rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-soft">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary-foreground/80" /> Confirmed
+                    </span>
                   </div>
-                  {b.rating && <div className="flex items-center gap-0.5 text-yellow-500">{Array.from({length:b.rating}).map((_,i)=><Star key={i} className="h-3 w-3 fill-current"/>)}</div>}
+                  <div className="p-5">
+                    <p className="text-[11px] font-bold tracking-widest text-primary">{cat?.name.toUpperCase()}</p>
+                    <h3 className="mt-1 font-display text-2xl font-semibold leading-tight">{s?.name}</h3>
+
+                    <div className="mt-4 space-y-3">
+                      <Row icon={CalendarDays} label="Date" value={b.date} />
+                      <Row icon={Clock} label="Time" value={`${b.time} · ${s?.duration ?? ""}`} />
+                    </div>
+
+                    <div className="mt-5 grid grid-cols-2 gap-3">
+                      <Link
+                        to="/bookings/$id"
+                        params={{ id: b.id }}
+                        className="press rounded-full bg-primary py-3 text-center text-sm font-semibold text-primary-foreground shadow-soft hover:shadow-glow"
+                      >
+                        Manage Details
+                      </Link>
+                      <Link
+                        to="/bookings/$id"
+                        params={{ id: b.id }}
+                        search={{ reschedule: 1 }}
+                        className="press rounded-full border border-border bg-card py-3 text-center text-sm font-semibold hover:border-primary/40"
+                      >
+                        Reschedule
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-                <div className="mt-3 flex gap-2">
-                  <Link to="/bookings/$id" params={{ id: b.id }} className="flex-1"><Button variant="outline" className="w-full">Details</Button></Link>
-                  <Link to="/services/$slug" params={{ slug: b.serviceSlug }} className="flex-1"><Button className="w-full">Rebook</Button></Link>
+              );
+            })}
+          </div>
+
+          {/* Upsell */}
+          <div className="mt-5 flex items-center gap-4 rounded-3xl bg-secondary/70 p-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15">
+              <Leaf className="h-5 w-5 text-primary" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold text-primary">Add Soil Nutrient Boost?</p>
+              <p className="text-xs text-muted-foreground">Only ₹149 when added to your next visit.</p>
+            </div>
+            <Link to="/shop/$productId" params={{ productId: "neerva" }} className="shrink-0 text-sm font-semibold text-primary underline underline-offset-4">
+              Add
+            </Link>
+          </div>
+
+          <Link
+            to="/services"
+            className="press mt-4 flex items-center justify-center gap-2 rounded-full bg-primary py-4 text-sm font-semibold text-primary-foreground shadow-glow"
+          >
+            <Plus className="h-4 w-4" /> Book New Service
+          </Link>
+        </section>
+      ) : (
+        <section className="pb-6">
+          {past.length === 0 && (
+            <p className="surface mt-6 rounded-3xl p-8 text-center text-sm text-muted-foreground">No past bookings</p>
+          )}
+
+          <div className="mt-6 space-y-4">
+            {past.map((b) => {
+              const s = services.find((x) => x.slug === b.serviceSlug);
+              return (
+                <div key={b.id} className="surface rounded-3xl p-4">
+                  <div className="flex items-start gap-3">
+                    <img src={s?.image} alt={s?.name ?? "Booking"} className="h-16 w-16 shrink-0 rounded-2xl object-cover" />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold leading-snug">{s?.name}</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">{b.date} · {b.time}</p>
+                      {b.rating ? (
+                        <div className="mt-1 flex items-center gap-0.5 text-yellow-500">
+                          {Array.from({ length: b.rating }).map((_, i) => (
+                            <Star key={i} className="h-3.5 w-3.5 fill-current" />
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-1 text-[11px] font-semibold text-primary">
+                        <CheckCircle2 className="h-3.5 w-3.5" /> Completed
+                      </span>
+                      <p className="mt-2 font-display text-xl font-bold">₹{b.price}</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-2 gap-3">
+                    <Link
+                      to="/services/$slug"
+                      params={{ slug: b.serviceSlug }}
+                      className="press flex items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-semibold text-primary-foreground shadow-soft hover:shadow-glow"
+                    >
+                      <RotateCw className="h-4 w-4" /> Rebook
+                    </Link>
+                    <Link
+                      to="/bookings/$id"
+                      params={{ id: b.id }}
+                      className="press rounded-full border border-border bg-card py-3 text-center text-sm font-semibold hover:border-primary/40"
+                    >
+                      Details
+                    </Link>
+                  </div>
                 </div>
-              </Card>
-            );
-          })}
-        </TabsContent>
-      </Tabs>
+              );
+            })}
+          </div>
+
+          <div className="mt-6 rounded-3xl bg-secondary/70 p-6">
+            <h3 className="font-display text-2xl font-semibold tracking-tight text-primary">How's your garden?</h3>
+            <p className="mt-2 text-sm leading-relaxed text-foreground/70">
+              Your feedback helps our botanists maintain the highest standards of floral excellence.
+            </p>
+            <Link
+              to="/profile/support"
+              className="press mt-5 block rounded-full bg-primary py-3.5 text-center text-sm font-semibold text-primary-foreground shadow-soft hover:shadow-glow"
+            >
+              Share Review
+            </Link>
+          </div>
+        </section>
+      )}
     </Shell>
   );
 }
 
-function Meta({ icon: Icon, children }: { icon: React.ComponentType<{ className?: string }>; children: React.ReactNode }) {
-  return <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground"><Icon className="h-3.5 w-3.5" /> {children}</p>;
-}
-function Empty({ text }: { text: string }) {
-  return <Card className="p-8 text-center text-sm text-muted-foreground">{text}</Card>;
+function Row({ icon: Icon, label, value }: { icon: React.ComponentType<{ className?: string }>; label: string; value: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
+        <Icon className="h-4 w-4 text-foreground/70" />
+      </span>
+      <div className="min-w-0">
+        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="truncate text-sm font-medium">{value}</p>
+      </div>
+    </div>
+  );
 }
