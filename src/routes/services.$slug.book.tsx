@@ -106,10 +106,23 @@ function BookPage() {
           <Card className="p-3">
             <p className="mb-2 text-sm font-medium">Available slots</p>
             <div className="grid grid-cols-3 gap-2">
-              {SLOTS.map(s => (
-                <button key={s} onClick={() => setSlot(s)} className={`rounded-lg border p-2 text-sm ${slot === s ? "border-primary bg-primary/10 text-primary" : "border-border"}`}>{s}</button>
+              {slots.map(({ slot: s, available }) => (
+                <button
+                  key={s}
+                  disabled={!available}
+                  onClick={() => setSlot(s)}
+                  className={`rounded-lg border p-2 text-sm transition ${
+                    !available
+                      ? "cursor-not-allowed border-dashed border-border text-muted-foreground/50 line-through"
+                      : slot === s
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border"
+                  }`}
+                >{s}</button>
               ))}
             </div>
+            <p className="mt-2 text-xs text-muted-foreground">Struck-out slots are fully booked for this date.</p>
+
           </Card>
           <Card className="p-3">
             <p className="mb-2 text-sm font-medium">Service address</p>
