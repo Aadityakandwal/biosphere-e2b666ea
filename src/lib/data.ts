@@ -66,7 +66,7 @@ export const services: Service[] = [
     description: "Transform your balcony into a beautiful green retreat with our customized balcony garden setup. We create space-friendly gardens using suitable plants, stylish pots, vertical stands, healthy soil, and smart arrangements to maximize your available space. Enjoy a refreshing, natural, and relaxing environment right at your home with a personalized balcony garden.",
     image: "https://images.unsplash.com/photo-1600411833196-7c1f6b1a8b90?w=800" },
   { slug: "terrace-garden", name: "Terrace Garden Setup", category: "setup", emoji: "🏡", price: 2999, duration: "half day", rating: 4.8, reviews: 98,
-    description: "Full terrace transformation with waterproofing-safe planters, seating, and edible or ornamental themes.",
+    description: "Transform your unused terrace into a beautiful green space with our customized terrace garden setup. We design practical and attractive terrace gardens using suitable plants, grow bags/pots, plant stands, healthy soil, and smart layouts to create a refreshing natural environment. Enjoy fresh greenery, improved aesthetics, and a peaceful garden experience right on your rooftop.",
     image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800" },
   { slug: "kitchen-garden", name: "Kitchen Garden Setup", category: "setup", emoji: "🥬", price: 999, duration: "2 hrs", rating: 4.9, reviews: 187,
     description: "Grow herbs, greens, and everyday vegetables right outside your kitchen.",
