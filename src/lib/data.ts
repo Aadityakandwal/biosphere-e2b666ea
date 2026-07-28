@@ -69,7 +69,7 @@ export const services: Service[] = [
     description: "Transform your unused terrace into a beautiful green space with our customized terrace garden setup. We design practical and attractive terrace gardens using suitable plants, grow bags/pots, plant stands, healthy soil, and smart layouts to create a refreshing natural environment. Enjoy fresh greenery, improved aesthetics, and a peaceful garden experience right on your rooftop.",
     image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800" },
   { slug: "kitchen-garden", name: "Kitchen Garden Setup", category: "setup", emoji: "🥬", price: 999, duration: "2 hrs", rating: 4.9, reviews: 187,
-    description: "Grow herbs, greens, and everyday vegetables right outside your kitchen.",
+    description: "Grow fresh and healthy vegetables, herbs, and greens right at your home with our customized kitchen garden setup. We create easy-to-maintain gardens using quality grow bags/pots, suitable plants, nutrient-rich soil, and smart arrangements to help you enjoy home-grown produce. Bring freshness, sustainability, and the joy of gardening to your everyday life.",
     image: "https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=800" },
   // Plant Care
   { slug: "basic-maintenance", name: "Basic Maintenance", category: "care", emoji: "💧", price: 499, duration: "1 hr", rating: 4.7, reviews: 512,
