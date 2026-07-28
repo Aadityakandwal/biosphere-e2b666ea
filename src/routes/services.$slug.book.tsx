@@ -317,7 +317,7 @@ function BookPage() {
                 </label>
               ))}
             </div>
-          </Card>
+          </Card>}
         </div>
       )}
 
