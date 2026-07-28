@@ -123,7 +123,7 @@ function ProfilePage() {
   );
 }
 
-function StatLink({ to, icon: Icon, label }: { to: string; icon: typeof Award; label: string }) {
+function StatLink({ to, icon: Icon, label, sub }: { to: string; icon: typeof Award; label: string; sub?: string }) {
   return (
     <Link
       to={to}
@@ -133,6 +133,11 @@ function StatLink({ to, icon: Icon, label }: { to: string; icon: typeof Award; l
         <Icon className="h-4 w-4" />
       </span>
       <p className="mt-1 text-xs font-semibold leading-tight text-foreground">{label}</p>
+      {sub && (
+        <span className="mt-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+          {sub}
+        </span>
+      )}
     </Link>
   );
 }
