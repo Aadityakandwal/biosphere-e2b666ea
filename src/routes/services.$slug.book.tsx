@@ -97,6 +97,8 @@ function BookPage() {
   const pointsEarned = Math.floor((service.price + subsTotal) / 100) * 50;
 
 
+  const isRemote = service.slug === "video-consult";
+
   const past = initialBookings.filter(b => b.status === "past").slice(0, 5);
 
   const handlePay = () => {
@@ -108,7 +110,7 @@ function BookPage() {
     addBook({
       id, serviceSlug: service.slug, date: date?.toISOString().slice(0,10) ?? "",
       time: slot, gardener: extend ? past.find(p => p.id === extend)!.gardener : "Auto-assigned",
-      address: addresses.find(a => a.id === addrId)?.line ?? newAddr, status: "upcoming", price: total, note,
+      address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr), status: "upcoming", price: total, note,
     });
     profile.addPoints(pointsEarned);
     toast.success("Booking confirmed! Green points added.");
@@ -195,7 +197,7 @@ function BookPage() {
             <p className="mt-3 text-xs text-muted-foreground">Struck-out slots are fully booked for this date.</p>
           </Card>
 
-          <Card className="p-4">
+          {!isRemote && <Card className="p-4">
             <div className="mb-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" />
@@ -235,7 +237,7 @@ function BookPage() {
                 );
               })}
             </div>
-          </Card>
+          </Card>}
         </div>
       )}
 
