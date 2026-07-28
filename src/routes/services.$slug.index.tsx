@@ -132,13 +132,18 @@ function ServiceDetail() {
         <div className="mx-auto flex max-w-md items-center justify-between border-t border-border bg-background/95 px-4 py-3 backdrop-blur">
           <div>
             <p className="text-xs text-muted-foreground">Total</p>
-            <p className="text-lg font-semibold">₹{total}</p>
+            <p className="text-lg font-semibold">₹{total.toLocaleString("en-IN")}</p>
           </div>
-          <Link to="/services/$slug/book" params={{ slug: service.slug }} search={{ subs: picked.length ? picked.join(",") : undefined }}>
-            <Button size="lg">Book service</Button>
-          </Link>
+          {service.packages && !pkgId ? (
+            <Button size="lg" disabled>Select a package</Button>
+          ) : (
+            <Link to="/services/$slug/book" params={{ slug: service.slug }} search={{ subs: picked.length ? picked.join(",") : undefined, pkg: pkgId }}>
+              <Button size="lg">Book service</Button>
+            </Link>
+          )}
         </div>
       </div>
+
       <div className="h-20" />
     </Shell>
   );
