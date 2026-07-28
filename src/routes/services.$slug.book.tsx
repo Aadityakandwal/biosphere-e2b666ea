@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { services, products, initialBookings } from "@/lib/data";
 import { useAddresses, useBookings, useCart, useProfile } from "@/lib/stores";
 import { useRazorpay } from "@/lib/use-razorpay";
+import { useAuth } from "@/lib/use-auth";
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ArrowLeft, MapPin, Plus, Check, CalendarDays, Clock, Home, Loader2 } from "lucide-react";
@@ -93,6 +94,7 @@ function BookPage() {
   const addBook = useBookings((s) => s.add);
   const profile = useProfile();
   const { pay, loading: paying } = useRazorpay();
+  const { isAuthenticated, loading: authLoading } = useAuth();
 
 
   const selectedPkg = (service.packages as import("@/lib/data").Pkg[] | undefined)?.find((p) => p.id === pkgParam);
@@ -117,7 +119,7 @@ function BookPage() {
   const handlePay = () => {
     if (!authLoading && !isAuthenticated) {
       toast.error("Please sign in to complete your booking");
-      navigate({ to: "/auth", search: { redirect: location.pathname + location.search } });
+      navigate({ to: "/auth", search: { redirect: window.location.pathname + window.location.search } });
       return;
     }
     const id = "b" + Date.now();
