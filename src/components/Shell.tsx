@@ -4,11 +4,18 @@ import type { ReactNode } from "react";
 import { useCart } from "@/lib/stores";
 import { Badge } from "@/components/ui/badge";
 import logoAsset from "@/assets/biosphere-logo.png.asset.json";
+import { useLocationPrompt, requestLocation } from "@/lib/use-location";
 
 export function Shell({ children, title }: { children: ReactNode; title?: string }) {
   const items = useCart((s) => s.items);
   const count = items.reduce((n, i) => n + i.qty, 0);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { label: locationLabel, status: locationStatus } = useLocationPrompt();
+  const locationText =
+    locationStatus === "asking"
+      ? "Locating…"
+      : locationLabel ?? (locationStatus === "denied" || locationStatus === "unavailable" ? "Set location" : "Locating…");
+
 
   const navItems = [
     { to: "/", label: "Home", icon: Home },
