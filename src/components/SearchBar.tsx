@@ -52,13 +52,34 @@ function score(r: Result, tokens: string[]): number {
   return total;
 }
 
-export function SearchBar() {
+export function SearchBar({
+  value,
+  onValueChange,
+  placeholder = "Search services & products...",
+  scope = "all",
+}: {
+  value?: string;
+  onValueChange?: (v: string) => void;
+  placeholder?: string;
+  scope?: "all" | "products" | "services";
+} = {}) {
   const navigate = useNavigate();
-  const [q, setQ] = React.useState("");
+  const [inner, setInner] = React.useState("");
+  const q = value !== undefined ? value : inner;
+  const setQ = React.useCallback(
+    (v: string) => {
+      if (value === undefined) setInner(v);
+      onValueChange?.(v);
+    },
+    [value, onValueChange]
+  );
   const [open, setOpen] = React.useState(false);
   const wrapRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const index = React.useMemo(buildIndex, []);
+  const index = React.useMemo(
+    () => buildIndex().filter((r) => (scope === "all" ? true : scope === "products" ? r.kind === "product" : r.kind === "service")),
+    [scope]
+  );
 
   React.useEffect(() => {
     const onDown = (e: MouseEvent) => {
@@ -111,7 +132,7 @@ export function SearchBar() {
             if (e.key === "Enter" && results[0]) go(results[0]);
             if (e.key === "Escape") setOpen(false);
           }}
-          placeholder="Search services & products..."
+          placeholder={placeholder}
           className="w-full border-0 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground"
         />
         {q && (
