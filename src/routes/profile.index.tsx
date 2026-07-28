@@ -113,6 +113,7 @@ function ProfilePage() {
       ) : (
         <Link
           to="/auth"
+          search={{ redirect: undefined }}
           className="mx-auto mt-8 flex w-max items-center gap-2 rounded-full bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-[var(--shadow-elevated)] transition-transform active:scale-[0.98]"
         >
           <LogIn className="h-5 w-5" />
