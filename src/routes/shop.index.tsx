@@ -98,6 +98,7 @@ function ShopPage() {
 
   return (
     <Shell>
+      <h1 className="sr-only">Shop plants, tools, planters, and fertilizers</h1>
       {/* Search */}
       <SearchBar
         value={q}
