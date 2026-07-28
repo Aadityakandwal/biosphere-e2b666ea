@@ -57,6 +57,7 @@ export function SearchBar() {
   const [q, setQ] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const wrapRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const index = React.useMemo(buildIndex, []);
 
   React.useEffect(() => {
@@ -87,17 +88,25 @@ export function SearchBar() {
     else navigate({ to: "/shop/$productId", params: { productId: r.id } });
   };
 
+  const clear = () => {
+    setQ("");
+    setOpen(false);
+    requestAnimationFrame(() => inputRef.current?.focus());
+  };
+
   return (
-    <div ref={wrapRef} className="relative mt-2">
-      <label className="flex items-center gap-3 rounded-full border border-border bg-card px-5 py-3.5 shadow-soft transition focus-within:border-primary/40 focus-within:shadow-elevated">
+    <div ref={wrapRef} className="relative z-30 mt-2">
+      <div className="flex items-center gap-3 rounded-full border border-border bg-card px-5 py-3.5 shadow-soft transition focus-within:border-primary/40 focus-within:shadow-elevated">
         <Search className="h-4 w-4 text-muted-foreground" />
         <input
+          ref={inputRef}
           value={q}
           onChange={(e) => {
-            setQ(e.target.value);
-            setOpen(true);
+            const next = e.target.value;
+            setQ(next);
+            setOpen(norm(next).length > 0);
           }}
-          onFocus={() => setOpen(true)}
+          onFocus={() => setOpen(term.length > 0)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && results[0]) go(results[0]);
             if (e.key === "Escape") setOpen(false);
@@ -106,14 +115,20 @@ export function SearchBar() {
           className="w-full border-0 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground"
         />
         {q && (
-          <button type="button" onClick={() => setQ("")} aria-label="Clear search" className="press text-muted-foreground">
+          <button
+            type="button"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={clear}
+            aria-label="Clear search"
+            className="press text-muted-foreground"
+          >
             <X className="h-4 w-4" />
           </button>
         )}
-      </label>
+      </div>
 
       {open && term.length > 0 && (
-        <div className="absolute inset-x-0 top-[calc(100%+0.5rem)] z-50 overflow-hidden rounded-3xl border border-border bg-card shadow-elevated">
+        <div className="absolute inset-x-0 top-[calc(100%+0.5rem)] z-[80] overflow-hidden rounded-3xl border border-border bg-card shadow-elevated">
           {results.length === 0 ? (
             <p className="px-5 py-6 text-center text-sm text-muted-foreground">
               No results for “{q.trim()}”
@@ -124,6 +139,7 @@ export function SearchBar() {
                 <li key={`${r.kind}-${r.id}`}>
                   <button
                     type="button"
+                      onMouseDown={(e) => e.preventDefault()}
                     onClick={() => go(r)}
                     className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-muted"
                   >
