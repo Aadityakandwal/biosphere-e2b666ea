@@ -76,7 +76,7 @@ function ProfilePage() {
       {/* Stats */}
       <div className="mt-6 grid grid-cols-3 gap-3">
         <Stat value={`${p.greenPoints}`} label="Green Points" />
-        <StatLink to="/profile/membership" icon={Award} label="Membership" />
+        <StatLink to="/profile/membership" icon={Award} label="Membership" sub={PLAN_LABELS[p.plan]} />
         <StatLink to="/profile/support" icon={HelpCircle} label="Help & Support" />
       </div>
 
