@@ -50,7 +50,7 @@ function slotAvailability(date?: Date) {
 
 function BookPage() {
   const { service } = Route.useLoaderData();
-  const { subs: subsParam } = Route.useSearch();
+  const { subs: subsParam, pkg: pkgParam } = Route.useSearch();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [date, setDate] = useState<Date | undefined>(new Date(Date.now() + 86400000));
