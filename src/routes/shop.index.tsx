@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Shell } from "@/components/Shell";
 import { products } from "@/lib/data";
 import { useCart } from "@/lib/stores";
-import { Search, Sprout, Hammer, FlaskConical, Flower2, LayoutGrid, Plus, ChevronRight, Sparkles } from "lucide-react";
+import { Sprout, Hammer, FlaskConical, Flower2, LayoutGrid, Plus, ChevronRight, Sparkles } from "lucide-react";
+import { SearchBar } from "@/components/SearchBar";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/shop/")({
