@@ -60,17 +60,23 @@ function ProfilePage() {
       {/* Avatar + badge */}
       <div className="mt-6 flex flex-col items-center">
         <div className="relative">
-          <img
-            src={p.avatar}
-            alt={p.name}
-            className="h-28 w-28 rounded-full object-cover ring-4 ring-primary/90 ring-offset-2 ring-offset-background"
-          />
+          {p.avatar ? (
+            <img
+              src={p.avatar}
+              alt={p.name || "Your profile photo"}
+              className="h-28 w-28 rounded-full object-cover ring-4 ring-primary/90 ring-offset-2 ring-offset-background"
+            />
+          ) : (
+            <span className="flex h-28 w-28 items-center justify-center rounded-full bg-primary/10 text-primary ring-4 ring-primary/90 ring-offset-2 ring-offset-background">
+              <User className="h-12 w-12" />
+            </span>
+          )}
           <span className="absolute -bottom-3 left-1/2 w-max -translate-x-1/2 rounded-full bg-primary px-4 py-1.5 text-center text-[11px] font-semibold leading-tight text-primary-foreground shadow-[var(--shadow-elevated)]">
             {PLAN_LABELS[p.plan]}<br />Member
           </span>
         </div>
-        <h1 className="mt-7 font-display text-3xl font-bold tracking-tight">{p.name}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Gardening enthusiast since 2021</p>
+        <h1 className="mt-7 font-display text-3xl font-bold tracking-tight">{p.name || (isAuthenticated ? "Your profile" : "Guest")}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{p.email || "Sign in to sync your bookings and points"}</p>
       </div>
 
       {/* Stats */}
