@@ -73,6 +73,7 @@ type OrderState = {
   orders: Order[];
   add: (o: Order) => void;
   setStatus: (id: string, status: string, paymentId?: string) => void;
+  clear: () => void;
 };
 
 export const useOrders = create<OrderState>()(
@@ -84,8 +85,9 @@ export const useOrders = create<OrderState>()(
         set((s) => ({
           orders: s.orders.map((o) => (o.id === id ? { ...o, status, ...(paymentId ? { paymentId } : {}) } : o)),
         })),
+      clear: () => set({ orders: [] }),
     }),
-    { name: "bio-orders-v2" }
+    { name: "bio-orders-v3" }
   )
 );
 
