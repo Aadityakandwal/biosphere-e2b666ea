@@ -98,12 +98,12 @@ function ServiceDetail() {
 
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{service.description}</p>
 
-      {service.packages && (
+      {(service.packages || unitFields) && (
         <>
           <h2 className="mt-6 font-display text-lg font-semibold">Choose your space</h2>
-          <p className="mt-1 text-xs text-muted-foreground">Pick the area you want set up — final price is confirmed after the site survey.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Pick a ready package or build your own — final price is confirmed after the site survey.</p>
           <div className="mt-3 space-y-3">
-            {service.packages.map((p) => {
+            {(service.packages ?? []).map((p) => {
               const active = p.id === pkgId;
               return (
                 <button
