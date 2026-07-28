@@ -66,7 +66,7 @@ function ProfilePage() {
             className="h-28 w-28 rounded-full object-cover ring-4 ring-primary/90 ring-offset-2 ring-offset-background"
           />
           <span className="absolute -bottom-3 left-1/2 w-max -translate-x-1/2 rounded-full bg-primary px-4 py-1.5 text-center text-[11px] font-semibold leading-tight text-primary-foreground shadow-[var(--shadow-elevated)]">
-            Elite<br />Caretaker
+            {PLAN_LABELS[p.plan]}<br />Member
           </span>
         </div>
         <h1 className="mt-7 font-display text-3xl font-bold tracking-tight">{p.name}</h1>
@@ -76,7 +76,7 @@ function ProfilePage() {
       {/* Stats */}
       <div className="mt-6 grid grid-cols-3 gap-3">
         <Stat value={`${p.greenPoints}`} label="Green Points" />
-        <StatLink to="/profile/membership" icon={Award} label="Membership" />
+        <StatLink to="/profile/membership" icon={Award} label="Membership" sub={PLAN_LABELS[p.plan]} />
         <StatLink to="/profile/support" icon={HelpCircle} label="Help & Support" />
       </div>
 
@@ -123,7 +123,7 @@ function ProfilePage() {
   );
 }
 
-function StatLink({ to, icon: Icon, label }: { to: string; icon: typeof Award; label: string }) {
+function StatLink({ to, icon: Icon, label, sub }: { to: string; icon: typeof Award; label: string; sub?: string }) {
   return (
     <Link
       to={to}
@@ -133,6 +133,11 @@ function StatLink({ to, icon: Icon, label }: { to: string; icon: typeof Award; l
         <Icon className="h-4 w-4" />
       </span>
       <p className="mt-1 text-xs font-semibold leading-tight text-foreground">{label}</p>
+      {sub && (
+        <span className="mt-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+          {sub}
+        </span>
+      )}
     </Link>
   );
 }
