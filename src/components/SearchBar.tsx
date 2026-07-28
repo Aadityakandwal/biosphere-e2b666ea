@@ -133,6 +133,8 @@ export function SearchBar({
             if (e.key === "Escape") setOpen(false);
           }}
           placeholder={placeholder}
+          aria-label={placeholder || "Search"}
+          type="search"
           className="w-full border-0 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground"
         />
         {q && (
