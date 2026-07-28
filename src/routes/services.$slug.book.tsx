@@ -283,7 +283,7 @@ function BookPage() {
             <p className="mb-2 text-sm font-medium">Add a note</p>
             <Textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="e.g. Gate code, pet on premises, plant details…" />
           </Card>
-          <Card className="p-3">
+          {!isRemote && <Card className="p-3">
             <p className="mb-2 text-sm font-medium">Extend a previous service?</p>
             <p className="mb-3 text-xs text-muted-foreground">Pick a gardener you've worked with. Availability confirmed on booking.</p>
             <div className="space-y-2">
