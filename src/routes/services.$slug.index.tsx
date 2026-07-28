@@ -29,14 +29,31 @@ export const Route = createFileRoute("/services/$slug/")({
   component: ServiceDetail,
 });
 
+const CUSTOM_FIELDS = [
+  { id: "plants", label: "Plants" },
+  { id: "pots", label: "Pots" },
+  { id: "grill", label: "Grill / plant stand" },
+  { id: "lights", label: "Grow lights" },
+  { id: "soil", label: "Healthy soil (bags)" },
+] as const;
+
 function ServiceDetail() {
   const { service } = Route.useLoaderData() as { service: import("@/lib/data").Service };
   const [picked, setPicked] = useState<string[]>([]);
   const [pkgId, setPkgId] = useState<string | undefined>(service.packages?.[0]?.id);
+  const [custom, setCustom] = useState<Record<string, string>>({});
+  const [remarks, setRemarks] = useState("");
+  const isCustom = pkgId === "custom";
   const pkg = service.packages?.find((p) => p.id === pkgId);
   const extra = service.subs?.filter((s) => picked.includes(s.id)).reduce((n: number, s) => n + s.price, 0) ?? 0;
-  const base = pkg ? pkg.price : service.price;
+  const base = isCustom ? 0 : pkg ? pkg.price : service.price;
   const total = base + extra;
+  const customSummary = isCustom
+    ? [
+        ...CUSTOM_FIELDS.filter((f) => custom[f.id]?.trim()).map((f) => `${f.label}: ${custom[f.id].trim()}`),
+        remarks.trim() && `Remarks: ${remarks.trim()}`,
+      ].filter(Boolean).join(" · ")
+    : "";
 
 
   return (
