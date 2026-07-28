@@ -53,7 +53,15 @@ export const services: Service[] = [
 
   { slug: "outdoor-setup", name: "Outdoor Plant Setup", category: "setup", emoji: "🌳", price: 1499, duration: "2-3 hrs", rating: 4.7, reviews: 132,
     description: "Design and plant your outdoor greens with soil prep, drainage, and seasonal picks.",
-    image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800" },
+    image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800",
+    packages: [
+      { id: "sqft-50-100", name: "50–100 sq. ft. (up to 11 sq. gaj)", price: 6999, priceMax: 8499,
+        includes: ["6 plants", "6 pots", "Grill / plant stand", "Healthy soil"] },
+      { id: "sqft-100-200", name: "100–200 sq. ft.", price: 11999, priceMax: 13999,
+        includes: ["12 plants", "12 pots", "Grill / plant stand", "Healthy soil"] },
+      { id: "sqft-200-300", name: "200–300 sq. ft.", price: 22999, priceMax: 26999,
+        includes: ["25 plants", "25 pots", "Grill / plant stand", "Healthy soil"] },
+    ] },
   { slug: "balcony-garden", name: "Balcony Garden Setup", category: "setup", emoji: "🌻", price: 1299, duration: "2 hrs", rating: 4.9, reviews: 341,
     description: "Compact planters, vertical trellises, and low-maintenance flowering plants for balconies of any size.",
     image: "https://images.unsplash.com/photo-1600411833196-7c1f6b1a8b90?w=800" },
