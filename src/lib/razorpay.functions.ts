@@ -7,7 +7,7 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
     z
       .object({
         amount: z.number().int().min(100).max(100_000_000), // paise
-        kind: z.enum(["shop", "service"]),
+        kind: z.enum(["shop", "service", "membership"]),
         receipt: z.string().min(1).max(40),
         label: z.string().min(1).max(120),
       })

@@ -26,7 +26,7 @@ function loadScript() {
 
 export type PayArgs = {
   amount: number; // rupees
-  kind: "shop" | "service";
+  kind: "shop" | "service" | "membership";
   label: string;
   receipt: string;
   prefill?: { name?: string; email?: string; contact?: string };
