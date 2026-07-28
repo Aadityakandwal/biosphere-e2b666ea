@@ -66,7 +66,7 @@ function ProfilePage() {
             className="h-28 w-28 rounded-full object-cover ring-4 ring-primary/90 ring-offset-2 ring-offset-background"
           />
           <span className="absolute -bottom-3 left-1/2 w-max -translate-x-1/2 rounded-full bg-primary px-4 py-1.5 text-center text-[11px] font-semibold leading-tight text-primary-foreground shadow-[var(--shadow-elevated)]">
-            Elite<br />Caretaker
+            {PLAN_LABELS[p.plan]}<br />Member
           </span>
         </div>
         <h1 className="mt-7 font-display text-3xl font-bold tracking-tight">{p.name}</h1>
