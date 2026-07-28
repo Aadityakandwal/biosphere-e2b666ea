@@ -32,7 +32,7 @@ export const useCart = create<CartState>()(
 
 export type Booking = {
   id: string; serviceSlug: string; date: string; time: string; gardener: string; address: string;
-  status: "upcoming" | "past"; price: number; photos?: string[]; rating?: number; note?: string;
+  status: "upcoming" | "past"; price: number; photos?: string[]; rating?: number; note?: string; paymentId?: string;
 };
 
 type BookingState = {
