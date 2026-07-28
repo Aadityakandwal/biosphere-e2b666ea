@@ -28,7 +28,7 @@ const taglines: Record<string, string> = {
   "terrace-garden": "Rooftop transformation",
   "kitchen-garden": "Herbs & vegetables",
   "basic-maintenance": "Watering, pruning, and repotting services.",
-  "garden-care": "Fertilizer, pest control, and health check-ups.",
+  "garden-care": "Fertilizer application , pest control, and health check-ups.",
   "lawn-garden": "Mowing, hedge trimming, and weed removal.",
   "video-consult": "Live 1-on-1",
   "garden-inspection": "In-person visit",
