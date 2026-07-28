@@ -2,9 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Shell } from "@/components/Shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useCart, useOrders } from "@/lib/stores";
+import { useCart } from "@/lib/stores";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({ meta: [{ title: "Cart — Biosphere" }, { name: "description", content: "Review and checkout your items." }] }),
@@ -12,21 +11,15 @@ export const Route = createFileRoute("/cart")({
 });
 
 function CartPage() {
-  const { items, setQty, remove, clear } = useCart();
-  const addOrder = useOrders(s => s.add);
-  
+  const { items, setQty, remove } = useCart();
+
   const navigate = useNavigate();
   const subtotal = items.reduce((n, i) => n + i.price * i.qty, 0);
   const shipping = items.length ? 49 : 0;
   const total = subtotal + shipping;
 
-  const checkout = () => {
-    const id = "ord-" + Date.now();
-    addOrder({ id, date: new Date().toISOString().slice(0,10), total, items: items.map(i => `${i.name} x${i.qty}`), status: "Placed" });
-    clear();
-    toast.success("Order placed!");
-    navigate({ to: "/orders" });
-  };
+  const checkout = () => navigate({ to: "/checkout" });
+
 
   return (
     <Shell title="Your cart">
