@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useProfile, type PlanId } from "@/lib/stores";
+import { useProfile, resetUserData, type PlanId } from "@/lib/stores";
+
+const LAST_USER_KEY = "bio-last-user";
 
 /**
  * Keeps the local profile store in sync with the signed-in user's row
@@ -11,6 +13,13 @@ export function AuthSync() {
     let cancelled = false;
 
     const load = async (userId: string, fallbackEmail?: string | null) => {
+      // A different user (or a first-ever sign-in) starts from a blank slate.
+      const last = localStorage.getItem(LAST_USER_KEY);
+      if (last !== userId) {
+        resetUserData();
+        localStorage.setItem(LAST_USER_KEY, userId);
+      }
+
       const { data } = await supabase
         .from("profiles")
         .select("full_name, email, phone, address, avatar_url, plan, green_points")
@@ -25,6 +34,7 @@ export function AuthSync() {
         address: data.address || s.address,
         avatar: data.avatar_url || s.avatar,
       });
+      s.setPoints(data.green_points ?? 0);
       if (data.plan) s.setPlan(data.plan as PlanId);
     };
 
@@ -32,6 +42,12 @@ export function AuthSync() {
       if (event === "SIGNED_IN" && session?.user) {
         // defer: no async work directly inside the callback
         setTimeout(() => void load(session.user.id, session.user.email), 0);
+      }
+      if (event === "SIGNED_OUT") {
+        setTimeout(() => {
+          localStorage.removeItem(LAST_USER_KEY);
+          resetUserData();
+        }, 0);
       }
     });
 
@@ -47,3 +63,4 @@ export function AuthSync() {
 
   return null;
 }
+
