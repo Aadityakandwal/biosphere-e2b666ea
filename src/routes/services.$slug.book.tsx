@@ -369,7 +369,7 @@ function BookPage() {
         <div className="mx-auto flex max-w-md items-center gap-2 border-t border-border bg-background/95 px-4 py-3 backdrop-blur">
           {step > 1 && <Button variant="outline" onClick={() => setStep(step - 1)} className="flex-1">Back</Button>}
           {step < 3 && <Button className="flex-1" onClick={() => setStep(step + 1)}>Continue</Button>}
-          {step === 3 && <Button className="flex-1" onClick={handlePay}><Check className="mr-1 h-4 w-4" /> Pay ₹{total}</Button>}
+          {step === 3 && <Button className="flex-1" onClick={handlePay} disabled={paying}>{paying ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" /> Opening Razorpay…</> : <><Check className="mr-1 h-4 w-4" /> Pay ₹{total}</>}</Button>}
         </div>
       </div>
       <div className="h-20" />
