@@ -45,6 +45,14 @@ function ProductPage() {
         </div>
         <div className="text-right">
           <p className="text-2xl font-semibold">₹{product.price}</p>
+          {product.mrp && product.mrp > product.price && (
+            <p className="mt-0.5 flex items-center justify-end gap-2 text-sm">
+              <span className="text-muted-foreground line-through">₹{product.mrp}</span>
+              <span className="font-semibold text-primary">
+                {Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF
+              </span>
+            </p>
+          )}
           {product.popular && <Badge className="mt-1">⭐ Most Popular</Badge>}
         </div>
       </div>
@@ -131,7 +139,11 @@ function NeervaGuide() {
 
       <Card className="flex items-center justify-between p-4">
         <div><p className="font-medium">1 L bottle</p><p className="text-xs text-muted-foreground">Best value</p></div>
-        <div className="text-right"><p className="text-xl font-semibold">₹249</p><Badge>⭐ Most Popular</Badge></div>
+        <div className="text-right">
+          <p className="text-xl font-semibold">₹249 <span className="text-sm font-normal text-muted-foreground line-through">₹300</span></p>
+          <p className="text-xs font-semibold text-primary">17% OFF</p>
+          <Badge className="mt-1">⭐ Most Popular</Badge>
+        </div>
       </Card>
     </div>
   );

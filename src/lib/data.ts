@@ -87,6 +87,8 @@ export type Product = {
   id: string;
   name: string;
   price: number;
+  /** Original list price (MRP) when the item is discounted. */
+  mrp?: number;
   category: "plants" | "tools" | "biovelocity" | "pots";
   image: string;
   short: string;
@@ -100,7 +102,7 @@ export type Product = {
 };
 
 export const products: Product[] = [
-  { id: "neerva", name: "Neerva — Bio Growth Tonic (1L)", price: 249, category: "biovelocity", popular: true,
+  { id: "neerva", name: "Neerva — Bio Growth Tonic (1L)", price: 249, mrp: 300, category: "biovelocity", popular: true,
     image: neervaAsset.url,
     short: "Microbial bio-formula for foliar, soil, and drip application.",
     description: "Neerva Biovelocity is a live microbial bio-liquid that rebuilds soil biology instead of force-feeding the plant. The consortium of beneficial bacteria fixes nitrogen, unlocks bound phosphorus and potassium, and improves root uptake — so leaves green up, flowering improves and stress recovery is faster. Safe for edibles, indoor pots and full field use.",
