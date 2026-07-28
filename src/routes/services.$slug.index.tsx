@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { services, reviews } from "@/lib/data";
-import { Clock, Star, ArrowLeft } from "lucide-react";
+import { Clock, Star, ArrowLeft, Quote } from "lucide-react";
 
 export const Route = createFileRoute("/services/$slug/")({
   loader: ({ params }) => {
@@ -180,16 +180,42 @@ function ServiceDetail() {
       )}
 
       <h2 className="mt-6 font-display text-lg font-semibold">Reviews</h2>
-      <div className="mt-2 space-y-2">
-        {reviews.slice(0, 3).map((r) => (
-          <Card key={r.name} className="p-3">
-            <div className="flex items-center gap-1 text-yellow-500">
-              {Array.from({ length: r.rating }).map((_, i) => <Star key={i} className="h-3 w-3 fill-current" />)}
-            </div>
-            <p className="mt-1 text-sm">{r.text}</p>
-            <p className="mt-1 text-xs text-muted-foreground">— {r.name}</p>
-          </Card>
-        ))}
+      <div className="relative -mx-4 mt-2">
+        <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 scrollbar-hide">
+          {reviews.map((r, idx) => (
+            <Card
+              key={r.name}
+              className="relative w-[280px] flex-none snap-start overflow-hidden border-0 bg-gradient-to-br from-card to-muted p-5 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-elevated"
+            >
+              <Quote className="absolute right-4 top-4 h-8 w-8 text-primary/10" />
+              <div className="flex items-center gap-3">
+                <span
+                  className="flex h-11 w-11 flex-none items-center justify-center rounded-full text-sm font-bold"
+                  style={{
+                    background: `oklch(0.88 0.06 ${130 + (idx * 25) % 90})`,
+                    color: `oklch(0.28 0.07 ${130 + (idx * 25) % 90})`,
+                  }}
+                >
+                  {r.name.charAt(0)}
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate font-display font-semibold">{r.name}</p>
+                  <div className="flex items-center gap-0.5 text-primary">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className={`h-3 w-3 ${i < r.rating ? "fill-current" : "text-muted-foreground/30"}`} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">“{r.text}”</p>
+              <div className="mt-5 flex items-center gap-2">
+                <span className="rounded-full bg-leaf/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+                  {r.service}
+                </span>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
 
       <div className="fixed inset-x-0 bottom-14 z-30">
