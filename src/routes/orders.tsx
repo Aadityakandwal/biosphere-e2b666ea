@@ -7,7 +7,23 @@ import { Download, Truck } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/orders")({
-  head: () => ({ meta: [{ title: "Order history — Biosphere" }, { name: "description", content: "Your past and current orders." }] }),
+  head: () => ({
+    meta: [
+      { title: "Order History — Biosphere" },
+      {
+        name: "description",
+        content:
+          "View your Biosphere order history to track current deliveries and review past purchases of plant care products and services.",
+      },
+      { property: "og:title", content: "Order History — Biosphere" },
+      {
+        property: "og:description",
+        content: "Track current deliveries and review past Biosphere plant care purchases in one place.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: OrdersPage,
 });
 

@@ -14,17 +14,43 @@ export const Route = createFileRoute("/shop/$productId")({
     if (!p) throw notFound();
     return { product: p };
   },
-  head: ({ loaderData }) => ({
+  head: ({ params, loaderData }) => ({
     meta: [
       { title: `${loaderData?.product.name ?? "Product"} — Biosphere Shop` },
       { name: "description", content: (loaderData?.product.description ?? loaderData?.product.short ?? "").slice(0, 155) },
       { property: "og:title", content: `${loaderData?.product.name ?? "Product"} — Biosphere Shop` },
       { property: "og:description", content: (loaderData?.product.description ?? loaderData?.product.short ?? "").slice(0, 155) },
+      { property: "og:type", content: "product" },
+      { property: "og:url", content: `https://biosphere.lovable.app/shop/${params.productId}` },
+      { name: "twitter:card", content: "summary_large_image" },
       ...(loaderData?.product.image ? [
         { property: "og:image", content: loaderData.product.image },
         { name: "twitter:image", content: loaderData.product.image },
       ] : []),
     ],
+    links: [{ rel: "canonical", href: `https://biosphere.lovable.app/shop/${params.productId}` }],
+    scripts: loaderData?.product
+      ? [
+          {
+            type: "application/ld+json",
+            children: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Product",
+              name: loaderData.product.name,
+              description: loaderData.product.description ?? loaderData.product.short,
+              image: loaderData.product.image,
+              brand: { "@type": "Brand", name: "Biosphere" },
+              offers: {
+                "@type": "Offer",
+                price: loaderData.product.price,
+                priceCurrency: "INR",
+                availability: "https://schema.org/InStock",
+                url: `https://biosphere.lovable.app/shop/${params.productId}`,
+              },
+            }),
+          },
+        ]
+      : [],
   }),
   component: ProductPage,
 });

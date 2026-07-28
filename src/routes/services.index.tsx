@@ -75,6 +75,7 @@ function ServicesPage() {
 
   return (
     <Shell>
+      <h1 className="sr-only">Plant setup, care, and gardening consultation services</h1>
       {/* Promo hero */}
       <div className="relative mt-3 overflow-hidden rounded-3xl shadow-elevated">
         <img

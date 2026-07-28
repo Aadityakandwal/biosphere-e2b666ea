@@ -80,14 +80,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Biosphere — Plant Care & Gardening Services" },
+      {
+        name: "description",
+        content:
+          "Biosphere is your all-in-one plant care companion: AI plant doctor, expert gardening services, and BioVelocity growth products delivered to your door.",
+      },
+      { name: "author", content: "Biosphere" },
+      { property: "og:site_name", content: "Biosphere" },
+      { property: "og:title", content: "Biosphere — Plant Care & Gardening Services" },
+      {
+        property: "og:description",
+        content:
+          "AI plant doctor, expert gardening services, and BioVelocity growth products — all in one plant care app.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -95,6 +103,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Biosphere",
+          url: "https://biosphere.lovable.app",
+          description:
+            "Plant care companion offering AI plant diagnosis, gardening services, and organic plant nutrition products.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Biosphere",
+          url: "https://biosphere.lovable.app",
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,

@@ -6,7 +6,23 @@ import { useCart } from "@/lib/stores";
 import { Minus, Plus, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/cart")({
-  head: () => ({ meta: [{ title: "Cart — Biosphere" }, { name: "description", content: "Review and checkout your items." }] }),
+  head: () => ({
+    meta: [
+      { title: "Your Cart — Biosphere" },
+      {
+        name: "description",
+        content:
+          "Review your selected plants, tools, planters, and BioVelocity products before completing your Biosphere purchase.",
+      },
+      { property: "og:title", content: "Your Cart — Biosphere" },
+      {
+        property: "og:description",
+        content: "Review your selected plants, tools, and plant care products before checkout on Biosphere.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: CartPage,
 });
 

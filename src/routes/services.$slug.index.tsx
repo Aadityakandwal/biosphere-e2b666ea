@@ -16,17 +16,46 @@ export const Route = createFileRoute("/services/$slug/")({
     if (!s) throw notFound();
     return { service: s };
   },
-  head: ({ loaderData }) => ({
+  head: ({ params, loaderData }) => ({
     meta: [
       { title: `${loaderData?.service.name ?? "Service"} — Biosphere` },
-      { name: "description", content: loaderData?.service.description ?? "Biosphere service" },
+      { name: "description", content: (loaderData?.service.description ?? "Biosphere service").slice(0, 155) },
       { property: "og:title", content: `${loaderData?.service.name ?? "Service"} — Biosphere` },
-      { property: "og:description", content: loaderData?.service.description ?? "" },
+      { property: "og:description", content: (loaderData?.service.description ?? "").slice(0, 155) },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `https://biosphere.lovable.app/services/${params.slug}` },
+      { name: "twitter:card", content: "summary_large_image" },
       ...(loaderData?.service.image ? [
         { property: "og:image", content: loaderData.service.image },
         { name: "twitter:image", content: loaderData.service.image },
       ] : []),
     ],
+    links: [{ rel: "canonical", href: `https://biosphere.lovable.app/services/${params.slug}` }],
+    scripts: loaderData?.service
+      ? [
+          {
+            type: "application/ld+json",
+            children: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Service",
+              name: loaderData.service.name,
+              description: loaderData.service.description,
+              image: loaderData.service.image,
+              provider: { "@type": "Organization", name: "Biosphere" },
+              offers: {
+                "@type": "Offer",
+                price: loaderData.service.price,
+                priceCurrency: "INR",
+              },
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: loaderData.service.rating,
+                reviewCount: loaderData.service.reviews,
+              },
+            }),
+          },
+        ]
+      : [],
   }),
   component: ServiceDetail,
 });

@@ -52,6 +52,7 @@ function Home() {
 
   return (
     <Shell>
+      <h1 className="sr-only">Biosphere — plant care, gardening services, and plant products</h1>
       {/* Search */}
       <SearchBar />
 
