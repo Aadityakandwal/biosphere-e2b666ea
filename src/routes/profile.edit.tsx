@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useProfile } from "@/lib/stores";
+import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Camera, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -41,8 +42,19 @@ function EditProfile() {
     setAvatar(dataUrl);
   };
 
-  const save = () => {
+  const save = async () => {
     p.update({ ...f, avatar });
+    const { data } = await supabase.auth.getUser();
+    if (data.user) {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ full_name: f.name, email: f.email, phone: f.phone, address: f.address, avatar_url: avatar })
+        .eq("id", data.user.id);
+      if (error) {
+        toast.error("Saved locally, but couldn't sync to your account");
+        return;
+      }
+    }
     toast.success("Profile updated");
   };
 
