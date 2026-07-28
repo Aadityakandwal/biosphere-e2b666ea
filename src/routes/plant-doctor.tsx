@@ -98,6 +98,33 @@ function PlantDoctor() {
           <h1 className="font-display text-2xl font-bold tracking-tight">AI Plant Doctor</h1>
           <p className="mt-1 text-sm text-muted-foreground">Take a clear photo of the affected leaf or upload one from your gallery.</p>
 
+          {/* Daily scan allowance */}
+          <div className={`mt-4 flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 ${exhausted ? "border-destructive/30 bg-destructive/10" : "border-border bg-card"} shadow-soft`}>
+            <div>
+              <p className="text-sm font-semibold">
+                {limit === null
+                  ? "Unlimited scans"
+                  : hydrated
+                    ? `${left} of ${limit} scans left today`
+                    : `${limit} scans/day`}
+              </p>
+              <p className="text-xs text-muted-foreground">{PLAN_LABELS[plan]} plan · resets at midnight</p>
+            </div>
+            {limit !== null && (
+              <Link to="/profile/membership" className="rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground press">
+                Upgrade
+              </Link>
+            )}
+          </div>
+
+          {exhausted && (
+            <p className="mt-2 text-xs text-destructive">
+              You've used all your scans for today. Upgrade your membership for more daily scans.
+            </p>
+          )}
+
+
+
           {/* Viewfinder */}
           <div className="relative mt-5 aspect-[3/4] overflow-hidden rounded-[2rem] bg-[oklch(0.22_0.04_155)] shadow-elevated">
             <img
