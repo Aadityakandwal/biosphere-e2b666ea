@@ -65,18 +65,28 @@ type Order = {
   stage?: number;
   address?: string;
   images?: string[];
+  paymentId?: string;
 };
-type OrderState = { orders: Order[]; add: (o: Order) => void };
+type OrderState = {
+  orders: Order[];
+  add: (o: Order) => void;
+  setStatus: (id: string, status: string, paymentId?: string) => void;
+};
 
 export const useOrders = create<OrderState>()(
   persist(
     (set) => ({
       orders: initialOrders,
       add: (o) => set((s) => ({ orders: [o, ...s.orders] })),
+      setStatus: (id, status, paymentId) =>
+        set((s) => ({
+          orders: s.orders.map((o) => (o.id === id ? { ...o, status, ...(paymentId ? { paymentId } : {}) } : o)),
+        })),
     }),
     { name: "bio-orders-v2" }
   )
 );
+
 
 export type PlanId = "free" | "basic" | "pro" | "elite";
 
