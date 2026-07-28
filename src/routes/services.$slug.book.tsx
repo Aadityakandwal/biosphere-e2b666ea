@@ -195,7 +195,7 @@ function BookPage() {
             <p className="mt-3 text-xs text-muted-foreground">Struck-out slots are fully booked for this date.</p>
           </Card>
 
-          <Card className="p-4">
+          {!isRemote && <Card className="p-4">
             <div className="mb-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" />
