@@ -25,6 +25,18 @@ function ProfilePage() {
   const bookings = useBookings(s => s.bookings);
   const orders = useOrders(s => s.orders);
   const hydrated = useHydrated();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const signOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  };
+
+
 
   const sections = [
     { to: "/profile/edit", icon: User, label: "My Profile", hint: "Edit personal info" },
