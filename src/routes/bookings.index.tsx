@@ -186,7 +186,8 @@ function BookingsPage() {
               Your feedback helps our botanists maintain the highest standards of floral excellence.
             </p>
             <Link
-              to="/profile/support"
+              to="/bookings/review"
+
               className="press mt-5 block rounded-full bg-primary py-3.5 text-center text-sm font-semibold text-primary-foreground shadow-soft hover:shadow-glow"
             >
               Share Review
