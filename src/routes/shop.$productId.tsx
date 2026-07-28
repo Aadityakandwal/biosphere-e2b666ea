@@ -139,7 +139,11 @@ function NeervaGuide() {
 
       <Card className="flex items-center justify-between p-4">
         <div><p className="font-medium">1 L bottle</p><p className="text-xs text-muted-foreground">Best value</p></div>
-        <div className="text-right"><p className="text-xl font-semibold">₹249</p><Badge>⭐ Most Popular</Badge></div>
+        <div className="text-right">
+          <p className="text-xl font-semibold">₹249 <span className="text-sm font-normal text-muted-foreground line-through">₹300</span></p>
+          <p className="text-xs font-semibold text-primary">17% OFF</p>
+          <Badge className="mt-1">⭐ Most Popular</Badge>
+        </div>
       </Card>
     </div>
   );
