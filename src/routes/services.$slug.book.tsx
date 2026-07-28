@@ -17,9 +17,11 @@ import { ArrowLeft, MapPin, Plus, Check, CalendarDays, Clock, Home, Loader2 } fr
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/services/$slug/book")({
-  validateSearch: (search: Record<string, unknown>): { subs?: string } => ({
+  validateSearch: (search: Record<string, unknown>): { subs?: string; pkg?: string } => ({
     subs: typeof search.subs === "string" ? search.subs : undefined,
+    pkg: typeof search.pkg === "string" ? search.pkg : undefined,
   }),
+
   loader: ({ params }) => {
     const s = services.find((x) => x.slug === params.slug);
     if (!s) throw notFound();
