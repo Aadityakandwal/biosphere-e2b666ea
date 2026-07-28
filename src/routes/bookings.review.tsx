@@ -31,7 +31,9 @@ function ReviewPage() {
   const rate = useBookings((s) => s.rate);
 
   const past = bookings.filter((b) => b.status === "past");
-  const booking = (id ? bookings.find((b) => b.id === id) : past[0]) ?? past[0];
+  const initial = (id ? bookings.find((b) => b.id === id) : past[0]) ?? past[0];
+  const [selectedId, setSelectedId] = useState<string | undefined>(initial?.id);
+  const booking = past.find((b) => b.id === selectedId) ?? initial;
   const service = services.find((s) => s.slug === booking?.serviceSlug);
 
   const [rating, setRating] = useState(booking?.rating ?? 0);
@@ -72,20 +74,54 @@ function ReviewPage() {
         </button>
         <h1 className="font-display text-3xl font-semibold tracking-tight text-primary">Write a Review</h1>
 
-        {/* Service card */}
-        <div className="mt-5 flex items-center gap-4 rounded-3xl bg-card p-4 shadow-soft">
-          <img
-            src={service?.image}
-            alt={service?.name ?? "Service"}
-            loading="lazy"
-            className="h-16 w-16 shrink-0 rounded-full object-cover"
-          />
-          <div className="min-w-0">
-            <p className="truncate font-display text-lg font-semibold">{service?.name ?? "Your service"}</p>
-            <p className="text-sm text-muted-foreground">
-              {booking ? `Service completed on ${booking.date}` : "Recently completed"}
-            </p>
-          </div>
+        {/* Service picker */}
+        <div className="mt-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            Which service are you reviewing?
+          </p>
+          {past.length === 0 ? (
+            <div className="mt-3 rounded-3xl bg-card p-4 text-sm text-muted-foreground shadow-soft">
+              No completed services yet.
+            </div>
+          ) : (
+            <div className="mt-3 space-y-2.5">
+              {past.map((b) => {
+                const sv = services.find((x) => x.slug === b.serviceSlug);
+                const on = b.id === booking?.id;
+                return (
+                  <button
+                    key={b.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedId(b.id);
+                      setRating(b.rating ?? 0);
+                    }}
+                    className={`press flex w-full items-center gap-4 rounded-3xl p-4 text-left shadow-soft transition-all ${
+                      on ? "bg-primary/10 ring-2 ring-primary" : "bg-card hover:bg-muted/60"
+                    }`}
+                  >
+                    <img
+                      src={sv?.image}
+                      alt={sv?.name ?? "Service"}
+                      loading="lazy"
+                      className="h-14 w-14 shrink-0 rounded-full object-cover"
+                    />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-display text-base font-semibold">
+                        {sv?.name ?? "Your service"}
+                      </span>
+                      <span className="block text-sm text-muted-foreground">Completed on {b.date}</span>
+                    </span>
+                    <span
+                      className={`h-5 w-5 shrink-0 rounded-full border-2 transition-colors ${
+                        on ? "border-primary bg-primary" : "border-border"
+                      }`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Rating */}
