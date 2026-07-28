@@ -61,8 +61,8 @@ function ProfilePage() {
       {/* Stats */}
       <div className="mt-6 grid grid-cols-3 gap-3">
         <Stat value={`${p.greenPoints}`} label="Green Points" />
-        <Stat value="12" label="Care Streak" accent />
-        <Stat value="92%" label="Garden Health" accent />
+        <StatLink to="/profile/membership" icon={Award} label="Membership" />
+        <StatLink to="/profile/support" icon={HelpCircle} label="Help & Support" />
       </div>
 
       <h2 className="mt-8 font-display text-2xl font-bold tracking-tight">Settings &amp; Tools</h2>
@@ -94,6 +94,20 @@ function ProfilePage() {
         Sign Out
       </button>
     </Shell>
+  );
+}
+
+function StatLink({ to, icon: Icon, label }: { to: string; icon: typeof Award; label: string }) {
+  return (
+    <Link
+      to={to}
+      className="flex flex-col items-center justify-center rounded-3xl border border-border/40 bg-card px-2 py-4 text-center shadow-[var(--shadow-soft)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-elevated)] active:scale-[0.99]"
+    >
+      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+        <Icon className="h-4 w-4" />
+      </span>
+      <p className="mt-1 text-xs font-semibold leading-tight text-foreground">{label}</p>
+    </Link>
   );
 }
 
