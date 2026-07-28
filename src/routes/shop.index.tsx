@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { Reveal } from "@/components/Reveal";
 import { Shell } from "@/components/Shell";
 import { products } from "@/lib/data";
 import { useCart } from "@/lib/stores";
@@ -148,13 +149,13 @@ function ShopPage() {
                 </button>
               </div>
 
-              <div className="-mx-4 mt-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <Reveal className="-mx-4 mt-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {rare.map((p) => (
                   <Link
                     key={p.id}
                     to="/shop/$productId"
                     params={{ productId: p.id }}
-                    className="press group relative min-w-[78%] snap-start overflow-hidden rounded-3xl shadow-elevated"
+                    className="press lift group relative min-w-[78%] snap-start overflow-hidden rounded-3xl shadow-elevated"
                   >
                     <img
                       src={p.image}
@@ -171,7 +172,7 @@ function ShopPage() {
                     </div>
                   </Link>
                 ))}
-              </div>
+              </Reveal>
             </>
           )}
 
@@ -180,7 +181,7 @@ function ShopPage() {
             const items = filtered.filter((p) => p.category === s.id);
             if (items.length === 0) return null;
             return (
-              <section key={s.id} className="mt-8">
+              <Reveal as="section" key={s.id} className="mt-8">
                 <div className="flex items-end justify-between gap-3">
                   <div className="min-w-0">
                     <h2 className="font-display text-xl font-semibold tracking-tight">{s.title}</h2>
@@ -193,12 +194,12 @@ function ShopPage() {
                     See all <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>
-                <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6">
+                <div className="stagger-children is-visible mt-4 grid grid-cols-2 gap-x-4 gap-y-6">
                   {items.map((p) => (
                     <Card key={p.id} p={p} />
                   ))}
                 </div>
-              </section>
+              </Reveal>
             );
           })}
 
@@ -223,14 +224,14 @@ function ShopPage() {
             </span>
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 pb-6">
+          <Reveal stagger className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 pb-6">
             {filtered.map((p) => (
               <Card key={p.id} p={p} />
             ))}
             {filtered.length === 0 && (
               <p className="col-span-2 py-12 text-center text-sm text-muted-foreground">No products found here yet.</p>
             )}
-          </div>
+          </Reveal>
         </>
       )}
     </Shell>
