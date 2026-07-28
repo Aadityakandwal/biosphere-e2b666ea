@@ -64,7 +64,7 @@ function Home() {
           <p className="text-xs font-bold uppercase tracking-[0.18em]">Seasonal Promo</p>
           <p className="font-display text-3xl font-bold leading-tight">Spring Garden Refresh</p>
           <div className="mt-2 flex items-center gap-3">
-            <span className="rounded-full bg-leaf/30 px-3 py-1 text-xs font-bold backdrop-blur-sm">20% OFF</span>
+            <span className="rounded-full bg-leaf/30 px-3.5 py-1.5 text-sm font-bold backdrop-blur-sm">20% OFF</span>
             <Link to="/services" className="inline-flex items-center gap-1.5 text-sm font-semibold">
               Book Now <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
