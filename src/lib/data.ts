@@ -40,7 +40,7 @@ export const categories = [
 export const services: Service[] = [
   // Plant Setup
   { slug: "indoor-setup", name: "Indoor Plant Setup", category: "setup", emoji: "🪴", price: 799, duration: "1-2 hrs", rating: 4.8, reviews: 214,
-    description: "Transform your indoor space with expert placement, potting, and starter plants suited to light and humidity in your home.",
+    description: "Transform your indoor spaces into a fresh, green, and relaxing environment with our customized indoor plant setup. We provide carefully selected indoor plants, stylish pots, plant stands, healthy soil, and grow light solutions to help your plants thrive while enhancing the beauty and air quality of your home or workspace.",
     image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=800",
     packages: [
       { id: "sqft-50-100", name: "50–100 sq. ft.", price: 8999, priceMax: 10999,
