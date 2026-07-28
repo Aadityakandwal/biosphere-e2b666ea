@@ -31,13 +31,30 @@ export const Route = createFileRoute("/services/$slug/")({
   component: ServiceDetail,
 });
 
-const CUSTOM_FIELDS = [
-  { id: "plants", label: "Plants" },
-  { id: "pots", label: "Pots" },
-  { id: "grill", label: "Grill / plant stand" },
-  { id: "lights", label: "Grow lights" },
-  { id: "soil", label: "Healthy soil (bags)" },
-] as const;
+type UnitField = { id: string; label: string; price: number };
+
+const UNIT_PRICES: Record<string, UnitField[]> = {
+  "indoor-setup": [
+    { id: "plants", label: "Indoor plants", price: 200 },
+    { id: "pots", label: "Pots", price: 200 },
+    { id: "grill", label: "Grill / plant stand", price: 1500 },
+    { id: "lights", label: "Grow lights", price: 600 },
+    { id: "soil", label: "Healthy soil (bags)", price: 200 },
+  ],
+  "outdoor-setup": [
+    { id: "plants", label: "Outdoor plants", price: 150 },
+    { id: "pots", label: "Pots", price: 200 },
+    { id: "grill", label: "Grill / plant stand", price: 1500 },
+    { id: "lights", label: "Grow lights", price: 0 },
+    { id: "soil", label: "Healthy soil (bags)", price: 200 },
+  ],
+  "kitchen-garden": [
+    { id: "plants", label: "Vegetable / herb plants", price: 70 },
+    { id: "pots", label: "Grow bags / pots", price: 100 },
+    { id: "grill", label: "Stand", price: 800 },
+    { id: "soil", label: "Healthy soil (bags)", price: 200 },
+  ],
+};
 
 function ServiceDetail() {
   const { service } = Route.useLoaderData() as { service: import("@/lib/data").Service };
@@ -45,14 +62,17 @@ function ServiceDetail() {
   const [pkgId, setPkgId] = useState<string | undefined>(service.packages?.[0]?.id);
   const [custom, setCustom] = useState<Record<string, string>>({});
   const [remarks, setRemarks] = useState("");
+  const unitFields = UNIT_PRICES[service.slug];
   const isCustom = pkgId === "custom";
   const pkg = service.packages?.find((p) => p.id === pkgId);
   const extra = service.subs?.filter((s) => picked.includes(s.id)).reduce((n: number, s) => n + s.price, 0) ?? 0;
-  const base = isCustom ? 0 : pkg ? pkg.price : service.price;
+  const qty = (id: string) => Math.max(0, parseInt(custom[id] ?? "", 10) || 0);
+  const customTotal = (unitFields ?? []).reduce((n, f) => n + qty(f.id) * f.price, 0);
+  const base = isCustom ? customTotal : pkg ? pkg.price : service.price;
   const total = base + extra;
   const customSummary = isCustom
     ? [
-        ...CUSTOM_FIELDS.filter((f) => custom[f.id]?.trim()).map((f) => `${f.label}: ${custom[f.id].trim()}`),
+        ...(unitFields ?? []).filter((f) => qty(f.id) > 0).map((f) => `${f.label} x${qty(f.id)}`),
         remarks.trim() && `Remarks: ${remarks.trim()}`,
       ].filter(Boolean).join(" · ")
     : "";
@@ -78,12 +98,12 @@ function ServiceDetail() {
 
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{service.description}</p>
 
-      {service.packages && (
+      {(service.packages || unitFields) && (
         <>
           <h2 className="mt-6 font-display text-lg font-semibold">Choose your space</h2>
-          <p className="mt-1 text-xs text-muted-foreground">Pick the area you want set up — final price is confirmed after the site survey.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Pick a ready package or build your own — final price is confirmed after the site survey.</p>
           <div className="mt-3 space-y-3">
-            {service.packages.map((p) => {
+            {(service.packages ?? []).map((p) => {
               const active = p.id === pkgId;
               return (
                 <button
@@ -112,37 +132,51 @@ function ServiceDetail() {
               );
             })}
 
-            <button
-              type="button"
-              onClick={() => setPkgId(isCustom ? undefined : "custom")}
-              className={`w-full rounded-2xl border p-4 text-left transition-all ${isCustom ? "border-primary bg-primary/5 shadow-md" : "border-dashed border-border bg-card hover:border-primary/40"}`}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-sm font-semibold">Customized setup</p>
-                  <p className="mt-1 text-xs text-muted-foreground">Tell us exactly what you need — we'll consult and share a quote.</p>
+            {unitFields && (
+              <button
+                type="button"
+                onClick={() => setPkgId(isCustom ? undefined : "custom")}
+                className={`w-full rounded-2xl border p-4 text-left transition-all ${isCustom ? "border-primary bg-primary/5 shadow-md" : "border-dashed border-border bg-card hover:border-primary/40"}`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold">Customized setup</p>
+                    <p className="mt-1 text-xs text-muted-foreground">Pick your own quantities — priced per unit.</p>
+                  </div>
+                  <Badge variant="secondary" className="flex-none text-[11px]">Pay per unit</Badge>
                 </div>
-                <Badge variant="secondary" className="flex-none text-[11px]">No charge now</Badge>
-              </div>
-              {isCustom && <p className="mt-3 text-xs font-medium text-primary">Selected</p>}
-            </button>
+                {isCustom && <p className="mt-3 text-xs font-medium text-primary">Selected</p>}
+              </button>
+            )}
 
-            {isCustom && (
+            {isCustom && unitFields && (
               <Card className="space-y-3 p-4">
-                <p className="text-sm font-semibold">Your custom requirement</p>
-                {CUSTOM_FIELDS.map((f) => (
+                <p className="text-sm font-semibold">Build your setup</p>
+                {unitFields.map((f) => (
                   <div key={f.id} className="flex items-center justify-between gap-3">
-                    <label htmlFor={`c-${f.id}`} className="text-sm text-muted-foreground">{f.label}</label>
-                    <Input
-                      id={`c-${f.id}`}
-                      inputMode="numeric"
-                      placeholder="Qty"
-                      value={custom[f.id] ?? ""}
-                      onChange={(e) => setCustom((c) => ({ ...c, [f.id]: e.target.value }))}
-                      className="h-9 w-24 text-right"
-                    />
+                    <div>
+                      <label htmlFor={`c-${f.id}`} className="text-sm">{f.label}</label>
+                      <p className="text-[11px] text-muted-foreground">{f.price === 0 ? "Free" : `₹${f.price.toLocaleString("en-IN")} each`}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id={`c-${f.id}`}
+                        inputMode="numeric"
+                        placeholder="0"
+                        value={custom[f.id] ?? ""}
+                        onChange={(e) => setCustom((c) => ({ ...c, [f.id]: e.target.value.replace(/\D/g, "") }))}
+                        className="h-9 w-20 text-right"
+                      />
+                      <span className="w-16 text-right text-xs font-medium">
+                        {qty(f.id) > 0 ? `₹${(qty(f.id) * f.price).toLocaleString("en-IN")}` : ""}
+                      </span>
+                    </div>
                   </div>
                 ))}
+                <div className="flex items-center justify-between border-t border-border pt-3 text-sm font-semibold">
+                  <span>Custom subtotal</span>
+                  <span>₹{customTotal.toLocaleString("en-IN")}</span>
+                </div>
                 <div>
                   <label htmlFor="c-remarks" className="text-sm text-muted-foreground">Remarks</label>
                   <Textarea
@@ -153,7 +187,6 @@ function ServiceDetail() {
                     className="mt-1"
                   />
                 </div>
-                <p className="text-[11px] text-muted-foreground">This request is shared with our team — you won't be charged for it. Final pricing is confirmed after consultation.</p>
               </Card>
             )}
           </div>
@@ -222,17 +255,24 @@ function ServiceDetail() {
         <div className="mx-auto flex max-w-md items-center justify-between border-t border-border bg-background/95 px-4 py-3 backdrop-blur">
           <div>
             <p className="text-xs text-muted-foreground">Total</p>
-            <p className="text-lg font-semibold">{isCustom ? "On consultation" : `₹${total.toLocaleString("en-IN")}`}</p>
+            <p className="text-lg font-semibold">₹{total.toLocaleString("en-IN")}</p>
           </div>
           {service.packages && !pkgId ? (
             <Button size="lg" disabled>Select a package</Button>
+          ) : isCustom && customTotal === 0 ? (
+            <Button size="lg" disabled>Add quantities</Button>
           ) : (
             <Link
               to="/services/$slug/book"
               params={{ slug: service.slug }}
-              search={{ subs: picked.length ? picked.join(",") : undefined, pkg: pkgId, custom: isCustom ? (customSummary || "Custom setup requested") : undefined }}
+              search={{
+                subs: picked.length ? picked.join(",") : undefined,
+                pkg: pkgId,
+                custom: isCustom ? customSummary : undefined,
+                customAmt: isCustom ? customTotal : undefined,
+              }}
             >
-              <Button size="lg">{isCustom ? "Request consultation" : "Book service"}</Button>
+              <Button size="lg">Book service</Button>
             </Link>
           )}
         </div>
