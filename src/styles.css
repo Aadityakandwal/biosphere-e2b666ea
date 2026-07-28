@@ -404,3 +404,63 @@ main {
 .reduce-motion main {
   scroll-behavior: auto;
 }
+
+/* ---------- Membership + payment flow motion ---------- */
+@keyframes price-roll {
+  0% { opacity: 0; transform: translateY(60%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@utility price-roll {
+  animation: price-roll 420ms var(--ease-out-soft);
+}
+
+@keyframes plan-pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.035); }
+  100% { transform: scale(1); }
+}
+@utility plan-pop {
+  animation: plan-pop 520ms var(--ease-out-soft);
+}
+
+@keyframes ring-pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-primary) 45%, transparent); }
+  100% { box-shadow: 0 0 0 14px transparent; }
+}
+@utility ring-pulse {
+  animation: ring-pulse 900ms var(--ease-out-soft);
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to { opacity: 1; backdrop-filter: blur(6px); }
+}
+@utility overlay-in {
+  animation: overlay-in 260ms var(--ease-out-soft) both;
+}
+
+@keyframes sheet-rise {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@utility sheet-rise {
+  animation: sheet-rise 420ms var(--ease-out-soft) both;
+}
+
+@keyframes check-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@utility check-pop {
+  animation: check-pop 520ms var(--ease-out-soft) both;
+}
+
+.reduce-motion .price-roll,
+.reduce-motion .plan-pop,
+.reduce-motion .ring-pulse,
+.reduce-motion .overlay-in,
+.reduce-motion .sheet-rise,
+.reduce-motion .check-pop {
+  animation: none !important;
+}
