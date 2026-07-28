@@ -4,11 +4,18 @@ import type { ReactNode } from "react";
 import { useCart } from "@/lib/stores";
 import { Badge } from "@/components/ui/badge";
 import logoAsset from "@/assets/biosphere-logo.png.asset.json";
+import { useLocationPrompt, requestLocation } from "@/lib/use-location";
 
 export function Shell({ children, title }: { children: ReactNode; title?: string }) {
   const items = useCart((s) => s.items);
   const count = items.reduce((n, i) => n + i.qty, 0);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { label: locationLabel, status: locationStatus } = useLocationPrompt();
+  const locationText =
+    locationStatus === "asking"
+      ? "Locating…"
+      : locationLabel ?? (locationStatus === "denied" || locationStatus === "unavailable" ? "Set location" : "Locating…");
+
 
   const navItems = [
     { to: "/", label: "Home", icon: Home },
@@ -22,13 +29,25 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-md pb-24">
         <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border/60 bg-background/70 px-4 py-3 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
-          <Link to="/" className="group press flex items-center gap-2">
-            <img src={logoAsset.url} alt="Biosphere" className="h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
+          <div className="flex items-center gap-2">
+            <Link to="/" className="group press flex items-center gap-2">
+              <img src={logoAsset.url} alt="Biosphere" className="h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
+            </Link>
             <span className="leading-tight">
-              <span className="block font-display text-xl font-semibold tracking-tight text-foreground">Biosphere</span>
-              <span className="flex items-center gap-1 text-[11px] text-muted-foreground"><MapPin className="h-3 w-3" /> Greenwich, NY</span>
+              <Link to="/" className="block font-display text-xl font-semibold tracking-tight text-foreground">Biosphere</Link>
+              <button
+                type="button"
+                onClick={() => void requestLocation()}
+                title="Use my current location"
+                className="flex max-w-[11rem] items-center gap-1 text-[11px] text-muted-foreground transition hover:text-primary"
+              >
+                <MapPin className="h-3 w-3 flex-none" />
+                <span className="truncate">{locationText}</span>
+              </button>
             </span>
-          </Link>
+          </div>
+
+
 
           <div className="flex items-center gap-1">
             <Link to="/cart" aria-label="Cart" className="relative rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-foreground press">
