@@ -40,6 +40,7 @@ type BookingState = {
   add: (b: Booking) => void;
   reschedule: (id: string, date: string, time: string) => void;
   rate: (id: string, r: number) => void;
+  clear: () => void;
 };
 
 export const useBookings = create<BookingState>()(
@@ -49,8 +50,9 @@ export const useBookings = create<BookingState>()(
       add: (b) => set((s) => ({ bookings: [b, ...s.bookings] })),
       reschedule: (id, date, time) => set((s) => ({ bookings: s.bookings.map((b) => (b.id === id ? { ...b, date, time } : b)) })),
       rate: (id, r) => set((s) => ({ bookings: s.bookings.map((b) => (b.id === id ? { ...b, rating: r } : b)) })),
+      clear: () => set({ bookings: [] }),
     }),
-    { name: "bio-bookings" }
+    { name: "bio-bookings-v2" }
   )
 );
 
