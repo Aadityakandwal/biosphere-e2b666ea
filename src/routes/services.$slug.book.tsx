@@ -131,7 +131,7 @@ function BookPage() {
         addBook({
           id, serviceSlug: service.slug, date: date?.toISOString().slice(0,10) ?? "",
           time: slot, gardener: extend ? past.find(p => p.id === extend)!.gardener : "Auto-assigned",
-          address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr), status: "upcoming", price: total, note,
+          address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr), status: "upcoming", price: total, note: fullNote,
           paymentId,
         });
         profile.addPoints(pointsEarned);
