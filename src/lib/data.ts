@@ -63,7 +63,7 @@ export const services: Service[] = [
         includes: ["25 plants", "25 pots", "Grill / plant stand", "Healthy soil"] },
     ] },
   { slug: "balcony-garden", name: "Balcony Garden Setup", category: "setup", emoji: "🌻", price: 1299, duration: "2 hrs", rating: 4.9, reviews: 341,
-    description: "Compact planters, vertical trellises, and low-maintenance flowering plants for balconies of any size.",
+    description: "Transform your balcony into a beautiful green retreat with our customized balcony garden setup. We create space-friendly gardens using suitable plants, stylish pots, vertical stands, healthy soil, and smart arrangements to maximize your available space. Enjoy a refreshing, natural, and relaxing environment right at your home with a personalized balcony garden.",
     image: "https://images.unsplash.com/photo-1600411833196-7c1f6b1a8b90?w=800" },
   { slug: "terrace-garden", name: "Terrace Garden Setup", category: "setup", emoji: "🏡", price: 2999, duration: "half day", rating: 4.8, reviews: 98,
     description: "Full terrace transformation with waterproofing-safe planters, seating, and edible or ornamental themes.",
