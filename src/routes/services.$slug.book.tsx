@@ -93,7 +93,7 @@ function BookPage() {
   const { pay, loading: paying } = useRazorpay();
 
 
-  const selectedPkg = service.packages?.find((p) => p.id === pkgParam);
+  const selectedPkg = (service.packages as import("@/lib/data").Pkg[] | undefined)?.find((p) => p.id === pkgParam);
   const basePrice = selectedPkg ? selectedPkg.price : service.price;
 
   const pickedSubs = ((service.subs ?? []) as { id: string; name: string; price: number }[]).filter((s) => (subsParam?.split(",") ?? []).includes(s.id));
