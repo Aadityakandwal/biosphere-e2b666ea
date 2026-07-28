@@ -10,6 +10,9 @@ import { Leaf, Loader2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    redirect: typeof search.redirect === "string" && search.redirect.startsWith("/") ? search.redirect : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Sign in — Biosphere" },
@@ -25,6 +28,8 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { redirect } = Route.useSearch();
+  const dest = redirect ?? "/";
   const { isAuthenticated, loading } = useAuth();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [name, setName] = useState("");
@@ -33,8 +38,8 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!loading && isAuthenticated) navigate({ to: "/", replace: true });
-  }, [loading, isAuthenticated, navigate]);
+    if (!loading && isAuthenticated) navigate({ to: dest, replace: true });
+  }, [loading, isAuthenticated, navigate, dest]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +64,7 @@ function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
         if (error) throw error;
         toast.success("Welcome back 🌿");
-        navigate({ to: "/", replace: true });
+        navigate({ to: dest, replace: true });
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong";
@@ -80,7 +85,7 @@ function AuthPage() {
       return;
     }
     if (result.redirected) return;
-    navigate({ to: "/", replace: true });
+    navigate({ to: dest, replace: true });
   };
 
   return (
