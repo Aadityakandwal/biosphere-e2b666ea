@@ -38,6 +38,7 @@ function BookingsPage() {
 
   return (
     <Shell>
+      <h1 className="sr-only">My gardening bookings</h1>
       {/* Segmented tabs */}
       <div className="mt-3 grid grid-cols-2 gap-1 rounded-full bg-muted/70 p-1">
         {(["upcoming", "past"] as const).map((t) => (
