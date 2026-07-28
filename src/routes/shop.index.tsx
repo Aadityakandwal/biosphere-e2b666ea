@@ -14,9 +14,9 @@ export const Route = createFileRoute("/shop/")({
   head: () => ({
     meta: [
       { title: "Shop — Biosphere" },
-      { name: "description", content: "Plants, tools, planters, and Biovelocity growth products." },
+      { name: "description", content: "Plants, tools, planters, and Fertilizers." },
       { property: "og:title", content: "Shop — Biosphere" },
-      { property: "og:description", content: "Plants, tools, planters, and Biovelocity growth products." },
+      { property: "og:description", content: "Plants, tools, planters, and Fertilizers." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -28,21 +28,21 @@ const CATS = [
   { id: "all", label: "All Categories", icon: LayoutGrid },
   { id: "plants", label: "Plants", icon: Sprout },
   { id: "tools", label: "Tools", icon: Hammer },
-  { id: "biovelocity", label: "Biovelocity", icon: FlaskConical },
+  { id: "biovelocity", label: "Fertilizers", icon: FlaskConical },
   { id: "pots", label: "Pots", icon: Flower2 },
 ] as const;
 
 const SECTIONS = [
   { id: "plants", title: "Plants", blurb: "Living greenery for every corner" },
   { id: "tools", title: "Tools", blurb: "Built to last, easy to handle" },
-  { id: "biovelocity", title: "Biovelocity", blurb: "Microbial nutrition that works fast" },
+  { id: "biovelocity", title: "Fertilizers", blurb: "Microbial nutrition that works fast" },
   { id: "pots", title: "Pots & Planters", blurb: "Homes that suit your plants" },
 ] as const;
 
 const CAT_LABEL: Record<string, string> = {
   plants: "PLANTS",
   tools: "TOOLS",
-  biovelocity: "BIOVELOCITY",
+  biovelocity: "FERTILIZERS",
   pots: "PLANTERS",
 };
 
