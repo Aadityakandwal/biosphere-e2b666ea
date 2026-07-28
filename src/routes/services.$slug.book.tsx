@@ -10,8 +10,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { services, products, initialBookings } from "@/lib/data";
 import { useAddresses, useBookings, useCart, useProfile } from "@/lib/stores";
+import { useRazorpay } from "@/lib/use-razorpay";
+
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, MapPin, Plus, Check, CalendarDays, Clock, Home } from "lucide-react";
+import { ArrowLeft, MapPin, Plus, Check, CalendarDays, Clock, Home, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/services/$slug/book")({
@@ -86,6 +88,8 @@ function BookPage() {
   const cart = useCart();
   const addBook = useBookings((s) => s.add);
   const profile = useProfile();
+  const { pay, loading: paying } = useRazorpay();
+
 
   const pickedSubs = ((service.subs ?? []) as { id: string; name: string; price: number }[]).filter((s) => (subsParam?.split(",") ?? []).includes(s.id));
   const subsTotal = pickedSubs.reduce((n: number, s) => n + s.price, 0);
@@ -103,19 +107,32 @@ function BookPage() {
 
   const handlePay = () => {
     const id = "b" + Date.now();
-    extras.forEach(pid => {
-      const p = bio.find(x => x.id === pid)!;
-      cart.add({ id: p.id, name: p.name, price: p.price, image: p.image });
+    void pay({
+      amount: total,
+      kind: "service",
+      label: `${service.name} · ${date?.toDateString() ?? ""} ${slot}`,
+      receipt: id,
+      prefill: { name: profile.name, email: profile.email, contact: profile.phone },
+      onSuccess: (paymentId) => {
+        extras.forEach(pid => {
+          const p = bio.find(x => x.id === pid)!;
+          cart.add({ id: p.id, name: p.name, price: p.price, image: p.image });
+        });
+        addBook({
+          id, serviceSlug: service.slug, date: date?.toISOString().slice(0,10) ?? "",
+          time: slot, gardener: extend ? past.find(p => p.id === extend)!.gardener : "Auto-assigned",
+          address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr), status: "upcoming", price: total, note,
+          paymentId,
+        });
+        profile.addPoints(pointsEarned);
+        toast.success("Payment successful — booking confirmed! Green points added.");
+        navigate({ to: "/bookings" });
+      },
+      onFailure: (msg) => toast.error(msg),
+      onDismiss: () => toast.info("Payment cancelled — your booking wasn't placed"),
     });
-    addBook({
-      id, serviceSlug: service.slug, date: date?.toISOString().slice(0,10) ?? "",
-      time: slot, gardener: extend ? past.find(p => p.id === extend)!.gardener : "Auto-assigned",
-      address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr), status: "upcoming", price: total, note,
-    });
-    profile.addPoints(pointsEarned);
-    toast.success("Booking confirmed! Green points added.");
-    navigate({ to: "/bookings" });
   };
+
 
   return (
     <Shell>
@@ -352,7 +369,7 @@ function BookPage() {
         <div className="mx-auto flex max-w-md items-center gap-2 border-t border-border bg-background/95 px-4 py-3 backdrop-blur">
           {step > 1 && <Button variant="outline" onClick={() => setStep(step - 1)} className="flex-1">Back</Button>}
           {step < 3 && <Button className="flex-1" onClick={() => setStep(step + 1)}>Continue</Button>}
-          {step === 3 && <Button className="flex-1" onClick={handlePay}><Check className="mr-1 h-4 w-4" /> Pay ₹{total}</Button>}
+          {step === 3 && <Button className="flex-1" onClick={handlePay} disabled={paying}>{paying ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" /> Opening Razorpay…</> : <><Check className="mr-1 h-4 w-4" /> Pay ₹{total}</>}</Button>}
         </div>
       </div>
       <div className="h-20" />
