@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { initialBookings, initialOrders } from "./data";
+
 
 export type CartItem = { id: string; name: string; price: number; qty: number; image?: string };
 
@@ -45,7 +45,7 @@ type BookingState = {
 export const useBookings = create<BookingState>()(
   persist(
     (set) => ({
-      bookings: initialBookings,
+      bookings: [],
       add: (b) => set((s) => ({ bookings: [b, ...s.bookings] })),
       reschedule: (id, date, time) => set((s) => ({ bookings: s.bookings.map((b) => (b.id === id ? { ...b, date, time } : b)) })),
       rate: (id, r) => set((s) => ({ bookings: s.bookings.map((b) => (b.id === id ? { ...b, rating: r } : b)) })),
@@ -76,7 +76,7 @@ type OrderState = {
 export const useOrders = create<OrderState>()(
   persist(
     (set) => ({
-      orders: initialOrders,
+      orders: [],
       add: (o) => set((s) => ({ orders: [o, ...s.orders] })),
       setStatus: (id, status, paymentId) =>
         set((s) => ({

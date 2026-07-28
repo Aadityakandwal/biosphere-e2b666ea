@@ -114,7 +114,7 @@ function BookPage() {
 
   const isRemote = service.slug === "video-consult";
 
-  const past = initialBookings.filter(b => b.status === "past").slice(0, 5);
+  const past = bookings.filter(b => b.status === "past").slice(0, 5);
 
   const handlePay = () => {
     if (!authLoading && !isAuthenticated) {
