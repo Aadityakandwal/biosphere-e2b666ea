@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PlantDoctorRouteImport } from './routes/plant-doctor'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as ConsultRouteImport } from './routes/consult'
@@ -32,6 +33,11 @@ import { Route as BookingsIdRouteImport } from './routes/bookings.$id'
 import { Route as ServicesSlugIndexRouteImport } from './routes/services.$slug.index'
 import { Route as ServicesSlugBookRouteImport } from './routes/services.$slug.book'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlantDoctorRoute = PlantDoctorRouteImport.update({
   id: '/plant-doctor',
   path: '/plant-doctor',
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
@@ -175,6 +182,7 @@ export interface FileRoutesByTo {
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
@@ -200,6 +208,7 @@ export interface FileRoutesById {
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
@@ -226,6 +235,7 @@ export interface FileRouteTypes {
     | '/consult'
     | '/orders'
     | '/plant-doctor'
+    | '/sitemap.xml'
     | '/bookings/$id'
     | '/bookings/review'
     | '/profile/activity'
@@ -250,6 +260,7 @@ export interface FileRouteTypes {
     | '/consult'
     | '/orders'
     | '/plant-doctor'
+    | '/sitemap.xml'
     | '/bookings/$id'
     | '/bookings/review'
     | '/profile/activity'
@@ -274,6 +285,7 @@ export interface FileRouteTypes {
     | '/consult'
     | '/orders'
     | '/plant-doctor'
+    | '/sitemap.xml'
     | '/bookings/$id'
     | '/bookings/review'
     | '/profile/activity'
@@ -299,6 +311,7 @@ export interface RootRouteChildren {
   ConsultRoute: typeof ConsultRoute
   OrdersRoute: typeof OrdersRoute
   PlantDoctorRoute: typeof PlantDoctorRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BookingsIdRoute: typeof BookingsIdRoute
   BookingsReviewRoute: typeof BookingsReviewRoute
   ProfileActivityRoute: typeof ProfileActivityRoute
@@ -318,6 +331,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/plant-doctor': {
       id: '/plant-doctor'
       path: '/plant-doctor'
@@ -483,6 +503,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConsultRoute: ConsultRoute,
   OrdersRoute: OrdersRoute,
   PlantDoctorRoute: PlantDoctorRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   BookingsIdRoute: BookingsIdRoute,
   BookingsReviewRoute: BookingsReviewRoute,
   ProfileActivityRoute: ProfileActivityRoute,
