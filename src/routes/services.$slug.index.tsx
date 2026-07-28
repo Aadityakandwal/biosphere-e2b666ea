@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { services, reviews } from "@/lib/data";
-import { Clock, Star, ArrowLeft } from "lucide-react";
+import { Clock, Star, ArrowLeft, Quote } from "lucide-react";
 
 export const Route = createFileRoute("/services/$slug/")({
   loader: ({ params }) => {
