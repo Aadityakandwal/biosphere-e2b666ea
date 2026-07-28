@@ -154,10 +154,10 @@ function PlantDoctor() {
             </p>
 
             <div className="absolute inset-x-0 bottom-6 flex items-center justify-center gap-8">
-              <button onClick={() => fileRef.current?.click()} className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-white backdrop-blur-md press" aria-label="Upload photo">
+              <button disabled={exhausted} onClick={() => fileRef.current?.click()} className="flex h-12 w-12 disabled:opacity-40 items-center justify-center rounded-2xl bg-white/15 text-white backdrop-blur-md press" aria-label="Upload photo">
                 <Upload className="h-5 w-5" />
               </button>
-              <button onClick={() => cameraRef.current?.click()} className="flex h-18 w-18 items-center justify-center rounded-full bg-white p-1 shadow-glow press" aria-label="Take photo">
+              <button disabled={exhausted} onClick={() => cameraRef.current?.click()} className="flex h-18 w-18 disabled:opacity-40 items-center justify-center rounded-full bg-white p-1 shadow-glow press" aria-label="Take photo">
                 <span className="flex h-full w-full items-center justify-center rounded-full bg-leaf text-leaf-foreground ring-4 ring-white">
                   <Camera className="h-7 w-7" />
                 </span>
@@ -167,10 +167,10 @@ function PlantDoctor() {
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-3">
-            <Button variant="outline" className="h-12 rounded-2xl" onClick={() => cameraRef.current?.click()}>
+            <Button variant="outline" disabled={exhausted} className="h-12 rounded-2xl" onClick={() => cameraRef.current?.click()}>
               <Camera className="mr-2 h-4 w-4" /> Click photo
             </Button>
-            <Button className="h-12 rounded-2xl" onClick={() => fileRef.current?.click()}>
+            <Button disabled={exhausted} className="h-12 rounded-2xl" onClick={() => fileRef.current?.click()}>
               <Upload className="mr-2 h-4 w-4" /> Upload
             </Button>
           </div>
