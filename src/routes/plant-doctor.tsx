@@ -30,10 +30,24 @@ function PlantDoctor() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Diagnosis | null>(null);
   const add = useCart((s) => s.add);
+  const plan = useProfile((s) => s.plan);
+  const scanDate = useProfile((s) => s.scanDate);
+  const scanCount = useProfile((s) => s.scanCount);
+  const useScan = useProfile((s) => s.useScan);
+  const hydrated = useHydrated();
   const solutions = products.filter((p) => p.category === "biovelocity");
+
+  const limit = SCAN_LIMITS[plan];
+  const usedToday = scanDate === new Date().toISOString().slice(0, 10) ? scanCount : 0;
+  const left = limit === null ? Infinity : Math.max(0, limit - usedToday);
+  const exhausted = hydrated && left <= 0;
 
   const onPick = async (file?: File | null) => {
     if (!file) return;
+    if (exhausted) {
+      toast.error("Daily scan limit reached — upgrade your plan for more");
+      return;
+    }
     if (file.size > 8 * 1024 * 1024) {
       toast.error("Please pick an image under 8MB");
       return;
@@ -50,6 +64,11 @@ function PlantDoctor() {
   };
 
   const run = async (dataUrl: string) => {
+    if (!useScan()) {
+      toast.error("Daily scan limit reached — upgrade your plan for more");
+      setImage(null);
+      return;
+    }
     setLoading(true);
     try {
       const res = await diagnosePlant({ data: { image: dataUrl } });
@@ -60,6 +79,7 @@ function PlantDoctor() {
       setLoading(false);
     }
   };
+
 
   const reset = () => {
     setImage(null);
