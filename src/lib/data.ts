@@ -1,4 +1,4 @@
-import neervaAsset from "@/assets/neerva-bottle.png.asset.json";
+import neervaAsset from "@/assets/neerva-bottle-full.png.asset.json";
 import biobloomAsset from "@/assets/biobloom-yardhak.png.asset.json";
 import snakePlantImg from "@/assets/product-snake-plant.jpg";
 import prunerImg from "@/assets/product-pruner.jpg";
