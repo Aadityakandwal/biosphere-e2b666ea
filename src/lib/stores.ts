@@ -166,7 +166,7 @@ export const useProfile = create<ProfileState>()(
         return true;
       },
     }),
-    { name: "bio-profile" }
+    { name: "bio-profile-v2" }
   )
 );
 
@@ -174,20 +174,28 @@ export const useProfile = create<ProfileState>()(
 type AddrState = {
   addresses: { id: string; label: string; line: string }[];
   add: (a: { id: string; label: string; line: string }) => void;
+  clear: () => void;
 };
 
 export const useAddresses = create<AddrState>()(
   persist(
     (set) => ({
-      addresses: [
-        { id: "a1", label: "Home", line: "Flat 402, Green Meadows, Bengaluru" },
-        { id: "a2", label: "Office", line: "8th floor, Prestige Tower, MG Road" },
-      ],
+      addresses: [],
       add: (a) => set((s) => ({ addresses: [...s.addresses, a] })),
+      clear: () => set({ addresses: [] }),
     }),
-    { name: "bio-addresses" }
+    { name: "bio-addresses-v2" }
   )
 );
+
+/** Wipes all local user data — used when a new user signs in or on sign-out. */
+export function resetUserData() {
+  useProfile.getState().reset();
+  useBookings.getState().clear();
+  useOrders.getState().clear();
+  useAddresses.getState().clear();
+  useCart.getState().clear();
+}
 
 /* ---------- UI preferences (reduced motion) ---------- */
 type PrefsState = {
