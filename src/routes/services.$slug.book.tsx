@@ -115,6 +115,11 @@ function BookPage() {
   const past = initialBookings.filter(b => b.status === "past").slice(0, 5);
 
   const handlePay = () => {
+    if (!authLoading && !isAuthenticated) {
+      toast.error("Please sign in to complete your booking");
+      navigate({ to: "/auth", search: { redirect: location.pathname + location.search } });
+      return;
+    }
     const id = "b" + Date.now();
     const fullNote = [customParam && `Custom setup — ${customParam}`, note].filter(Boolean).join(" | ");
     void pay({
