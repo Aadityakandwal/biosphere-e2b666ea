@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Shell } from "@/components/Shell";
 import { Card } from "@/components/ui/card";
@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { membershipPlans } from "@/lib/data";
 import { useProfile, type PlanId } from "@/lib/stores";
-import { ArrowLeft, Check } from "lucide-react";
+import { useRazorpay } from "@/lib/use-razorpay";
+import { useAuth } from "@/lib/use-auth";
+import { ArrowLeft, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/profile/membership")({
@@ -18,7 +20,37 @@ function MembershipPage() {
   const [cycle, setCycle] = useState<"monthly" | "yearly">("monthly");
   const plan = useProfile((s) => s.plan);
   const setPlan = useProfile((s) => s.setPlan);
+  const profile = useProfile();
+  const navigate = useNavigate();
+  const { pay, loading } = useRazorpay();
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const [payingId, setPayingId] = useState<string | null>(null);
   const factor = cycle === "monthly" ? 1 : 10;
+
+  function subscribe(p: { id: string; name: string; price: number }) {
+    if (authLoading) return;
+    if (!isAuthenticated) {
+      toast.info("Please sign in to buy a membership");
+      navigate({ to: "/auth", search: { redirect: "/profile/membership" } });
+      return;
+    }
+    const amount = p.price * factor;
+    setPayingId(p.id);
+    void pay({
+      amount,
+      kind: "membership",
+      label: `Biosphere ${p.name} membership (${cycle})`,
+      receipt: `mem-${p.id}-${Date.now()}`.slice(0, 40),
+      prefill: { name: profile.name, email: profile.email, contact: profile.phone },
+      onSuccess: () => {
+        setPlan(p.id as PlanId);
+        setPayingId(null);
+        toast.success(`${p.name} membership activated`);
+      },
+      onFailure: (m) => { setPayingId(null); toast.error(m); },
+      onDismiss: () => setPayingId(null),
+    });
+  }
 
   return (
     <Shell>
@@ -50,7 +82,15 @@ function MembershipPage() {
                 <li key={perk} className="flex gap-2"><Check className="h-4 w-4 flex-none text-primary" /> <span>{perk}</span></li>
               ))}
             </ul>
-            <Button className="mt-4 w-full" onClick={() => { setPlan(p.id as PlanId); toast.success(`${p.name} plan activated`); }}>{plan === p.id ? "Current plan" : `Choose ${p.name}`}</Button>
+            <Button
+              className="mt-4 w-full"
+              disabled={plan === p.id || loading}
+              onClick={() => subscribe(p)}
+            >
+              {payingId === p.id && loading ? (
+                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Opening payment…</>
+              ) : plan === p.id ? "Current plan" : `Get ${p.name} · ₹${p.price * factor}`}
+            </Button>
           </Card>
         ))}
       </div>
