@@ -1,13 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Wrench, CalendarDays, ShoppingBag, User, ShoppingCart, MapPin } from "lucide-react";
 import type { ReactNode } from "react";
-import { useCart } from "@/lib/stores";
+import { useCart, useProfile } from "@/lib/stores";
 import { Badge } from "@/components/ui/badge";
 import logoAsset from "@/assets/biosphere-logo.png.asset.json";
 import { useLocationPrompt, requestLocation } from "@/lib/use-location";
 
 export function Shell({ children, title }: { children: ReactNode; title?: string }) {
   const items = useCart((s) => s.items);
+  const avatar = useProfile((s) => s.avatar);
+  const name = useProfile((s) => s.name);
   const count = items.reduce((n, i) => n + i.qty, 0);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { label: locationLabel, status: locationStatus } = useLocationPrompt();
@@ -56,8 +58,12 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
                 <Badge className="absolute -right-0.5 -top-0.5 h-5 min-w-5 rounded-full px-1 text-[10px] shadow-md ring-2 ring-background animate-in zoom-in">{count}</Badge>
               )}
             </Link>
-            <Link to="/profile" aria-label="Profile" className="ml-1 h-9 w-9 overflow-hidden rounded-full bg-secondary ring-1 ring-border shadow-sm transition hover:ring-primary/40 hover:shadow-md press">
-              <img alt="You" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80" className="h-full w-full object-cover" />
+            <Link to="/profile" aria-label="Profile" className="ml-1 flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-secondary ring-1 ring-border shadow-sm transition hover:ring-primary/40 hover:shadow-md press">
+              {avatar ? (
+                <img alt={name || "Your profile photo"} src={avatar} className="h-full w-full object-cover" />
+              ) : (
+                <User className="h-[18px] w-[18px] text-muted-foreground" />
+              )}
             </Link>
           </div>
         </header>
