@@ -3,28 +3,53 @@ import { useNavigate } from "@tanstack/react-router";
 import { Search, X, Leaf, ShoppingBag } from "lucide-react";
 import { services, products } from "@/lib/data";
 
-type Result =
-  | { kind: "service"; id: string; name: string; sub?: string; price: number; image?: string }
-  | { kind: "product"; id: string; name: string; sub?: string; price: number; image?: string };
+type Result = {
+  kind: "service" | "product";
+  id: string;
+  name: string;
+  sub?: string;
+  price: number;
+  image?: string;
+  haystack: string;
+};
+
+const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
 
 function buildIndex(): Result[] {
   const s: Result[] = services.map((x) => ({
-    kind: "service",
+    kind: "service" as const,
     id: x.slug,
     name: x.name,
     sub: "Service",
     price: x.price,
     image: x.image,
+    haystack: norm([x.name, x.category, x.description, x.slug, "service"].join(" ")),
   }));
   const p: Result[] = products.map((x) => ({
-    kind: "product",
+    kind: "product" as const,
     id: x.id,
     name: x.name,
     sub: x.category.charAt(0).toUpperCase() + x.category.slice(1),
     price: x.price,
     image: x.image,
+    haystack: norm(
+      [x.name, x.category, (x as { short?: string }).short ?? "", (x as { description?: string }).description ?? "", "product"].join(" ")
+    ),
   }));
   return [...s, ...p];
+}
+
+function score(r: Result, tokens: string[]): number {
+  const name = norm(r.name);
+  let total = 0;
+  for (const t of tokens) {
+    if (name.startsWith(t)) total += 100;
+    else if (name.includes(t)) total += 60;
+    else if (r.haystack.includes(t)) total += 25;
+    else if (t.length >= 4 && r.haystack.split(" ").some((w) => w.startsWith(t.slice(0, Math.max(3, t.length - 1))))) total += 10;
+    else return -1;
+  }
+  return total;
 }
 
 export function SearchBar() {
@@ -42,13 +67,18 @@ export function SearchBar() {
     return () => document.removeEventListener("mousedown", onDown);
   }, []);
 
-  const term = q.trim().toLowerCase();
+  const term = norm(q);
   const results = React.useMemo(() => {
     if (!term) return [];
+    const tokens = term.split(" ").filter(Boolean);
     return index
-      .filter((r) => r.name.toLowerCase().includes(term) || (r.sub ?? "").toLowerCase().includes(term))
-      .slice(0, 8);
+      .map((r) => ({ r, s: score(r, tokens) }))
+      .filter((x) => x.s >= 0)
+      .sort((a, b) => b.s - a.s || a.r.name.localeCompare(b.r.name))
+      .slice(0, 8)
+      .map((x) => x.r);
   }, [term, index]);
+
 
   const go = (r: Result) => {
     setOpen(false);
