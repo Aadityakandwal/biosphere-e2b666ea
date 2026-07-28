@@ -98,15 +98,13 @@ function ShopPage() {
   return (
     <Shell>
       {/* Search */}
-      <div className="mt-3 flex items-center gap-2 rounded-full bg-muted/70 px-5 py-3.5 shadow-soft transition-shadow focus-within:shadow-glow">
-        <Search className="h-5 w-5 shrink-0 text-muted-foreground" />
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Search for rare plants, tools…"
-          className="w-full bg-transparent text-[15px] outline-none placeholder:text-muted-foreground"
-        />
-      </div>
+      <SearchBar
+        value={q}
+        onValueChange={setQ}
+        scope="products"
+        placeholder="Search for rare plants, tools…"
+      />
+
 
       {/* Categories */}
       <div className="-mx-4 mt-4 flex gap-2.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
