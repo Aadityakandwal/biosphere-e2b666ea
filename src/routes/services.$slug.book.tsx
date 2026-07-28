@@ -302,8 +302,8 @@ function BookPage() {
                 );
               })}
             </div>
-          </Card>
-          <Card className="p-3">
+          </Card>}
+          {!isRemote && <Card className="p-3">
             <p className="mb-2 text-sm font-medium">Add Biovelocity products</p>
             <div className="space-y-2">
               {bio.map(p => (
