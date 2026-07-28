@@ -3,7 +3,9 @@ import { useRef, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
 import { products } from "@/lib/data";
-import { useCart } from "@/lib/stores";
+import { useCart, useProfile, SCAN_LIMITS, PLAN_LABELS } from "@/lib/stores";
+import { useHydrated } from "@/lib/motion";
+
 import { diagnosePlant, type Diagnosis } from "@/lib/plant-doctor.functions";
 import { Camera, Upload, Leaf, AlertCircle, CheckCircle2, Zap, ZapOff, Video, RotateCcw, Droplets, Sun } from "lucide-react";
 import { toast } from "sonner";
