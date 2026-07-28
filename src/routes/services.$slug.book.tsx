@@ -103,19 +103,32 @@ function BookPage() {
 
   const handlePay = () => {
     const id = "b" + Date.now();
-    extras.forEach(pid => {
-      const p = bio.find(x => x.id === pid)!;
-      cart.add({ id: p.id, name: p.name, price: p.price, image: p.image });
+    void pay({
+      amount: total,
+      kind: "service",
+      label: `${service.name} · ${date?.toDateString() ?? ""} ${slot}`,
+      receipt: id,
+      prefill: { name: profile.name, email: profile.email, contact: profile.phone },
+      onSuccess: (paymentId) => {
+        extras.forEach(pid => {
+          const p = bio.find(x => x.id === pid)!;
+          cart.add({ id: p.id, name: p.name, price: p.price, image: p.image });
+        });
+        addBook({
+          id, serviceSlug: service.slug, date: date?.toISOString().slice(0,10) ?? "",
+          time: slot, gardener: extend ? past.find(p => p.id === extend)!.gardener : "Auto-assigned",
+          address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr), status: "upcoming", price: total, note,
+          paymentId,
+        });
+        profile.addPoints(pointsEarned);
+        toast.success("Payment successful — booking confirmed! Green points added.");
+        navigate({ to: "/bookings" });
+      },
+      onFailure: (msg) => toast.error(msg),
+      onDismiss: () => toast.info("Payment cancelled — your booking wasn't placed"),
     });
-    addBook({
-      id, serviceSlug: service.slug, date: date?.toISOString().slice(0,10) ?? "",
-      time: slot, gardener: extend ? past.find(p => p.id === extend)!.gardener : "Auto-assigned",
-      address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr), status: "upcoming", price: total, note,
-    });
-    profile.addPoints(pointsEarned);
-    toast.success("Booking confirmed! Green points added.");
-    navigate({ to: "/bookings" });
   };
+
 
   return (
     <Shell>
