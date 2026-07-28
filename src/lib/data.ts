@@ -52,7 +52,7 @@ export const services: Service[] = [
     ] },
 
   { slug: "outdoor-setup", name: "Outdoor Plant Setup", category: "setup", emoji: "🌳", price: 1499, duration: "2-3 hrs", rating: 4.7, reviews: 132,
-    description: "Design and plant your outdoor greens with soil prep, drainage, and seasonal picks.",
+    description: "Create a beautiful and refreshing outdoor space with our customized outdoor plant setup. We design green corners with suitable outdoor plants, durable pots, plant stands, and nutrient-rich soil to enhance your garden, balcony, terrace, or open area. Our setups are designed to bring natural beauty, freshness, and a vibrant green atmosphere to your surroundings.",
     image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800",
     packages: [
       { id: "sqft-50-100", name: "50–100 sq. ft. (up to 11 sq. gaj)", price: 6999, priceMax: 8499,
