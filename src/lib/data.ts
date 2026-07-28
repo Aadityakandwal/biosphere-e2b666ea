@@ -1,4 +1,5 @@
 import neervaAsset from "@/assets/neerva-bottle.png.asset.json";
+import biobloomAsset from "@/assets/biobloom-yardhak.png.asset.json";
 import snakePlantImg from "@/assets/product-snake-plant.jpg";
 import prunerImg from "@/assets/product-pruner.jpg";
 import lawnCareImg from "@/assets/service-lawn-care.jpg";
@@ -138,7 +139,7 @@ export const products: Product[] = [
     care: "Rinse off soil and dry after use; store indoors during monsoon." },
 
   { id: "biobloom", name: "BioBloom Flower Booster", price: 349, category: "biovelocity",
-    image: "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=800",
+    image: biobloomAsset.url,
     short: "Organic bloom accelerator.",
     description: "BioBloom is a potassium- and phosphorus-rich organic bloom stimulant for flowering and fruiting plants. It encourages more flower buds, deeper petal colour and better fruit set in hibiscus, rose, jasmine, chilli and tomato — without the salt build-up you get from chemical bloom boosters.",
     highlights: ["500 ml concentrate", "Boosts bud count and petal colour", "Organic, residue-free on edibles", "Best used through the flowering cycle"],
