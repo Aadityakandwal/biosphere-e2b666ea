@@ -235,7 +235,7 @@ function BookPage() {
                 );
               })}
             </div>
-          </Card>
+          </Card>}
         </div>
       )}
 
