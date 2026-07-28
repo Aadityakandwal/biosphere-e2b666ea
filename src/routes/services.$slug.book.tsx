@@ -17,9 +17,10 @@ import { ArrowLeft, MapPin, Plus, Check, CalendarDays, Clock, Home, Loader2 } fr
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/services/$slug/book")({
-  validateSearch: (search: Record<string, unknown>): { subs?: string; pkg?: string } => ({
+  validateSearch: (search: Record<string, unknown>): { subs?: string; pkg?: string; custom?: string } => ({
     subs: typeof search.subs === "string" ? search.subs : undefined,
     pkg: typeof search.pkg === "string" ? search.pkg : undefined,
+    custom: typeof search.custom === "string" ? search.custom : undefined,
   }),
 
   loader: ({ params }) => {
@@ -50,7 +51,7 @@ function slotAvailability(date?: Date) {
 
 function BookPage() {
   const { service } = Route.useLoaderData();
-  const { subs: subsParam, pkg: pkgParam } = Route.useSearch();
+  const { subs: subsParam, pkg: pkgParam, custom: customParam } = Route.useSearch();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [date, setDate] = useState<Date | undefined>(new Date(Date.now() + 86400000));
@@ -94,7 +95,8 @@ function BookPage() {
 
 
   const selectedPkg = (service.packages as import("@/lib/data").Pkg[] | undefined)?.find((p) => p.id === pkgParam);
-  const basePrice = selectedPkg ? selectedPkg.price : service.price;
+  const isCustomReq = pkgParam === "custom";
+  const basePrice = isCustomReq ? 0 : selectedPkg ? selectedPkg.price : service.price;
 
   const pickedSubs = ((service.subs ?? []) as { id: string; name: string; price: number }[]).filter((s) => (subsParam?.split(",") ?? []).includes(s.id));
   const subsTotal = pickedSubs.reduce((n: number, s) => n + s.price, 0);
@@ -113,6 +115,18 @@ function BookPage() {
 
   const handlePay = () => {
     const id = "b" + Date.now();
+    if (isCustomReq && total === 0) {
+      addBook({
+        id, serviceSlug: service.slug, date: date?.toISOString().slice(0,10) ?? "",
+        time: slot, gardener: "Consultation pending",
+        address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr),
+        status: "upcoming", price: 0,
+        note: [customParam && `Custom request — ${customParam}`, note].filter(Boolean).join(" | "),
+      });
+      toast.success("Request sent — our team will consult you shortly.");
+      navigate({ to: "/bookings" });
+      return;
+    }
     void pay({
       amount: total,
       kind: "service",
@@ -349,7 +363,10 @@ function BookPage() {
           <Card className="p-4">
             <p className="text-sm font-medium">Order summary</p>
             <div className="mt-3 space-y-2 text-sm">
-              <Row label={selectedPkg ? `${service.name} · ${selectedPkg.name}` : service.name} value={`₹${basePrice.toLocaleString("en-IN")}`} />
+              <Row label={isCustomReq ? `${service.name} · Customized (on consultation)` : selectedPkg ? `${service.name} · ${selectedPkg.name}` : service.name} value={isCustomReq ? "₹0" : `₹${basePrice.toLocaleString("en-IN")}`} />
+              {isCustomReq && customParam && (
+                <p className="rounded-xl bg-muted/50 p-3 text-xs text-muted-foreground">Your request: {customParam}</p>
+              )}
               {pickedSubs.map((s) => (
                 <Row key={s.id} label={<span className="text-muted-foreground">+ {s.name}</span>} value={`₹${s.price}`} />
               ))}
@@ -375,7 +392,7 @@ function BookPage() {
         <div className="mx-auto flex max-w-md items-center gap-2 border-t border-border bg-background/95 px-4 py-3 backdrop-blur">
           {step > 1 && <Button variant="outline" onClick={() => setStep(step - 1)} className="flex-1">Back</Button>}
           {step < 3 && <Button className="flex-1" onClick={() => setStep(step + 1)}>Continue</Button>}
-          {step === 3 && <Button className="flex-1" onClick={handlePay} disabled={paying}>{paying ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" /> Opening Razorpay…</> : <><Check className="mr-1 h-4 w-4" /> Pay ₹{total}</>}</Button>}
+          {step === 3 && <Button className="flex-1" onClick={handlePay} disabled={paying}>{paying ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" /> Opening Razorpay…</> : <><Check className="mr-1 h-4 w-4" /> {isCustomReq && total === 0 ? "Send request" : `Pay ₹${total}`}</>}</Button>}
         </div>
       </div>
       <div className="h-20" />
