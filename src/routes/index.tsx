@@ -1,5 +1,6 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Reveal } from "@/components/Reveal";
 import { Shell } from "@/components/Shell";
 import { SearchBar } from "@/components/SearchBar";
 
@@ -58,7 +59,7 @@ function Home() {
 
 
       {/* Seasonal promo hero */}
-      <div className="group relative mt-5 overflow-hidden rounded-3xl shadow-elevated">
+      <Reveal className="group relative mt-5 overflow-hidden rounded-3xl shadow-elevated">
         <img src={hero.image} alt="" className="h-52 w-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-r from-[oklch(0.24_0.05_155)] via-[oklch(0.24_0.05_155)]/80 to-transparent" />
         <div className="absolute inset-0 flex flex-col justify-center gap-2 p-5 text-primary-foreground">
@@ -71,7 +72,7 @@ function Home() {
             <span className="rounded-full bg-leaf px-3.5 py-1.5 text-sm font-bold text-leaf-foreground shadow-sm backdrop-blur-sm">20% OFF</span>
           </div>
         </div>
-      </div>
+      </Reveal>
 
       {/* AI Plant Doctor banner */}
       <Link
@@ -94,7 +95,7 @@ function Home() {
 
       {/* Shop categories */}
       <SectionRow title="Shop Categories" href="/shop" />
-      <div className="grid grid-cols-4 gap-3">
+      <Reveal stagger className="grid grid-cols-4 gap-3">
         {catTiles.map(({ name, cat, Icon }) => (
           <Link
             key={name}
@@ -108,11 +109,11 @@ function Home() {
             <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/80">{name}</span>
           </Link>
         ))}
-      </div>
+      </Reveal>
 
       {/* Popular services */}
       <SectionRow title="Popular Services" href="/services" />
-      <Card className="flex gap-0 overflow-hidden p-0 shadow-soft transition hover:shadow-elevated">
+      <Card className="lift flex gap-0 overflow-hidden p-0 shadow-soft">
         <span className="media-zoom flex w-28 flex-none"><img src={featured.image} alt="" className="h-auto w-full object-cover" /></span>
         <div className="flex flex-1 flex-col p-4">
           <div className="flex items-start justify-between gap-2">
@@ -130,10 +131,10 @@ function Home() {
         </div>
       </Card>
 
-      <div className="mt-3 grid grid-cols-2 gap-3">
+      <Reveal stagger className="mt-3 grid grid-cols-2 gap-3">
         {secondary.map((s) => (
           <Link key={s.slug} to="/services/$slug" params={{ slug: s.slug }}>
-            <Card className="h-full p-4 shadow-soft transition hover:-translate-y-1 hover:shadow-elevated">
+            <Card className="lift h-full p-4 shadow-soft">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-base">
                 {s.emoji}
               </span>
@@ -142,15 +143,15 @@ function Home() {
             </Card>
           </Link>
         ))}
-      </div>
+      </Reveal>
 
       {/* Seasonal tips */}
       <SectionRow title="Seasonal Tips" />
-      <div className="flex flex-col gap-3">
+      <Reveal stagger className="flex flex-col gap-3">
         {(showAllTips ? seasonalTips : seasonalTips.slice(0, 2)).map((tip) => (
           <div
             key={tip.id}
-            className="flex items-center gap-4 rounded-3xl bg-muted p-4 transition hover:bg-muted/80"
+            className="lift flex items-center gap-4 rounded-3xl bg-muted p-4 transition hover:bg-muted/80"
           >
             <div className="flex-1">
               <span className="rounded-full bg-leaf/25 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
@@ -177,11 +178,11 @@ function Home() {
           {showAllTips ? "View less" : "View more"}
           <ChevronDown className={`h-4 w-4 transition-transform ${showAllTips ? "rotate-180" : ""}`} />
         </button>
-      </div>
+      </Reveal>
 
       {/* Reviews */}
       <SectionRow title="Recent Reviews" />
-      <div className="relative -mx-4">
+      <Reveal className="relative -mx-4">
         <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-6 scrollbar-hide">
           {reviews.map((r, idx) => (
             <Card
@@ -222,7 +223,7 @@ function Home() {
             </Card>
           ))}
         </div>
-      </div>
+      </Reveal>
     </Shell>
   );
 }

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { Reveal } from "@/components/Reveal";
 import { Shell } from "@/components/Shell";
 import { services } from "@/lib/data";
 import { ChevronRight, Video, ClipboardCheck, FlaskConical } from "lucide-react";
@@ -77,11 +78,11 @@ function ServicesPage() {
     <Shell>
       <h1 className="sr-only">Plant setup, care, and gardening consultation services</h1>
       {/* Promo hero */}
-      <div className="relative mt-3 overflow-hidden rounded-3xl shadow-elevated">
+      <Reveal className="group relative mt-3 overflow-hidden rounded-3xl shadow-elevated">
         <img
           src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=900"
           alt="Lush greenhouse full of plants"
-          className="h-52 w-full object-cover"
+          className="h-52 w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/75 to-primary/10" />
         <div className="absolute inset-0 flex flex-col justify-center p-5">
@@ -95,7 +96,7 @@ function ServicesPage() {
             Premium care for your urban jungle.
           </p>
         </div>
-      </div>
+      </Reveal>
 
       {/* Category chips */}
       <div className="-mx-4 mt-5 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -116,7 +117,7 @@ function ServicesPage() {
 
       {/* Plant Setup */}
       {show("setup") && (
-        <section>
+        <Reveal as="section">
           <SectionTitle title="Plant Setup" count={setup.length} />
           <Link
             to="/services/$slug"
@@ -133,9 +134,9 @@ function ServicesPage() {
             </div>
           </Link>
 
-          <div className="mt-3 space-y-3">
+          <div className="stagger-children is-visible mt-3 space-y-3">
             {restSetup.map((s) => (
-              <div key={s.slug} className="surface surface-hover media-zoom flex items-center gap-4 rounded-3xl p-4">
+              <div key={s.slug} className="surface surface-hover media-zoom lift flex items-center gap-4 rounded-3xl p-4">
                 <img src={s.image} alt={s.name} className="h-16 w-16 shrink-0 rounded-full object-cover" />
                 <div className="min-w-0 flex-1">
                   <Link to="/services/$slug" params={{ slug: s.slug }} className="block">
@@ -158,16 +159,16 @@ function ServicesPage() {
           </div>
 
           <p className="mt-3 text-center text-xs italic text-muted-foreground">more setup services coming soon…</p>
-        </section>
+        </Reveal>
       )}
 
       {/* Care & Maintenance */}
       {show("care") && (
-        <section>
+        <Reveal as="section">
           <SectionTitle title="Care & Maintenance" count={care.length} />
-          <div className="space-y-3">
+          <div className="stagger-children is-visible space-y-3">
             {care.map((s) => (
-              <div key={s.slug} className="surface surface-hover media-zoom flex items-center gap-4 rounded-3xl p-4">
+              <div key={s.slug} className="surface surface-hover media-zoom lift flex items-center gap-4 rounded-3xl p-4">
                 <img src={s.image} alt={s.name} className="h-16 w-16 shrink-0 rounded-full object-cover" />
                 <div className="min-w-0 flex-1">
                   <Link to="/services/$slug" params={{ slug: s.slug }} className="block">
@@ -188,14 +189,14 @@ function ServicesPage() {
               </div>
             ))}
           </div>
-        </section>
+        </Reveal>
       )}
 
       {/* Consultation */}
       {show("consult") && (
-        <section className="pb-6">
+        <Reveal as="section" className="pb-6">
           <SectionTitle title="Consultation" count={consult.length} />
-          <div className="grid grid-cols-2 gap-3">
+          <div className="stagger-children is-visible grid grid-cols-2 gap-3">
             {consultTiles.map((s, i) => {
               const Icon = consultIcons[i] ?? Video;
               return (
@@ -232,7 +233,7 @@ function ServicesPage() {
               <ChevronRight className="h-5 w-5 shrink-0 text-primary" />
             </Link>
           )}
-        </section>
+        </Reveal>
       )}
     </Shell>
   );
