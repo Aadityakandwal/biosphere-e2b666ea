@@ -37,7 +37,9 @@ function ProductPage() {
   return (
     <Shell>
       <Link to="/shop" className="mb-2 inline-flex items-center gap-1 text-sm text-muted-foreground"><ArrowLeft className="h-4 w-4" /> Back to shop</Link>
-      <img src={product.image} alt={product.name} className="h-64 w-full rounded-2xl object-cover" />
+      <div className="flex h-80 w-full items-center justify-center overflow-hidden rounded-2xl bg-muted/40">
+        <img src={product.image} alt={product.name} className="h-full w-full object-contain" />
+      </div>
       <div className="mt-4 flex items-start justify-between gap-3">
         <div>
           <h1 className="font-display text-2xl font-semibold">{product.name}</h1>
