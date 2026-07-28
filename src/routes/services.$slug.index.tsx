@@ -255,17 +255,24 @@ function ServiceDetail() {
         <div className="mx-auto flex max-w-md items-center justify-between border-t border-border bg-background/95 px-4 py-3 backdrop-blur">
           <div>
             <p className="text-xs text-muted-foreground">Total</p>
-            <p className="text-lg font-semibold">{isCustom ? "On consultation" : `₹${total.toLocaleString("en-IN")}`}</p>
+            <p className="text-lg font-semibold">₹{total.toLocaleString("en-IN")}</p>
           </div>
           {service.packages && !pkgId ? (
             <Button size="lg" disabled>Select a package</Button>
+          ) : isCustom && customTotal === 0 ? (
+            <Button size="lg" disabled>Add quantities</Button>
           ) : (
             <Link
               to="/services/$slug/book"
               params={{ slug: service.slug }}
-              search={{ subs: picked.length ? picked.join(",") : undefined, pkg: pkgId, custom: isCustom ? (customSummary || "Custom setup requested") : undefined }}
+              search={{
+                subs: picked.length ? picked.join(",") : undefined,
+                pkg: pkgId,
+                custom: isCustom ? customSummary : undefined,
+                customAmt: isCustom ? customTotal : undefined,
+              }}
             >
-              <Button size="lg">{isCustom ? "Request consultation" : "Book service"}</Button>
+              <Button size="lg">Book service</Button>
             </Link>
           )}
         </div>
