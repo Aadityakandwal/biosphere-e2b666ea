@@ -1,9 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { Shell } from "@/components/Shell";
 import { useProfile, useBookings, useOrders, PLAN_LABELS, SCAN_LIMITS } from "@/lib/stores";
 import { useHydrated } from "@/lib/motion";
+import { useAuth } from "@/lib/use-auth";
+import { supabase } from "@/integrations/supabase/client";
 import { ProfileSkeleton } from "@/components/Skeletons";
-import { ChevronRight, User, CalendarDays, Leaf, Award, Settings, HelpCircle, LogOut } from "lucide-react";
+import { ChevronRight, User, CalendarDays, Leaf, Award, Settings, HelpCircle, LogOut, LogIn } from "lucide-react";
 
 export const Route = createFileRoute("/profile/")({
   head: () => ({
@@ -86,13 +89,24 @@ function ProfilePage() {
         ))}
       </div>
 
-      <button
-        type="button"
-        className="mx-auto mt-8 flex items-center gap-2 rounded-full px-4 py-2 text-base font-medium text-destructive transition-colors hover:bg-destructive/10"
-      >
-        <LogOut className="h-5 w-5" />
-        Sign Out
-      </button>
+      {isAuthenticated ? (
+        <button
+          type="button"
+          onClick={signOut}
+          className="mx-auto mt-8 flex items-center gap-2 rounded-full px-4 py-2 text-base font-medium text-destructive transition-colors hover:bg-destructive/10"
+        >
+          <LogOut className="h-5 w-5" />
+          Sign Out
+        </button>
+      ) : (
+        <Link
+          to="/auth"
+          className="mx-auto mt-8 flex w-max items-center gap-2 rounded-full bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-[var(--shadow-elevated)] transition-transform active:scale-[0.98]"
+        >
+          <LogIn className="h-5 w-5" />
+          Sign in or create account
+        </Link>
+      )}
     </Shell>
   );
 }
