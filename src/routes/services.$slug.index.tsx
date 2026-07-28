@@ -31,13 +31,30 @@ export const Route = createFileRoute("/services/$slug/")({
   component: ServiceDetail,
 });
 
-const CUSTOM_FIELDS = [
-  { id: "plants", label: "Plants" },
-  { id: "pots", label: "Pots" },
-  { id: "grill", label: "Grill / plant stand" },
-  { id: "lights", label: "Grow lights" },
-  { id: "soil", label: "Healthy soil (bags)" },
-] as const;
+type UnitField = { id: string; label: string; price: number };
+
+const UNIT_PRICES: Record<string, UnitField[]> = {
+  "indoor-setup": [
+    { id: "plants", label: "Indoor plants", price: 200 },
+    { id: "pots", label: "Pots", price: 200 },
+    { id: "grill", label: "Grill / plant stand", price: 1500 },
+    { id: "lights", label: "Grow lights", price: 600 },
+    { id: "soil", label: "Healthy soil (bags)", price: 200 },
+  ],
+  "outdoor-setup": [
+    { id: "plants", label: "Outdoor plants", price: 150 },
+    { id: "pots", label: "Pots", price: 200 },
+    { id: "grill", label: "Grill / plant stand", price: 1500 },
+    { id: "lights", label: "Grow lights", price: 0 },
+    { id: "soil", label: "Healthy soil (bags)", price: 200 },
+  ],
+  "kitchen-garden": [
+    { id: "plants", label: "Vegetable / herb plants", price: 70 },
+    { id: "pots", label: "Grow bags / pots", price: 100 },
+    { id: "grill", label: "Stand", price: 800 },
+    { id: "soil", label: "Healthy soil (bags)", price: 200 },
+  ],
+};
 
 function ServiceDetail() {
   const { service } = Route.useLoaderData() as { service: import("@/lib/data").Service };
@@ -45,14 +62,17 @@ function ServiceDetail() {
   const [pkgId, setPkgId] = useState<string | undefined>(service.packages?.[0]?.id);
   const [custom, setCustom] = useState<Record<string, string>>({});
   const [remarks, setRemarks] = useState("");
+  const unitFields = UNIT_PRICES[service.slug];
   const isCustom = pkgId === "custom";
   const pkg = service.packages?.find((p) => p.id === pkgId);
   const extra = service.subs?.filter((s) => picked.includes(s.id)).reduce((n: number, s) => n + s.price, 0) ?? 0;
-  const base = isCustom ? 0 : pkg ? pkg.price : service.price;
+  const qty = (id: string) => Math.max(0, parseInt(custom[id] ?? "", 10) || 0);
+  const customTotal = (unitFields ?? []).reduce((n, f) => n + qty(f.id) * f.price, 0);
+  const base = isCustom ? customTotal : pkg ? pkg.price : service.price;
   const total = base + extra;
   const customSummary = isCustom
     ? [
-        ...CUSTOM_FIELDS.filter((f) => custom[f.id]?.trim()).map((f) => `${f.label}: ${custom[f.id].trim()}`),
+        ...(unitFields ?? []).filter((f) => qty(f.id) > 0).map((f) => `${f.label} x${qty(f.id)}`),
         remarks.trim() && `Remarks: ${remarks.trim()}`,
       ].filter(Boolean).join(" · ")
     : "";
