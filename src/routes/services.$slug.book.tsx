@@ -97,6 +97,8 @@ function BookPage() {
   const pointsEarned = Math.floor((service.price + subsTotal) / 100) * 50;
 
 
+  const isRemote = service.slug === "video-consult";
+
   const past = initialBookings.filter(b => b.status === "past").slice(0, 5);
 
   const handlePay = () => {
