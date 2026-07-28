@@ -109,6 +109,51 @@ function ServiceDetail() {
                 </button>
               );
             })}
+
+            <button
+              type="button"
+              onClick={() => setPkgId(isCustom ? undefined : "custom")}
+              className={`w-full rounded-2xl border p-4 text-left transition-all ${isCustom ? "border-primary bg-primary/5 shadow-md" : "border-dashed border-border bg-card hover:border-primary/40"}`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-semibold">Customized setup</p>
+                  <p className="mt-1 text-xs text-muted-foreground">Tell us exactly what you need — we'll consult and share a quote.</p>
+                </div>
+                <Badge variant="secondary" className="flex-none text-[11px]">No charge now</Badge>
+              </div>
+              {isCustom && <p className="mt-3 text-xs font-medium text-primary">Selected</p>}
+            </button>
+
+            {isCustom && (
+              <Card className="space-y-3 p-4">
+                <p className="text-sm font-semibold">Your custom requirement</p>
+                {CUSTOM_FIELDS.map((f) => (
+                  <div key={f.id} className="flex items-center justify-between gap-3">
+                    <label htmlFor={`c-${f.id}`} className="text-sm text-muted-foreground">{f.label}</label>
+                    <Input
+                      id={`c-${f.id}`}
+                      inputMode="numeric"
+                      placeholder="Qty"
+                      value={custom[f.id] ?? ""}
+                      onChange={(e) => setCustom((c) => ({ ...c, [f.id]: e.target.value }))}
+                      className="h-9 w-24 text-right"
+                    />
+                  </div>
+                ))}
+                <div>
+                  <label htmlFor="c-remarks" className="text-sm text-muted-foreground">Remarks</label>
+                  <Textarea
+                    id="c-remarks"
+                    placeholder="Anything else we should know?"
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+                <p className="text-[11px] text-muted-foreground">This request is shared with our team — you won't be charged for it. Final pricing is confirmed after consultation.</p>
+              </Card>
+            )}
           </div>
         </>
       )}
