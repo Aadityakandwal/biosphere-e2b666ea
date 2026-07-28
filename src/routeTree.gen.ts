@@ -25,6 +25,7 @@ import { Route as ProfileMembershipRouteImport } from './routes/profile.membersh
 import { Route as ProfileGreenPointsRouteImport } from './routes/profile.green-points'
 import { Route as ProfileEditRouteImport } from './routes/profile.edit'
 import { Route as ProfileActivityRouteImport } from './routes/profile.activity'
+import { Route as BookingsReviewRouteImport } from './routes/bookings.review'
 import { Route as BookingsIdRouteImport } from './routes/bookings.$id'
 import { Route as ServicesSlugIndexRouteImport } from './routes/services.$slug.index'
 import { Route as ServicesSlugBookRouteImport } from './routes/services.$slug.book'
@@ -109,6 +110,11 @@ const ProfileActivityRoute = ProfileActivityRouteImport.update({
   path: '/profile/activity',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BookingsReviewRoute = BookingsReviewRouteImport.update({
+  id: '/bookings/review',
+  path: '/bookings/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BookingsIdRoute = BookingsIdRouteImport.update({
   id: '/bookings/$id',
   path: '/bookings/$id',
@@ -132,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/bookings/$id': typeof BookingsIdRoute
+  '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
   '/profile/edit': typeof ProfileEditRoute
   '/profile/green-points': typeof ProfileGreenPointsRoute
@@ -153,6 +160,7 @@ export interface FileRoutesByTo {
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/bookings/$id': typeof BookingsIdRoute
+  '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
   '/profile/edit': typeof ProfileEditRoute
   '/profile/green-points': typeof ProfileGreenPointsRoute
@@ -175,6 +183,7 @@ export interface FileRoutesById {
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/bookings/$id': typeof BookingsIdRoute
+  '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
   '/profile/edit': typeof ProfileEditRoute
   '/profile/green-points': typeof ProfileGreenPointsRoute
@@ -198,6 +207,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/plant-doctor'
     | '/bookings/$id'
+    | '/bookings/review'
     | '/profile/activity'
     | '/profile/edit'
     | '/profile/green-points'
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/plant-doctor'
     | '/bookings/$id'
+    | '/bookings/review'
     | '/profile/activity'
     | '/profile/edit'
     | '/profile/green-points'
@@ -240,6 +251,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/plant-doctor'
     | '/bookings/$id'
+    | '/bookings/review'
     | '/profile/activity'
     | '/profile/edit'
     | '/profile/green-points'
@@ -262,6 +274,7 @@ export interface RootRouteChildren {
   OrdersRoute: typeof OrdersRoute
   PlantDoctorRoute: typeof PlantDoctorRoute
   BookingsIdRoute: typeof BookingsIdRoute
+  BookingsReviewRoute: typeof BookingsReviewRoute
   ProfileActivityRoute: typeof ProfileActivityRoute
   ProfileEditRoute: typeof ProfileEditRoute
   ProfileGreenPointsRoute: typeof ProfileGreenPointsRoute
@@ -391,6 +404,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileActivityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bookings/review': {
+      id: '/bookings/review'
+      path: '/bookings/review'
+      fullPath: '/bookings/review'
+      preLoaderRoute: typeof BookingsReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bookings/$id': {
       id: '/bookings/$id'
       path: '/bookings/$id'
@@ -422,6 +442,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrdersRoute: OrdersRoute,
   PlantDoctorRoute: PlantDoctorRoute,
   BookingsIdRoute: BookingsIdRoute,
+  BookingsReviewRoute: BookingsReviewRoute,
   ProfileActivityRoute: ProfileActivityRoute,
   ProfileEditRoute: ProfileEditRoute,
   ProfileGreenPointsRoute: ProfileGreenPointsRoute,
