@@ -32,8 +32,12 @@ export const Route = createFileRoute("/services/$slug/")({
 function ServiceDetail() {
   const { service } = Route.useLoaderData() as { service: import("@/lib/data").Service };
   const [picked, setPicked] = useState<string[]>([]);
+  const [pkgId, setPkgId] = useState<string | undefined>(service.packages?.[0]?.id);
+  const pkg = service.packages?.find((p) => p.id === pkgId);
   const extra = service.subs?.filter((s) => picked.includes(s.id)).reduce((n: number, s) => n + s.price, 0) ?? 0;
-  const total = service.price + extra;
+  const base = pkg ? pkg.price : service.price;
+  const total = base + extra;
+
 
   return (
     <Shell>
@@ -48,14 +52,52 @@ function ServiceDetail() {
           </div>
         </div>
         <div className="text-right">
-          <p className="text-2xl font-semibold">₹{service.price}</p>
-          <p className="text-xs text-muted-foreground">base price</p>
+          <p className="text-2xl font-semibold">₹{base.toLocaleString("en-IN")}</p>
+          <p className="text-xs text-muted-foreground">{pkg ? "starting price" : "base price"}</p>
         </div>
       </div>
 
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{service.description}</p>
 
+      {service.packages && (
+        <>
+          <h2 className="mt-6 font-display text-lg font-semibold">Choose your space</h2>
+          <p className="mt-1 text-xs text-muted-foreground">Pick the area you want set up — final price is confirmed after the site survey.</p>
+          <div className="mt-3 space-y-3">
+            {service.packages.map((p) => {
+              const active = p.id === pkgId;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setPkgId(active ? undefined : p.id)}
+                  className={`w-full rounded-2xl border p-4 text-left transition-all ${active ? "border-primary bg-primary/5 shadow-md" : "border-border bg-card hover:border-primary/40"}`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold">{p.name}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{p.includes.join(" · ")}</p>
+                    </div>
+                    <div className="flex-none text-right">
+                      <p className="text-sm font-semibold">₹{p.price.toLocaleString("en-IN")}</p>
+                      <p className="text-[11px] text-muted-foreground">to ₹{p.priceMax.toLocaleString("en-IN")}</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {p.includes.map((inc) => (
+                      <Badge key={inc} variant="secondary" className="text-[11px]">{inc}</Badge>
+                    ))}
+                  </div>
+                  {active && <p className="mt-3 text-xs font-medium text-primary">Selected</p>}
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
+
       {service.subs && (
+
         <>
           <h2 className="mt-6 font-display text-lg font-semibold">Add sub-services</h2>
           <div className="mt-2 space-y-2">
@@ -90,13 +132,18 @@ function ServiceDetail() {
         <div className="mx-auto flex max-w-md items-center justify-between border-t border-border bg-background/95 px-4 py-3 backdrop-blur">
           <div>
             <p className="text-xs text-muted-foreground">Total</p>
-            <p className="text-lg font-semibold">₹{total}</p>
+            <p className="text-lg font-semibold">₹{total.toLocaleString("en-IN")}</p>
           </div>
-          <Link to="/services/$slug/book" params={{ slug: service.slug }} search={{ subs: picked.length ? picked.join(",") : undefined }}>
-            <Button size="lg">Book service</Button>
-          </Link>
+          {service.packages && !pkgId ? (
+            <Button size="lg" disabled>Select a package</Button>
+          ) : (
+            <Link to="/services/$slug/book" params={{ slug: service.slug }} search={{ subs: picked.length ? picked.join(",") : undefined, pkg: pkgId }}>
+              <Button size="lg">Book service</Button>
+            </Link>
+          )}
         </div>
       </div>
+
       <div className="h-20" />
     </Shell>
   );

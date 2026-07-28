@@ -17,9 +17,11 @@ import { ArrowLeft, MapPin, Plus, Check, CalendarDays, Clock, Home, Loader2 } fr
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/services/$slug/book")({
-  validateSearch: (search: Record<string, unknown>): { subs?: string } => ({
+  validateSearch: (search: Record<string, unknown>): { subs?: string; pkg?: string } => ({
     subs: typeof search.subs === "string" ? search.subs : undefined,
+    pkg: typeof search.pkg === "string" ? search.pkg : undefined,
   }),
+
   loader: ({ params }) => {
     const s = services.find((x) => x.slug === params.slug);
     if (!s) throw notFound();
@@ -48,7 +50,7 @@ function slotAvailability(date?: Date) {
 
 function BookPage() {
   const { service } = Route.useLoaderData();
-  const { subs: subsParam } = Route.useSearch();
+  const { subs: subsParam, pkg: pkgParam } = Route.useSearch();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [date, setDate] = useState<Date | undefined>(new Date(Date.now() + 86400000));
@@ -91,14 +93,18 @@ function BookPage() {
   const { pay, loading: paying } = useRazorpay();
 
 
+  const selectedPkg = (service.packages as import("@/lib/data").Pkg[] | undefined)?.find((p) => p.id === pkgParam);
+  const basePrice = selectedPkg ? selectedPkg.price : service.price;
+
   const pickedSubs = ((service.subs ?? []) as { id: string; name: string; price: number }[]).filter((s) => (subsParam?.split(",") ?? []).includes(s.id));
   const subsTotal = pickedSubs.reduce((n: number, s) => n + s.price, 0);
 
   const extrasTotal = bio.filter(p => extras.includes(p.id)).reduce((n, p) => n + p.price, 0);
-  const taxes = Math.round((service.price + subsTotal) * 0.05);
-  const total = service.price + subsTotal + extrasTotal + taxes;
+  const taxes = Math.round((basePrice + subsTotal) * 0.05);
+  const total = basePrice + subsTotal + extrasTotal + taxes;
   // Green Points are earned on service value only (not products/taxes): 50 pts per ₹100
-  const pointsEarned = Math.floor((service.price + subsTotal) / 100) * 50;
+  const pointsEarned = Math.floor((basePrice + subsTotal) / 100) * 50;
+
 
 
   const isRemote = service.slug === "video-consult";
@@ -343,7 +349,7 @@ function BookPage() {
           <Card className="p-4">
             <p className="text-sm font-medium">Order summary</p>
             <div className="mt-3 space-y-2 text-sm">
-              <Row label={service.name} value={`₹${service.price}`} />
+              <Row label={selectedPkg ? `${service.name} · ${selectedPkg.name}` : service.name} value={`₹${basePrice.toLocaleString("en-IN")}`} />
               {pickedSubs.map((s) => (
                 <Row key={s.id} label={<span className="text-muted-foreground">+ {s.name}</span>} value={`₹${s.price}`} />
               ))}

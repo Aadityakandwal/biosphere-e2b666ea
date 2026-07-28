@@ -9,6 +9,13 @@ import gardenInspectionImg from "@/assets/service-garden-inspection.jpg";
 import soilTestingImg from "@/assets/service-soil-testing.jpg";
 
 export type Sub = { id: string; name: string; price: number };
+export type Pkg = {
+  id: string;
+  name: string;
+  includes: string[];
+  price: number;
+  priceMax: number;
+};
 export type Service = {
   slug: string;
   name: string;
@@ -19,6 +26,7 @@ export type Service = {
   description: string;
   image: string;
   subs?: Sub[];
+  packages?: Pkg[];
   rating: number;
   reviews: number;
 };
@@ -33,7 +41,16 @@ export const services: Service[] = [
   // Plant Setup
   { slug: "indoor-setup", name: "Indoor Plant Setup", category: "setup", emoji: "🪴", price: 799, duration: "1-2 hrs", rating: 4.8, reviews: 214,
     description: "Transform your indoor space with expert placement, potting, and starter plants suited to light and humidity in your home.",
-    image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=800" },
+    image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=800",
+    packages: [
+      { id: "sqft-50-100", name: "50–100 sq. ft.", price: 8999, priceMax: 10999,
+        includes: ["6 plants", "6 pots", "Grill", "Grow lights", "Healthy soil"] },
+      { id: "sqft-100-200", name: "100–200 sq. ft.", price: 14999, priceMax: 17999,
+        includes: ["12 plants", "12 pots", "Grill", "Grow lights", "Healthy soil"] },
+      { id: "sqft-200-300", name: "200–300 sq. ft.", price: 27999, priceMax: 34999,
+        includes: ["25 plants", "25 pots", "Grill", "Grow lights", "Healthy soil"] },
+    ] },
+
   { slug: "outdoor-setup", name: "Outdoor Plant Setup", category: "setup", emoji: "🌳", price: 1499, duration: "2-3 hrs", rating: 4.7, reviews: 132,
     description: "Design and plant your outdoor greens with soil prep, drainage, and seasonal picks.",
     image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800" },
