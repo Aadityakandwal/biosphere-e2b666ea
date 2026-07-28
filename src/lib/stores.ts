@@ -113,30 +113,39 @@ type ProfileState = {
   plan: PlanId;
   scanDate: string;
   scanCount: number;
-  update: (p: Partial<Pick<ProfileState, "name" | "email" | "phone" | "address" | "avatar">>) => void;
+  update: (p: Partial<Pick<ProfileState, "name" | "email" | "phone" | "address" | "avatar" | "greenPoints">>) => void;
   addPoints: (n: number) => void;
+  setPoints: (n: number) => void;
   setPlan: (p: PlanId) => void;
+  /** Wipes local profile data back to a blank new-user state. */
+  reset: () => void;
   /** Scans left today (Infinity when unlimited). */
   scansLeft: () => number;
   /** Consumes one scan; returns false when the daily limit is reached. */
   useScan: () => boolean;
 };
 
+const BLANK_PROFILE = {
+  name: "",
+  email: "",
+  phone: "",
+  address: "",
+  greenPoints: 0,
+  avatar: "",
+  plan: "free" as PlanId,
+  scanDate: today(),
+  scanCount: 0,
+};
+
 export const useProfile = create<ProfileState>()(
   persist(
     (set, get) => ({
-      name: "Arjun Kapoor",
-      email: "arjun@biosphere.app",
-      phone: "+91 98765 43210",
-      address: "Flat 402, Green Meadows, Bengaluru",
-      greenPoints: 1240,
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=240",
-      plan: "basic",
-      scanDate: today(),
-      scanCount: 0,
+      ...BLANK_PROFILE,
       update: (p) => set(p),
       addPoints: (n) => set((s) => ({ greenPoints: s.greenPoints + n })),
+      setPoints: (n) => set({ greenPoints: n }),
       setPlan: (plan) => set({ plan }),
+      reset: () => set({ ...BLANK_PROFILE, scanDate: today() }),
       scansLeft: () => {
         const s = get();
         const limit = SCAN_LIMITS[s.plan];
