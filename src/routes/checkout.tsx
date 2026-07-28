@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCart, useOrders, useProfile } from "@/lib/stores";
 import { useRazorpay } from "@/lib/use-razorpay";
+import { useAuth } from "@/lib/use-auth";
 import { ArrowLeft, CheckCircle2, Loader2, Lock, ShieldCheck, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
@@ -29,6 +30,7 @@ function CheckoutPage() {
   const setStatus = useOrders((s) => s.setStatus);
   const profile = useProfile();
   const { pay, loading } = useRazorpay();
+  const { isAuthenticated, loading: authLoading } = useAuth();
 
   const subtotal = items.reduce((n, i) => n + i.price * i.qty, 0);
   const shipping = items.length ? 49 : 0;
@@ -40,6 +42,11 @@ function CheckoutPage() {
   const [failure, setFailure] = useState("");
 
   const startPayment = () => {
+    if (!authLoading && !isAuthenticated) {
+      toast.error("Please sign in to complete your purchase");
+      navigate({ to: "/auth", search: { redirect: "/checkout" } });
+      return;
+    }
     setFailure("");
     const id = "ord-" + Date.now();
     void pay({
