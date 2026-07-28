@@ -87,6 +87,8 @@ export type Product = {
   id: string;
   name: string;
   price: number;
+  /** Original list price (MRP) when the item is discounted. */
+  mrp?: number;
   category: "plants" | "tools" | "biovelocity" | "pots";
   image: string;
   short: string;
