@@ -197,7 +197,7 @@
 }
 
 @utility page-enter {
-  & > * {
+  & > *:not(.reveal-item):not(.stagger-children) {
     animation: rise-in 520ms var(--ease-out-soft) both;
   }
   & > *:nth-child(1) { animation-delay: 0ms; }
