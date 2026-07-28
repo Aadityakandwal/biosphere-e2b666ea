@@ -86,6 +86,8 @@ function BookPage() {
   const cart = useCart();
   const addBook = useBookings((s) => s.add);
   const profile = useProfile();
+  const { pay, loading: paying } = useRazorpay();
+
 
   const pickedSubs = ((service.subs ?? []) as { id: string; name: string; price: number }[]).filter((s) => (subsParam?.split(",") ?? []).includes(s.id));
   const subsTotal = pickedSubs.reduce((n: number, s) => n + s.price, 0);
