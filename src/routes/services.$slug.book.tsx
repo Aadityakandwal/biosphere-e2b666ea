@@ -13,7 +13,7 @@ import { useAddresses, useBookings, useCart, useProfile } from "@/lib/stores";
 import { useRazorpay } from "@/lib/use-razorpay";
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, MapPin, Plus, Check, CalendarDays, Clock, Home } from "lucide-react";
+import { ArrowLeft, MapPin, Plus, Check, CalendarDays, Clock, Home, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/services/$slug/book")({
