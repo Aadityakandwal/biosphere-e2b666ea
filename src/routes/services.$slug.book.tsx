@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { services, products, initialBookings } from "@/lib/data";
+import { services, products } from "@/lib/data";
 import { useAddresses, useBookings, useCart, useProfile } from "@/lib/stores";
 import { useRazorpay } from "@/lib/use-razorpay";
 import { useAuth } from "@/lib/use-auth";
@@ -92,6 +92,7 @@ function BookPage() {
   const bio = products.filter(p => p.category === "biovelocity").slice(0, 3);
   const cart = useCart();
   const addBook = useBookings((s) => s.add);
+  const bookings = useBookings((s) => s.bookings);
   const profile = useProfile();
   const { pay, loading: paying } = useRazorpay();
   const { isAuthenticated, loading: authLoading } = useAuth();
