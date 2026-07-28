@@ -93,14 +93,18 @@ function BookPage() {
   const { pay, loading: paying } = useRazorpay();
 
 
+  const selectedPkg = service.packages?.find((p) => p.id === pkgParam);
+  const basePrice = selectedPkg ? selectedPkg.price : service.price;
+
   const pickedSubs = ((service.subs ?? []) as { id: string; name: string; price: number }[]).filter((s) => (subsParam?.split(",") ?? []).includes(s.id));
   const subsTotal = pickedSubs.reduce((n: number, s) => n + s.price, 0);
 
   const extrasTotal = bio.filter(p => extras.includes(p.id)).reduce((n, p) => n + p.price, 0);
-  const taxes = Math.round((service.price + subsTotal) * 0.05);
-  const total = service.price + subsTotal + extrasTotal + taxes;
+  const taxes = Math.round((basePrice + subsTotal) * 0.05);
+  const total = basePrice + subsTotal + extrasTotal + taxes;
   // Green Points are earned on service value only (not products/taxes): 50 pts per ₹100
-  const pointsEarned = Math.floor((service.price + subsTotal) / 100) * 50;
+  const pointsEarned = Math.floor((basePrice + subsTotal) / 100) * 50;
+
 
 
   const isRemote = service.slug === "video-consult";
