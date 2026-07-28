@@ -45,6 +45,14 @@ function ProductPage() {
         </div>
         <div className="text-right">
           <p className="text-2xl font-semibold">₹{product.price}</p>
+          {product.mrp && product.mrp > product.price && (
+            <p className="mt-0.5 flex items-center justify-end gap-2 text-sm">
+              <span className="text-muted-foreground line-through">₹{product.mrp}</span>
+              <span className="font-semibold text-primary">
+                {Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF
+              </span>
+            </p>
+          )}
           {product.popular && <Badge className="mt-1">⭐ Most Popular</Badge>}
         </div>
       </div>
