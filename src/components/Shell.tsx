@@ -32,9 +32,21 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
           <div className="flex items-center gap-2">
             <Link to="/" className="group press flex items-center gap-2">
               <img src={logoAsset.url} alt="Biosphere" className="h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
-              <span className="block font-display text-xl font-semibold tracking-tight text-foreground">Biosphere</span>
             </Link>
+            <span className="leading-tight">
+              <Link to="/" className="block font-display text-xl font-semibold tracking-tight text-foreground">Biosphere</Link>
+              <button
+                type="button"
+                onClick={() => void requestLocation()}
+                title="Use my current location"
+                className="flex max-w-[11rem] items-center gap-1 text-[11px] text-muted-foreground transition hover:text-primary"
+              >
+                <MapPin className="h-3 w-3 flex-none" />
+                <span className="truncate">{locationText}</span>
+              </button>
+            </span>
           </div>
+
 
 
           <div className="flex items-center gap-1">
