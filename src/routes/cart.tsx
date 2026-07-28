@@ -2,9 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Shell } from "@/components/Shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useCart, useOrders } from "@/lib/stores";
+import { useCart } from "@/lib/stores";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({ meta: [{ title: "Cart — Biosphere" }, { name: "description", content: "Review and checkout your items." }] }),
