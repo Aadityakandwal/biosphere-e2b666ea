@@ -115,6 +115,18 @@ function BookPage() {
 
   const handlePay = () => {
     const id = "b" + Date.now();
+    if (isCustomReq && total === 0) {
+      addBook({
+        id, serviceSlug: service.slug, date: date?.toISOString().slice(0,10) ?? "",
+        time: slot, gardener: "Consultation pending",
+        address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr),
+        status: "upcoming", price: 0,
+        note: [customParam && `Custom request — ${customParam}`, note].filter(Boolean).join(" | "),
+      });
+      toast.success("Request sent — our team will consult you shortly.");
+      navigate({ to: "/bookings" });
+      return;
+    }
     void pay({
       amount: total,
       kind: "service",
