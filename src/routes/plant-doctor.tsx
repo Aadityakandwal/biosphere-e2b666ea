@@ -3,7 +3,9 @@ import { useRef, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
 import { products } from "@/lib/data";
-import { useCart } from "@/lib/stores";
+import { useCart, useProfile, SCAN_LIMITS, PLAN_LABELS } from "@/lib/stores";
+import { useHydrated } from "@/lib/motion";
+
 import { diagnosePlant, type Diagnosis } from "@/lib/plant-doctor.functions";
 import { Camera, Upload, Leaf, AlertCircle, CheckCircle2, Zap, ZapOff, Video, RotateCcw, Droplets, Sun } from "lucide-react";
 import { toast } from "sonner";
@@ -30,10 +32,24 @@ function PlantDoctor() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Diagnosis | null>(null);
   const add = useCart((s) => s.add);
+  const plan = useProfile((s) => s.plan);
+  const scanDate = useProfile((s) => s.scanDate);
+  const scanCount = useProfile((s) => s.scanCount);
+  const useScan = useProfile((s) => s.useScan);
+  const hydrated = useHydrated();
   const solutions = products.filter((p) => p.category === "biovelocity");
+
+  const limit = SCAN_LIMITS[plan];
+  const usedToday = scanDate === new Date().toISOString().slice(0, 10) ? scanCount : 0;
+  const left = limit === null ? Infinity : Math.max(0, limit - usedToday);
+  const exhausted = hydrated && left <= 0;
 
   const onPick = async (file?: File | null) => {
     if (!file) return;
+    if (exhausted) {
+      toast.error("Daily scan limit reached — upgrade your plan for more");
+      return;
+    }
     if (file.size > 8 * 1024 * 1024) {
       toast.error("Please pick an image under 8MB");
       return;
@@ -50,6 +66,11 @@ function PlantDoctor() {
   };
 
   const run = async (dataUrl: string) => {
+    if (!useScan()) {
+      toast.error("Daily scan limit reached — upgrade your plan for more");
+      setImage(null);
+      return;
+    }
     setLoading(true);
     try {
       const res = await diagnosePlant({ data: { image: dataUrl } });
@@ -60,6 +81,7 @@ function PlantDoctor() {
       setLoading(false);
     }
   };
+
 
   const reset = () => {
     setImage(null);
@@ -75,6 +97,33 @@ function PlantDoctor() {
         <div className="mt-2">
           <h1 className="font-display text-2xl font-bold tracking-tight">AI Plant Doctor</h1>
           <p className="mt-1 text-sm text-muted-foreground">Take a clear photo of the affected leaf or upload one from your gallery.</p>
+
+          {/* Daily scan allowance */}
+          <div className={`mt-4 flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 ${exhausted ? "border-destructive/30 bg-destructive/10" : "border-border bg-card"} shadow-soft`}>
+            <div>
+              <p className="text-sm font-semibold">
+                {limit === null
+                  ? "Unlimited scans"
+                  : hydrated
+                    ? `${left} of ${limit} scans left today`
+                    : `${limit} scans/day`}
+              </p>
+              <p className="text-xs text-muted-foreground">{PLAN_LABELS[plan]} plan · resets at midnight</p>
+            </div>
+            {limit !== null && (
+              <Link to="/profile/membership" className="rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground press">
+                Upgrade
+              </Link>
+            )}
+          </div>
+
+          {exhausted && (
+            <p className="mt-2 text-xs text-destructive">
+              You've used all your scans for today. Upgrade your membership for more daily scans.
+            </p>
+          )}
+
+
 
           {/* Viewfinder */}
           <div className="relative mt-5 aspect-[3/4] overflow-hidden rounded-[2rem] bg-[oklch(0.22_0.04_155)] shadow-elevated">
@@ -105,10 +154,10 @@ function PlantDoctor() {
             </p>
 
             <div className="absolute inset-x-0 bottom-6 flex items-center justify-center gap-8">
-              <button onClick={() => fileRef.current?.click()} className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-white backdrop-blur-md press" aria-label="Upload photo">
+              <button disabled={exhausted} onClick={() => fileRef.current?.click()} className="flex h-12 w-12 disabled:opacity-40 items-center justify-center rounded-2xl bg-white/15 text-white backdrop-blur-md press" aria-label="Upload photo">
                 <Upload className="h-5 w-5" />
               </button>
-              <button onClick={() => cameraRef.current?.click()} className="flex h-18 w-18 items-center justify-center rounded-full bg-white p-1 shadow-glow press" aria-label="Take photo">
+              <button disabled={exhausted} onClick={() => cameraRef.current?.click()} className="flex h-18 w-18 disabled:opacity-40 items-center justify-center rounded-full bg-white p-1 shadow-glow press" aria-label="Take photo">
                 <span className="flex h-full w-full items-center justify-center rounded-full bg-leaf text-leaf-foreground ring-4 ring-white">
                   <Camera className="h-7 w-7" />
                 </span>
@@ -118,10 +167,10 @@ function PlantDoctor() {
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-3">
-            <Button variant="outline" className="h-12 rounded-2xl" onClick={() => cameraRef.current?.click()}>
+            <Button variant="outline" disabled={exhausted} className="h-12 rounded-2xl" onClick={() => cameraRef.current?.click()}>
               <Camera className="mr-2 h-4 w-4" /> Click photo
             </Button>
-            <Button className="h-12 rounded-2xl" onClick={() => fileRef.current?.click()}>
+            <Button disabled={exhausted} className="h-12 rounded-2xl" onClick={() => fileRef.current?.click()}>
               <Upload className="mr-2 h-4 w-4" /> Upload
             </Button>
           </div>
