@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { membershipPlans } from "@/lib/data";
+import { useProfile, type PlanId } from "@/lib/stores";
 import { ArrowLeft, Check } from "lucide-react";
 import { toast } from "sonner";
 
@@ -15,6 +16,8 @@ export const Route = createFileRoute("/profile/membership")({
 
 function MembershipPage() {
   const [cycle, setCycle] = useState<"monthly" | "yearly">("monthly");
+  const plan = useProfile((s) => s.plan);
+  const setPlan = useProfile((s) => s.setPlan);
   const factor = cycle === "monthly" ? 1 : 10;
 
   return (
@@ -31,7 +34,7 @@ function MembershipPage() {
 
       <div className="mt-4 space-y-3">
         {membershipPlans.map(p => (
-          <Card key={p.id} className={`p-4 ${p.popular ? "ring-2 ring-primary" : ""}`}>
+          <Card key={p.id} className={`p-4 ${plan === p.id ? "ring-2 ring-primary" : p.popular ? "ring-2 ring-primary/40" : ""}`}>
             <div className="flex items-start justify-between">
               <div>
                 <p className="font-display text-xl font-semibold">{p.name}</p>
@@ -47,7 +50,7 @@ function MembershipPage() {
                 <li key={perk} className="flex gap-2"><Check className="h-4 w-4 flex-none text-primary" /> <span>{perk}</span></li>
               ))}
             </ul>
-            <Button className="mt-4 w-full" onClick={() => toast.success(`${p.name} plan selected`)}>Choose {p.name}</Button>
+            <Button className="mt-4 w-full" onClick={() => { setPlan(p.id as PlanId); toast.success(`${p.name} plan activated`); }}>{plan === p.id ? "Current plan" : `Choose ${p.name}`}</Button>
           </Card>
         ))}
       </div>

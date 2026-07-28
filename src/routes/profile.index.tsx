@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/Shell";
-import { useProfile, useBookings, useOrders } from "@/lib/stores";
+import { useProfile, useBookings, useOrders, PLAN_LABELS, SCAN_LIMITS } from "@/lib/stores";
 import { useHydrated } from "@/lib/motion";
 import { ProfileSkeleton } from "@/components/Skeletons";
 import { ChevronRight, User, CalendarDays, Leaf, Award, Settings, HelpCircle, LogOut } from "lucide-react";
@@ -27,7 +27,7 @@ function ProfilePage() {
     { to: "/profile/edit", icon: User, label: "My Profile", hint: "Edit personal info" },
     { to: "/profile/activity", icon: CalendarDays, label: "My Bookings & Orders", hint: `${bookings.length} bookings · ${orders.length} orders` },
     { to: "/profile/green-points", icon: Leaf, label: "Redeem Green Points", hint: `${p.greenPoints} pts available` },
-    { to: "/profile/membership", icon: Award, label: "Membership Pass", hint: "Basic · Pro · Elite" },
+    { to: "/profile/membership", icon: Award, label: "Membership Pass", hint: `${PLAN_LABELS[p.plan]} plan · ${SCAN_LIMITS[p.plan] === null ? "unlimited" : SCAN_LIMITS[p.plan]} AI scans/day` },
     { to: "/profile/settings", icon: Settings, label: "Settings", hint: "Notifications, privacy" },
     { to: "/profile/support", icon: HelpCircle, label: "Help & Support", hint: "WhatsApp · Email · Phone" },
   ] as const;
@@ -46,7 +46,7 @@ function ProfilePage() {
       <div className="mt-6 flex flex-col items-center">
         <div className="relative">
           <img
-            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=240"
+            src={p.avatar}
             alt={p.name}
             className="h-28 w-28 rounded-full object-cover ring-4 ring-primary/90 ring-offset-2 ring-offset-background"
           />
