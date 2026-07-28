@@ -78,26 +78,75 @@ export const useOrders = create<OrderState>()(
   )
 );
 
+export type PlanId = "free" | "basic" | "pro" | "elite";
+
+/** Daily AI Plant Doctor scan allowance per plan. null = unlimited. */
+export const SCAN_LIMITS: Record<PlanId, number | null> = {
+  free: 2,
+  basic: 6,
+  pro: 15,
+  elite: null,
+};
+
+export const PLAN_LABELS: Record<PlanId, string> = {
+  free: "Free",
+  basic: "Basic",
+  pro: "Pro",
+  elite: "Elite",
+};
+
+const today = () => new Date().toISOString().slice(0, 10);
+
 type ProfileState = {
   name: string; email: string; phone: string; address: string; greenPoints: number;
-  update: (p: Partial<Omit<ProfileState, "update" | "addPoints">>) => void;
+  avatar: string;
+  plan: PlanId;
+  scanDate: string;
+  scanCount: number;
+  update: (p: Partial<Pick<ProfileState, "name" | "email" | "phone" | "address" | "avatar">>) => void;
   addPoints: (n: number) => void;
+  setPlan: (p: PlanId) => void;
+  /** Scans left today (Infinity when unlimited). */
+  scansLeft: () => number;
+  /** Consumes one scan; returns false when the daily limit is reached. */
+  useScan: () => boolean;
 };
 
 export const useProfile = create<ProfileState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       name: "Arjun Kapoor",
       email: "arjun@biosphere.app",
       phone: "+91 98765 43210",
       address: "Flat 402, Green Meadows, Bengaluru",
       greenPoints: 1240,
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=240",
+      plan: "basic",
+      scanDate: today(),
+      scanCount: 0,
       update: (p) => set(p),
       addPoints: (n) => set((s) => ({ greenPoints: s.greenPoints + n })),
+      setPlan: (plan) => set({ plan }),
+      scansLeft: () => {
+        const s = get();
+        const limit = SCAN_LIMITS[s.plan];
+        if (limit === null) return Infinity;
+        const used = s.scanDate === today() ? s.scanCount : 0;
+        return Math.max(0, limit - used);
+      },
+      useScan: () => {
+        const s = get();
+        const limit = SCAN_LIMITS[s.plan];
+        const used = s.scanDate === today() ? s.scanCount : 0;
+        if (limit !== null && used >= limit) return false;
+        set({ scanDate: today(), scanCount: used + 1 });
+        return true;
+      },
     }),
     { name: "bio-profile" }
   )
 );
+
 
 type AddrState = {
   addresses: { id: string; label: string; line: string }[];
