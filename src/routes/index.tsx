@@ -47,7 +47,7 @@ function Home() {
   const catTiles = [
     { name: "Plants", cat: "plants", Icon: Sprout },
     { name: "Tools", cat: "tools", Icon: Hammer },
-    { name: "Biovelocity", cat: "biovelocity", Icon: FlaskConical },
+    { name: "FERTILIZERS\n\n", cat: "biovelocity", Icon: FlaskConical },
     { name: "Pots", cat: "pots", Icon: Flower2 },
   ];
 
