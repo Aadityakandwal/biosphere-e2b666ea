@@ -30,6 +30,9 @@ function MembershipPage() {
   const navigate = useNavigate();
   const { pay, loading } = useRazorpay();
   const { isAuthenticated, loading: authLoading } = useAuth();
+  const logPayment = useServerFn(recordPayment);
+  const persistProfile = useServerFn(saveProfileState);
+
   const [payingId, setPayingId] = useState<string | null>(null);
   const [flow, setFlow] = useState<FlowState>("idle");
   const [justActivated, setJustActivated] = useState<string | null>(null);
