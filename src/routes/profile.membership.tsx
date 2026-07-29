@@ -60,8 +60,24 @@ function MembershipPage() {
       label: `Biosphere ${p.name} membership (${cycle})`,
       receipt: `mem-${p.id}-${Date.now()}`.slice(0, 40),
       prefill: { name: profile.name, email: profile.email, contact: profile.phone },
-      onSuccess: () => {
+      onSuccess: (paymentId, rzpOrderId) => {
         setFlow("verifying");
+        void (async () => {
+          try {
+            await logPayment({
+              data: {
+                kind: "membership",
+                label: `Biosphere ${p.name} membership (${cycle})`,
+                amount,
+                razorpay_order_id: rzpOrderId,
+                razorpay_payment_id: paymentId,
+              },
+            });
+            await persistProfile({ data: { plan: p.id as PlanId } });
+          } catch {
+            /* plan still applies locally */
+          }
+        })();
         later(() => {
           setPlan(p.id as PlanId);
           setFlow("success");
@@ -74,6 +90,7 @@ function MembershipPage() {
           later(() => setJustActivated(null), 2600);
         }, 650);
       },
+
       onFailure: (m) => {
         setFlow("idle");
         setPayingId(null);
