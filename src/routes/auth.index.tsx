@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
+import { getSupabaseEnvStatus } from "@/lib/supabase-env";
 
 
 
@@ -38,6 +39,7 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const supabaseEnv = getSupabaseEnvStatus();
 
   useEffect(() => {
     if (!loading && isAuthenticated) navigate({ to: dest, replace: true });
@@ -45,6 +47,10 @@ function AuthPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!supabaseEnv.configured) {
+      toast.error("Authentication is missing local environment variables");
+      return;
+    }
     if (!email.trim() || password.length < 6) {
       toast.error("Enter a valid email and a password of at least 6 characters");
       return;
@@ -77,6 +83,10 @@ function AuthPage() {
   };
 
   const google = async () => {
+    if (!supabaseEnv.configured) {
+      toast.error("Authentication is missing local environment variables");
+      return;
+    }
     setBusy(true);
     // Remember where the user was heading; the callback route reads it back.
     sessionStorage.setItem("bio-auth-redirect", dest);
@@ -132,6 +142,11 @@ function AuthPage() {
         </div>
 
         <form onSubmit={submit} className="mt-6 space-y-4 rounded-[28px] border border-border/40 bg-card p-5 shadow-[var(--shadow-soft)]">
+          {!supabaseEnv.configured && (
+            <div role="alert" className="rounded-3xl border border-destructive/30 bg-destructive/10 p-4 text-left text-sm text-destructive">
+              Add {supabaseEnv.missing.join(" and ")} to your local .env, then restart the app.
+            </div>
+          )}
           {mode === "signup" && (
             <div className="space-y-1.5">
               <Label htmlFor="name">Full name</Label>
@@ -154,7 +169,7 @@ function AuthPage() {
               required
             />
           </div>
-          <Button type="submit" disabled={busy} className="h-12 w-full rounded-full text-base font-semibold">
+          <Button type="submit" disabled={busy || !supabaseEnv.configured} className="h-12 w-full rounded-full text-base font-semibold">
             {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : mode === "signin" ? "Sign in" : "Create account"}
           </Button>
 
@@ -164,7 +179,7 @@ function AuthPage() {
             <span className="h-px flex-1 bg-border" />
           </div>
 
-          <Button type="button" variant="outline" disabled={busy} onClick={google} className="h-12 w-full rounded-full text-base font-medium">
+          <Button type="button" variant="outline" disabled={busy || !supabaseEnv.configured} onClick={google} className="h-12 w-full rounded-full text-base font-medium">
             <GoogleIcon /> Continue with Google
           </Button>
         </form>
