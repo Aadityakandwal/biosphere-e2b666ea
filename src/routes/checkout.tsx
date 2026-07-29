@@ -61,23 +61,54 @@ function CheckoutPage() {
       label: `Biosphere order (${items.length} item${items.length > 1 ? "s" : ""})`,
       receipt: id,
       prefill: { name: profile.name, email: profile.email, contact: profile.phone },
-      onSuccess: (pid) => {
+      onSuccess: (pid, rzpOrderId) => {
+        const itemLines = items.map((i) => `${i.name} x${i.qty}`);
+        const images = items.map((i) => i.image).filter(Boolean) as string[];
         addOrder({
           id,
           date: new Date().toISOString().slice(0, 10),
           total,
-          items: items.map((i) => `${i.name} x${i.qty}`),
+          items: itemLines,
           status: "Placed",
-          images: items.map((i) => i.image).filter(Boolean) as string[],
+          images,
           paymentId: pid,
         });
         setStatus(id, "Placed", pid);
+        void (async () => {
+          try {
+            const p = await logPayment({
+              data: {
+                kind: "shop",
+                label: `Biosphere order (${itemLines.length} item${itemLines.length > 1 ? "s" : ""})`,
+                amount: total,
+                razorpay_order_id: rzpOrderId,
+                razorpay_payment_id: pid,
+                receipt: id,
+              },
+            });
+            await persistOrder({
+              data: {
+                ref: id,
+                total,
+                items: itemLines,
+                images,
+                status: "Placed",
+                address: profile.address || undefined,
+                payment_id: p.id,
+                razorpay_payment_id: pid,
+              },
+            });
+          } catch {
+            /* order is still saved locally */
+          }
+        })();
         clear();
         setOrderId(id);
         setPaymentId(pid);
         setStage("done");
         toast.success("Payment successful — order confirmed");
       },
+
       onFailure: (msg) => {
         setFailure(msg);
         toast.error(msg);
