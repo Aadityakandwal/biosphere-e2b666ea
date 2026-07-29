@@ -9,9 +9,6 @@ import { membershipPlans } from "@/lib/data";
 import { useProfile, type PlanId } from "@/lib/stores";
 import { useRazorpay } from "@/lib/use-razorpay";
 import { useAuth } from "@/lib/use-auth";
-import { useServerFn } from "@tanstack/react-start";
-import { recordPayment, saveProfileState } from "@/lib/account.functions";
-
 import { ArrowLeft, Check, Loader2, ShieldCheck, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
@@ -30,9 +27,6 @@ function MembershipPage() {
   const navigate = useNavigate();
   const { pay, loading } = useRazorpay();
   const { isAuthenticated, loading: authLoading } = useAuth();
-  const logPayment = useServerFn(recordPayment);
-  const persistProfile = useServerFn(saveProfileState);
-
   const [payingId, setPayingId] = useState<string | null>(null);
   const [flow, setFlow] = useState<FlowState>("idle");
   const [justActivated, setJustActivated] = useState<string | null>(null);
@@ -60,24 +54,8 @@ function MembershipPage() {
       label: `Biosphere ${p.name} membership (${cycle})`,
       receipt: `mem-${p.id}-${Date.now()}`.slice(0, 40),
       prefill: { name: profile.name, email: profile.email, contact: profile.phone },
-      onSuccess: (paymentId, rzpOrderId) => {
+      onSuccess: () => {
         setFlow("verifying");
-        void (async () => {
-          try {
-            await logPayment({
-              data: {
-                kind: "membership",
-                label: `Biosphere ${p.name} membership (${cycle})`,
-                amount,
-                razorpay_order_id: rzpOrderId,
-                razorpay_payment_id: paymentId,
-              },
-            });
-            await persistProfile({ data: { plan: p.id as PlanId } });
-          } catch {
-            /* plan still applies locally */
-          }
-        })();
         later(() => {
           setPlan(p.id as PlanId);
           setFlow("success");
@@ -90,7 +68,6 @@ function MembershipPage() {
           later(() => setJustActivated(null), 2600);
         }, 650);
       },
-
       onFailure: (m) => {
         setFlow("idle");
         setPayingId(null);

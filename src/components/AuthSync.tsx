@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useProfile, useOrders, useBookings, resetUserData, type PlanId } from "@/lib/stores";
-import { getSupabaseEnvStatus } from "@/lib/supabase-env";
+import { useProfile, resetUserData, type PlanId } from "@/lib/stores";
 
 const LAST_USER_KEY = "bio-last-user";
 
@@ -11,8 +10,6 @@ const LAST_USER_KEY = "bio-last-user";
  */
 export function AuthSync() {
   useEffect(() => {
-    if (!getSupabaseEnvStatus().configured) return;
-
     let cancelled = false;
 
     const load = async (userId: string, fallbackEmail?: string | null) => {
@@ -28,69 +25,18 @@ export function AuthSync() {
         .select("full_name, email, phone, address, avatar_url, plan, green_points")
         .eq("id", userId)
         .maybeSingle();
-      if (cancelled) return;
-      if (data) {
-        const s = useProfile.getState();
-        s.update({
-          name: data.full_name || s.name,
-          email: data.email || fallbackEmail || s.email,
-          phone: data.phone || s.phone,
-          address: data.address || s.address,
-          avatar: data.avatar_url || s.avatar,
-        });
-        s.setPoints(data.green_points ?? 0);
-        if (data.plan) s.setPlan(data.plan as PlanId);
-      }
-
-      // Restore saved orders and bookings from the account.
-      const [orders, bookings] = await Promise.all([
-        supabase.from("orders").select("*").order("created_at", { ascending: false }),
-        supabase.from("bookings").select("*").order("created_at", { ascending: false }),
-      ]);
-      if (cancelled) return;
-
-      if (orders.data?.length) {
-        const local = useOrders.getState();
-        const seen = new Set(local.orders.map((o) => o.id));
-        orders.data
-          .filter((o) => !seen.has(o.ref))
-          .forEach((o) =>
-            local.add({
-              id: o.ref,
-              date: String(o.created_at).slice(0, 10),
-              total: Number(o.total),
-              items: (o.items as string[]) ?? [],
-              images: (o.images as string[]) ?? [],
-              status: o.status,
-              address: o.address ?? undefined,
-              paymentId: o.razorpay_payment_id ?? undefined,
-            }),
-          );
-      }
-
-      if (bookings.data?.length) {
-        const local = useBookings.getState();
-        const seen = new Set(local.bookings.map((b) => b.id));
-        bookings.data
-          .filter((b) => !seen.has(b.ref))
-          .forEach((b) =>
-            local.add({
-              id: b.ref,
-              serviceSlug: b.service_slug,
-              date: b.scheduled_date ?? "",
-              time: b.slot ?? "",
-              gardener: b.gardener ?? "Auto-assigned",
-              address: b.address ?? "",
-              status: b.status === "past" ? "past" : "upcoming",
-              price: Number(b.price),
-              note: b.note ?? undefined,
-              rating: b.rating ?? undefined,
-              paymentId: b.razorpay_payment_id ?? undefined,
-            }),
-          );
-      }
+      if (cancelled || !data) return;
+      const s = useProfile.getState();
+      s.update({
+        name: data.full_name || s.name,
+        email: data.email || fallbackEmail || s.email,
+        phone: data.phone || s.phone,
+        address: data.address || s.address,
+        avatar: data.avatar_url || s.avatar,
+      });
+      s.setPoints(data.green_points ?? 0);
+      if (data.plan) s.setPlan(data.plan as PlanId);
     };
-
 
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session?.user) {
