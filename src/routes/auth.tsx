@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/lib/use-auth";
+import { getSupabaseEnvStatus } from "@/lib/supabase-env";
 import { Leaf, Loader2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
@@ -31,6 +32,7 @@ function AuthPage() {
   const { redirect } = Route.useSearch();
   const dest = redirect ?? "/";
   const { isAuthenticated, loading } = useAuth();
+  const supabaseEnv = getSupabaseEnvStatus();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -43,6 +45,10 @@ function AuthPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!supabaseEnv.configured) {
+      toast.error("Supabase is not configured. Add your VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY, then restart the app.");
+      return;
+    }
     if (!email.trim() || password.length < 6) {
       toast.error("Enter a valid email and a password of at least 6 characters");
       return;
@@ -75,6 +81,10 @@ function AuthPage() {
   };
 
   const google = async () => {
+    if (!supabaseEnv.configured) {
+      toast.error("Supabase is not configured. Add your VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY, then restart the app.");
+      return;
+    }
     setBusy(true);
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
@@ -108,6 +118,15 @@ function AuthPage() {
               : "Join Biosphere to book plant care and earn green points."}
           </p>
         </div>
+
+        {!supabaseEnv.configured && (
+          <div className="mt-5 rounded-3xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+            <p className="font-semibold">Authentication is not configured.</p>
+            <p className="mt-1 text-destructive/90">
+              Missing {supabaseEnv.missing.join(" and ")}. Add them to your local environment and restart the app.
+            </p>
+          </div>
+        )}
 
         <div className="mt-6 grid grid-cols-2 gap-1 rounded-full border border-border/50 bg-muted/50 p-1">
           {(["signin", "signup"] as const).map((m) => (
@@ -147,7 +166,7 @@ function AuthPage() {
               required
             />
           </div>
-          <Button type="submit" disabled={busy} className="h-12 w-full rounded-full text-base font-semibold">
+          <Button type="submit" disabled={busy || !supabaseEnv.configured} className="h-12 w-full rounded-full text-base font-semibold">
             {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : mode === "signin" ? "Sign in" : "Create account"}
           </Button>
 
@@ -157,7 +176,7 @@ function AuthPage() {
             <span className="h-px flex-1 bg-border" />
           </div>
 
-          <Button type="button" variant="outline" disabled={busy} onClick={google} className="h-12 w-full rounded-full text-base font-medium">
+          <Button type="button" variant="outline" disabled={busy || !supabaseEnv.configured} onClick={google} className="h-12 w-full rounded-full text-base font-medium">
             <GoogleIcon /> Continue with Google
           </Button>
         </form>

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useProfile } from "@/lib/stores";
 import { supabase } from "@/integrations/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase-env";
 import { ArrowLeft, Camera, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -44,6 +45,10 @@ function EditProfile() {
 
   const save = async () => {
     p.update({ ...f, avatar });
+    if (!isSupabaseConfigured()) {
+      toast.success("Profile updated locally");
+      return;
+    }
     const { data } = await supabase.auth.getUser();
     if (data.user) {
       const { error } = await supabase
