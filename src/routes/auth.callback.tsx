@@ -42,7 +42,7 @@ function AuthCallback() {
     const providerError = params.get("error_description") || params.get("error");
     if (providerError) {
       toast.error(providerError);
-      navigate({ to: "/auth", replace: true });
+      navigate({ to: "/auth", search: {}, replace: true });
       return;
     }
 
@@ -55,7 +55,7 @@ function AuthCallback() {
         if (error && !/code verifier|already/i.test(error.message)) {
           if (cancelled) return;
           toast.error(error.message);
-          navigate({ to: "/auth", replace: true });
+          navigate({ to: "/auth", search: {}, replace: true });
           return;
         }
       }
@@ -74,7 +74,7 @@ function AuthCallback() {
 
       if (cancelled) return;
       setMessage("Could not complete sign-in.");
-      navigate({ to: "/auth", replace: true });
+      navigate({ to: "/auth", search: {}, replace: true });
     };
 
     void finish();
