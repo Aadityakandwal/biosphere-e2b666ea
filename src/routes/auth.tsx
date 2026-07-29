@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 
 import { useAuth } from "@/lib/use-auth";
 import { Leaf, Loader2, ArrowLeft } from "lucide-react";
@@ -76,16 +77,16 @@ function AuthPage() {
 
   const google = async () => {
     setBusy(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}${dest}`,
-      },
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
     });
-    if (error) {
+    if (result.error) {
       setBusy(false);
       toast.error("Could not sign in with Google");
+      return;
     }
+    if (result.redirected) return;
+    navigate({ to: dest, replace: true });
   };
 
   return (
