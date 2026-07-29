@@ -76,22 +76,25 @@ function AuthPage() {
 
   const google = async () => {
     setBusy(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}${dest}`,
-        queryParams: { prompt: "select_account" },
-      },
-    });
-    if (error) {
-      setBusy(false);
-      toast.error(
-        error.message.includes("provider is not enabled")
-          ? "Google sign-in isn't configured yet — add your Google OAuth credentials in the backend auth settings."
-          : "Could not sign in with Google",
-      );
+    // Remember where to land once the session is live.
+    try {
+      sessionStorage.setItem("bio-auth-dest", dest);
+    } catch {
+      /* ignore */
     }
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
+      extraParams: { prompt: "select_account" },
+    });
+    if (result.redirected) return;
+    if (result.error) {
+      setBusy(false);
+      toast.error("Could not sign in with Google");
+      return;
+    }
+    navigate({ to: dest });
   };
+
 
   return (
     <main className="min-h-screen bg-background px-5 pb-16 pt-8">
