@@ -5,6 +5,7 @@ import { useProfile, useBookings, useOrders, PLAN_LABELS, SCAN_LIMITS } from "@/
 import { useHydrated } from "@/lib/motion";
 import { useAuth } from "@/lib/use-auth";
 import { supabase } from "@/integrations/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase-env";
 import { ProfileSkeleton } from "@/components/Skeletons";
 import { ChevronRight, User, CalendarDays, Leaf, Award, Settings, HelpCircle, LogOut, LogIn } from "lucide-react";
 
@@ -32,7 +33,7 @@ function ProfilePage() {
   const signOut = async () => {
     await queryClient.cancelQueries();
     queryClient.clear();
-    await supabase.auth.signOut();
+    if (isSupabaseConfigured()) await supabase.auth.signOut();
     navigate({ to: "/auth", search: { redirect: undefined }, replace: true });
   };
 
