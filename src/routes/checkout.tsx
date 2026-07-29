@@ -34,6 +34,9 @@ function CheckoutPage() {
   const profile = useProfile();
   const { pay, loading } = useRazorpay();
   const { isAuthenticated, loading: authLoading } = useAuth();
+  const logPayment = useServerFn(recordPayment);
+  const persistOrder = useServerFn(saveOrder);
+
 
   const subtotal = items.reduce((n, i) => n + i.price * i.qty, 0);
   const shipping = items.length ? 49 : 0;
