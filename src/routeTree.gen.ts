@@ -30,6 +30,7 @@ import { Route as ProfileEditRouteImport } from './routes/profile.edit'
 import { Route as ProfileActivityRouteImport } from './routes/profile.activity'
 import { Route as BookingsReviewRouteImport } from './routes/bookings.review'
 import { Route as BookingsIdRouteImport } from './routes/bookings.$id'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ServicesSlugIndexRouteImport } from './routes/services.$slug.index'
 import { Route as ServicesSlugBookRouteImport } from './routes/services.$slug.book'
 
@@ -138,6 +139,11 @@ const BookingsIdRoute = BookingsIdRouteImport.update({
   path: '/bookings/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesSlugIndexRoute = ServicesSlugIndexRouteImport.update({
   id: '/services/$slug/',
   path: '/services/$slug/',
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
@@ -208,6 +216,7 @@ export interface FileRoutesById {
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
@@ -235,6 +244,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/plant-doctor'
     | '/sitemap.xml'
+    | '/auth/callback'
     | '/bookings/$id'
     | '/bookings/review'
     | '/profile/activity'
@@ -260,6 +270,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/plant-doctor'
     | '/sitemap.xml'
+    | '/auth/callback'
     | '/bookings/$id'
     | '/bookings/review'
     | '/profile/activity'
@@ -285,6 +296,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/plant-doctor'
     | '/sitemap.xml'
+    | '/auth/callback'
     | '/bookings/$id'
     | '/bookings/review'
     | '/profile/activity'
@@ -311,6 +323,7 @@ export interface RootRouteChildren {
   OrdersRoute: typeof OrdersRoute
   PlantDoctorRoute: typeof PlantDoctorRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   BookingsIdRoute: typeof BookingsIdRoute
   BookingsReviewRoute: typeof BookingsReviewRoute
   ProfileActivityRoute: typeof ProfileActivityRoute
@@ -478,6 +491,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookingsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services/$slug/': {
       id: '/services/$slug/'
       path: '/services/$slug'
@@ -503,6 +523,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrdersRoute: OrdersRoute,
   PlantDoctorRoute: PlantDoctorRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   BookingsIdRoute: BookingsIdRoute,
   BookingsReviewRoute: BookingsReviewRoute,
   ProfileActivityRoute: ProfileActivityRoute,

@@ -78,10 +78,14 @@ function AuthPage() {
 
   const google = async () => {
     setBusy(true);
+    // Remember where the user was heading; the callback route reads it back.
+    sessionStorage.setItem("bio-auth-redirect", dest);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: window.location.origin,
+        // Must be a public, same-origin URL that exists in the router and in
+        // the backend's redirect allow-list (works on localhost too).
+        redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(dest)}`,
         queryParams: { prompt: "select_account" },
       },
     });
@@ -90,8 +94,6 @@ function AuthPage() {
       toast.error("Could not sign in with Google");
     }
   };
-
-
 
   return (
     <main className="min-h-screen bg-background px-5 pb-16 pt-8">
