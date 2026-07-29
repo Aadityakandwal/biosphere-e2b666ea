@@ -106,7 +106,7 @@ function Home() {
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-primary">
               <Icon className="h-5 w-5" />
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/80">{name}</span>
+            <span className="whitespace-pre-line text-[10px] font-bold uppercase tracking-wider text-foreground/80">{name}</span>
           </Link>
         ))}
       </Reveal>
