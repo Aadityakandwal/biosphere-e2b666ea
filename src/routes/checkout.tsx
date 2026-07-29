@@ -1,13 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { Shell } from "@/components/Shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCart, useOrders, useProfile } from "@/lib/stores";
 import { useRazorpay } from "@/lib/use-razorpay";
 import { useAuth } from "@/lib/use-auth";
+import { recordPayment, saveOrder } from "@/lib/account.functions";
 import { ArrowLeft, CheckCircle2, Loader2, Lock, ShieldCheck, XCircle } from "lucide-react";
 import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -31,6 +34,9 @@ function CheckoutPage() {
   const profile = useProfile();
   const { pay, loading } = useRazorpay();
   const { isAuthenticated, loading: authLoading } = useAuth();
+  const logPayment = useServerFn(recordPayment);
+  const persistOrder = useServerFn(saveOrder);
+
 
   const subtotal = items.reduce((n, i) => n + i.price * i.qty, 0);
   const shipping = items.length ? 49 : 0;
@@ -55,23 +61,54 @@ function CheckoutPage() {
       label: `Biosphere order (${items.length} item${items.length > 1 ? "s" : ""})`,
       receipt: id,
       prefill: { name: profile.name, email: profile.email, contact: profile.phone },
-      onSuccess: (pid) => {
+      onSuccess: (pid, rzpOrderId) => {
+        const itemLines = items.map((i) => `${i.name} x${i.qty}`);
+        const images = items.map((i) => i.image).filter(Boolean) as string[];
         addOrder({
           id,
           date: new Date().toISOString().slice(0, 10),
           total,
-          items: items.map((i) => `${i.name} x${i.qty}`),
+          items: itemLines,
           status: "Placed",
-          images: items.map((i) => i.image).filter(Boolean) as string[],
+          images,
           paymentId: pid,
         });
         setStatus(id, "Placed", pid);
+        void (async () => {
+          try {
+            const p = await logPayment({
+              data: {
+                kind: "shop",
+                label: `Biosphere order (${itemLines.length} item${itemLines.length > 1 ? "s" : ""})`,
+                amount: total,
+                razorpay_order_id: rzpOrderId,
+                razorpay_payment_id: pid,
+                receipt: id,
+              },
+            });
+            await persistOrder({
+              data: {
+                ref: id,
+                total,
+                items: itemLines,
+                images,
+                status: "Placed",
+                address: profile.address || undefined,
+                payment_id: p.id,
+                razorpay_payment_id: pid,
+              },
+            });
+          } catch {
+            /* order is still saved locally */
+          }
+        })();
         clear();
         setOrderId(id);
         setPaymentId(pid);
         setStage("done");
         toast.success("Payment successful — order confirmed");
       },
+
       onFailure: (msg) => {
         setFailure(msg);
         toast.error(msg);

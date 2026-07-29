@@ -12,6 +12,9 @@ import { services, products } from "@/lib/data";
 import { useAddresses, useBookings, useCart, useProfile } from "@/lib/stores";
 import { useRazorpay } from "@/lib/use-razorpay";
 import { useAuth } from "@/lib/use-auth";
+import { useServerFn } from "@tanstack/react-start";
+import { recordPayment, saveBooking, saveProfileState } from "@/lib/account.functions";
+
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ArrowLeft, MapPin, Plus, Check, CalendarDays, Clock, Home, Loader2 } from "lucide-react";
@@ -96,6 +99,10 @@ function BookPage() {
   const profile = useProfile();
   const { pay, loading: paying } = useRazorpay();
   const { isAuthenticated, loading: authLoading } = useAuth();
+  const logPayment = useServerFn(recordPayment);
+  const persistBooking = useServerFn(saveBooking);
+  const persistProfile = useServerFn(saveProfileState);
+
 
 
   const selectedPkg = (service.packages as import("@/lib/data").Pkg[] | undefined)?.find((p) => p.id === pkgParam);
@@ -131,21 +138,57 @@ function BookPage() {
       label: `${service.name} · ${date?.toDateString() ?? ""} ${slot}`,
       receipt: id,
       prefill: { name: profile.name, email: profile.email, contact: profile.phone },
-      onSuccess: (paymentId) => {
+      onSuccess: (paymentId, rzpOrderId) => {
         extras.forEach(pid => {
           const p = bio.find(x => x.id === pid)!;
           cart.add({ id: p.id, name: p.name, price: p.price, image: p.image });
         });
+        const gardener = extend ? past.find(p => p.id === extend)!.gardener : "Auto-assigned";
+        const address = isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr);
         addBook({
           id, serviceSlug: service.slug, date: date?.toISOString().slice(0,10) ?? "",
-          time: slot, gardener: extend ? past.find(p => p.id === extend)!.gardener : "Auto-assigned",
-          address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr), status: "upcoming", price: total, note: fullNote,
+          time: slot, gardener,
+          address, status: "upcoming", price: total, note: fullNote,
           paymentId,
         });
+        const nextPoints = profile.greenPoints + pointsEarned;
         profile.addPoints(pointsEarned);
+        void (async () => {
+          try {
+            const p = await logPayment({
+              data: {
+                kind: "service",
+                label: `${service.name} · ${slot}`,
+                amount: total,
+                razorpay_order_id: rzpOrderId,
+                razorpay_payment_id: paymentId,
+                receipt: id,
+              },
+            });
+            await persistBooking({
+              data: {
+                ref: id,
+                service_slug: service.slug,
+                scheduled_date: date?.toISOString().slice(0, 10) ?? null,
+                slot,
+                gardener,
+                address,
+                price: total,
+                status: "upcoming",
+                note: fullNote || undefined,
+                payment_id: p.id,
+                razorpay_payment_id: paymentId,
+              },
+            });
+            await persistProfile({ data: { green_points: nextPoints } });
+          } catch {
+            /* booking is still saved locally */
+          }
+        })();
         toast.success("Payment successful — booking confirmed! Green points added.");
         navigate({ to: "/bookings" });
       },
+
       onFailure: (msg) => toast.error(msg),
       onDismiss: () => toast.info("Payment cancelled — your booking wasn't placed"),
     });
