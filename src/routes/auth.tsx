@@ -77,12 +77,6 @@ function AuthPage() {
 
   const google = async () => {
     setBusy(true);
-    // Remember where to land once the session is live.
-    try {
-      sessionStorage.setItem("bio-auth-dest", dest);
-    } catch {
-      /* ignore */
-    }
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
       extraParams: { prompt: "select_account" },
