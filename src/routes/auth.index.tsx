@@ -11,7 +11,7 @@ import { useAuth } from "@/lib/use-auth";
 import { Leaf, Loader2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/auth")({
+export const Route = createFileRoute("/auth/")({
   validateSearch: (search: Record<string, unknown>) => ({
     redirect: typeof search.redirect === "string" && search.redirect.startsWith("/") ? search.redirect : undefined,
   }),
