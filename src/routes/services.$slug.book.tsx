@@ -99,6 +99,10 @@ function BookPage() {
   const profile = useProfile();
   const { pay, loading: paying } = useRazorpay();
   const { isAuthenticated, loading: authLoading } = useAuth();
+  const logPayment = useServerFn(recordPayment);
+  const persistBooking = useServerFn(saveBooking);
+  const persistProfile = useServerFn(saveProfileState);
+
 
 
   const selectedPkg = (service.packages as import("@/lib/data").Pkg[] | undefined)?.find((p) => p.id === pkgParam);
