@@ -15,12 +15,12 @@ import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as ConsultRouteImport } from './routes/consult'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
-import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ProfileIndexRouteImport } from './routes/profile.index'
 import { Route as BookingsIndexRouteImport } from './routes/bookings.index'
+import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as ShopProductIdRouteImport } from './routes/shop.$productId'
 import { Route as ProfileSupportRouteImport } from './routes/profile.support'
 import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
@@ -30,6 +30,7 @@ import { Route as ProfileEditRouteImport } from './routes/profile.edit'
 import { Route as ProfileActivityRouteImport } from './routes/profile.activity'
 import { Route as BookingsReviewRouteImport } from './routes/bookings.review'
 import { Route as BookingsIdRouteImport } from './routes/bookings.$id'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ServicesSlugIndexRouteImport } from './routes/services.$slug.index'
 import { Route as ServicesSlugBookRouteImport } from './routes/services.$slug.book'
 
@@ -63,11 +64,6 @@ const CartRoute = CartRouteImport.update({
   path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -91,6 +87,11 @@ const ProfileIndexRoute = ProfileIndexRouteImport.update({
 const BookingsIndexRoute = BookingsIndexRouteImport.update({
   id: '/bookings/',
   path: '/bookings/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: '/auth/',
+  path: '/auth/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopProductIdRoute = ShopProductIdRouteImport.update({
@@ -138,6 +139,11 @@ const BookingsIdRoute = BookingsIdRouteImport.update({
   path: '/bookings/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesSlugIndexRoute = ServicesSlugIndexRouteImport.update({
   id: '/services/$slug/',
   path: '/services/$slug/',
@@ -151,13 +157,13 @@ const ServicesSlugBookRoute = ServicesSlugBookRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
+  '/auth/': typeof AuthIndexRoute
   '/bookings/': typeof BookingsIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/services/': typeof ServicesIndexRoute
@@ -176,13 +183,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
+  '/auth': typeof AuthIndexRoute
   '/bookings': typeof BookingsIndexRoute
   '/profile': typeof ProfileIndexRoute
   '/services': typeof ServicesIndexRoute
@@ -202,13 +210,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
@@ -218,6 +226,7 @@ export interface FileRoutesById {
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
+  '/auth/': typeof AuthIndexRoute
   '/bookings/': typeof BookingsIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/services/': typeof ServicesIndexRoute
@@ -229,13 +238,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/auth'
     | '/cart'
     | '/checkout'
     | '/consult'
     | '/orders'
     | '/plant-doctor'
     | '/sitemap.xml'
+    | '/auth/callback'
     | '/bookings/$id'
     | '/bookings/review'
     | '/profile/activity'
@@ -245,6 +254,7 @@ export interface FileRouteTypes {
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
+    | '/auth/'
     | '/bookings/'
     | '/profile/'
     | '/services/'
@@ -254,13 +264,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/auth'
     | '/cart'
     | '/checkout'
     | '/consult'
     | '/orders'
     | '/plant-doctor'
     | '/sitemap.xml'
+    | '/auth/callback'
     | '/bookings/$id'
     | '/bookings/review'
     | '/profile/activity'
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
+    | '/auth'
     | '/bookings'
     | '/profile'
     | '/services'
@@ -279,13 +290,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/auth'
     | '/cart'
     | '/checkout'
     | '/consult'
     | '/orders'
     | '/plant-doctor'
     | '/sitemap.xml'
+    | '/auth/callback'
     | '/bookings/$id'
     | '/bookings/review'
     | '/profile/activity'
@@ -295,6 +306,7 @@ export interface FileRouteTypes {
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
+    | '/auth/'
     | '/bookings/'
     | '/profile/'
     | '/services/'
@@ -305,13 +317,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   ConsultRoute: typeof ConsultRoute
   OrdersRoute: typeof OrdersRoute
   PlantDoctorRoute: typeof PlantDoctorRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   BookingsIdRoute: typeof BookingsIdRoute
   BookingsReviewRoute: typeof BookingsReviewRoute
   ProfileActivityRoute: typeof ProfileActivityRoute
@@ -321,6 +333,7 @@ export interface RootRouteChildren {
   ProfileSettingsRoute: typeof ProfileSettingsRoute
   ProfileSupportRoute: typeof ProfileSupportRoute
   ShopProductIdRoute: typeof ShopProductIdRoute
+  AuthIndexRoute: typeof AuthIndexRoute
   BookingsIndexRoute: typeof BookingsIndexRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
@@ -373,13 +386,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -413,6 +419,13 @@ declare module '@tanstack/react-router' {
       path: '/bookings'
       fullPath: '/bookings/'
       preLoaderRoute: typeof BookingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/': {
+      id: '/auth/'
+      path: '/auth'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop/$productId': {
@@ -478,6 +491,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookingsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services/$slug/': {
       id: '/services/$slug/'
       path: '/services/$slug'
@@ -497,13 +517,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   ConsultRoute: ConsultRoute,
   OrdersRoute: OrdersRoute,
   PlantDoctorRoute: PlantDoctorRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   BookingsIdRoute: BookingsIdRoute,
   BookingsReviewRoute: BookingsReviewRoute,
   ProfileActivityRoute: ProfileActivityRoute,
@@ -513,6 +533,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileSettingsRoute: ProfileSettingsRoute,
   ProfileSupportRoute: ProfileSupportRoute,
   ShopProductIdRoute: ShopProductIdRoute,
+  AuthIndexRoute: AuthIndexRoute,
   BookingsIndexRoute: BookingsIndexRoute,
   ProfileIndexRoute: ProfileIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,

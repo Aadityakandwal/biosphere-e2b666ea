@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 
 
 
@@ -12,7 +11,7 @@ import { useAuth } from "@/lib/use-auth";
 import { Leaf, Loader2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/auth")({
+export const Route = createFileRoute("/auth/")({
   validateSearch: (search: Record<string, unknown>) => ({
     redirect: typeof search.redirect === "string" && search.redirect.startsWith("/") ? search.redirect : undefined,
   }),
@@ -79,41 +78,22 @@ function AuthPage() {
 
   const google = async () => {
     setBusy(true);
-    try {
-      // Preferred path: this project's own Google OAuth credentials.
-      const authorizeUrl = `${import.meta.env.VITE_SUPABASE_URL}/auth/v1/authorize?provider=google`;
-      const probe = await fetch(authorizeUrl, { method: "HEAD", redirect: "manual" }).catch(() => null);
-      const providerConfigured = !probe || probe.status !== 400;
-
-      if (providerConfigured) {
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: "google",
-          options: {
-            redirectTo: window.location.origin,
-            queryParams: { prompt: "select_account" },
-          },
-        });
-        if (!error) return;
-      }
-
-      // Fallback: managed Google credentials (used when the project's own
-      // client ID/secret are not saved in the backend auth settings).
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
-        extraParams: { prompt: "select_account" },
-      });
-      if (result.redirected) return;
-      if (result.error) throw result.error;
-      navigate({ to: dest, replace: true });
-    } catch {
-      toast.error("Could not sign in with Google");
-    } finally {
+    // Remember where the user was heading; the callback route reads it back.
+    sessionStorage.setItem("bio-auth-redirect", dest);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        // Must be a public, same-origin URL that exists in the router and in
+        // the backend's redirect allow-list (works on localhost too).
+        redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(dest)}`,
+        queryParams: { prompt: "select_account" },
+      },
+    });
+    if (error) {
       setBusy(false);
+      toast.error("Could not sign in with Google");
     }
   };
-
-
-
 
   return (
     <main className="min-h-screen bg-background px-5 pb-16 pt-8">
