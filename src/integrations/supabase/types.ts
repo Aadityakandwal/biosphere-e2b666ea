@@ -14,6 +14,163 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          address: string | null
+          created_at: string
+          gardener: string | null
+          id: string
+          note: string | null
+          payment_id: string | null
+          price: number
+          rating: number | null
+          razorpay_payment_id: string | null
+          ref: string
+          scheduled_date: string | null
+          service_slug: string
+          slot: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          gardener?: string | null
+          id?: string
+          note?: string | null
+          payment_id?: string | null
+          price?: number
+          rating?: number | null
+          razorpay_payment_id?: string | null
+          ref: string
+          scheduled_date?: string | null
+          service_slug: string
+          slot?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          gardener?: string | null
+          id?: string
+          note?: string | null
+          payment_id?: string | null
+          price?: number
+          rating?: number | null
+          razorpay_payment_id?: string | null
+          ref?: string
+          scheduled_date?: string | null
+          service_slug?: string
+          slot?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          address: string | null
+          created_at: string
+          id: string
+          images: Json
+          items: Json
+          payment_id: string | null
+          razorpay_payment_id: string | null
+          ref: string
+          status: string
+          total: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          images?: Json
+          items?: Json
+          payment_id?: string | null
+          razorpay_payment_id?: string | null
+          ref: string
+          status?: string
+          total: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          images?: Json
+          items?: Json
+          payment_id?: string | null
+          razorpay_payment_id?: string | null
+          ref?: string
+          status?: string
+          total?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          kind: string
+          label: string
+          razorpay_order_id: string | null
+          razorpay_payment_id: string | null
+          receipt: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          kind: string
+          label: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
+          receipt?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          kind?: string
+          label?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
+          receipt?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
