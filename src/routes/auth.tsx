@@ -78,18 +78,39 @@ function AuthPage() {
 
   const google = async () => {
     setBusy(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: window.location.origin,
-        queryParams: { prompt: "select_account" },
-      },
-    });
-    if (error) {
-      setBusy(false);
+    try {
+      // Preferred path: this project's own Google OAuth credentials.
+      const authorizeUrl = `${import.meta.env.VITE_SUPABASE_URL}/auth/v1/authorize?provider=google`;
+      const probe = await fetch(authorizeUrl, { method: "HEAD", redirect: "manual" }).catch(() => null);
+      const providerConfigured = !probe || probe.status !== 400;
+
+      if (providerConfigured) {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: window.location.origin,
+            queryParams: { prompt: "select_account" },
+          },
+        });
+        if (!error) return;
+      }
+
+      // Fallback: managed Google credentials (used when the project's own
+      // client ID/secret are not saved in the backend auth settings).
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+        extraParams: { prompt: "select_account" },
+      });
+      if (result.redirected) return;
+      if (result.error) throw result.error;
+      navigate({ to: dest, replace: true });
+    } catch {
       toast.error("Could not sign in with Google");
+    } finally {
+      setBusy(false);
     }
   };
+
 
 
 
