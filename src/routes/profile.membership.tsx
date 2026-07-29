@@ -9,6 +9,9 @@ import { membershipPlans } from "@/lib/data";
 import { useProfile, type PlanId } from "@/lib/stores";
 import { useRazorpay } from "@/lib/use-razorpay";
 import { useAuth } from "@/lib/use-auth";
+import { useServerFn } from "@tanstack/react-start";
+import { recordPayment, saveProfileState } from "@/lib/account.functions";
+
 import { ArrowLeft, Check, Loader2, ShieldCheck, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
