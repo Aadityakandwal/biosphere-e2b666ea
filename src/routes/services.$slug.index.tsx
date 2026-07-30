@@ -23,14 +23,14 @@ export const Route = createFileRoute("/services/$slug/")({
       { property: "og:title", content: `${loaderData?.service.name ?? "Service"} — Biosphere` },
       { property: "og:description", content: (loaderData?.service.description ?? "").slice(0, 155) },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: `https://biosphere.lovable.app/services/${params.slug}` },
+      { property: "og:url", content: `https://biosphere.app/services/${params.slug}` },
       { name: "twitter:card", content: "summary_large_image" },
       ...(loaderData?.service.image ? [
         { property: "og:image", content: loaderData.service.image },
         { name: "twitter:image", content: loaderData.service.image },
       ] : []),
     ],
-    links: [{ rel: "canonical", href: `https://biosphere.lovable.app/services/${params.slug}` }],
+    links: [{ rel: "canonical", href: `https://biosphere.app/services/${params.slug}` }],
     scripts: loaderData?.service
       ? [
           {

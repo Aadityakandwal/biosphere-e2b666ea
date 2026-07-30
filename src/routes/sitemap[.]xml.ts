@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { products, services } from "@/lib/data";
 
-const BASE_URL = "https://biosphere.lovable.app";
+const BASE_URL = "https://biosphere.app";
 
 interface SitemapEntry {
   path: string;

@@ -11,7 +11,6 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Splash } from "../components/Loading";
 import { AuthSync } from "../components/AuthSync";
 
@@ -40,10 +39,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
@@ -111,7 +106,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Biosphere",
-          url: "https://biosphere.lovable.app",
+          url: "https://biosphere.app",
           description:
             "Plant care companion offering AI plant diagnosis, gardening services, and organic plant nutrition products.",
         }),
@@ -122,7 +117,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "Biosphere",
-          url: "https://biosphere.lovable.app",
+          url: "https://biosphere.app",
         }),
       },
     ],

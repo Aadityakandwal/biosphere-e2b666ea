@@ -21,14 +21,14 @@ export const Route = createFileRoute("/shop/$productId")({
       { property: "og:title", content: `${loaderData?.product.name ?? "Product"} — Biosphere Shop` },
       { property: "og:description", content: (loaderData?.product.description ?? loaderData?.product.short ?? "").slice(0, 155) },
       { property: "og:type", content: "product" },
-      { property: "og:url", content: `https://biosphere.lovable.app/shop/${params.productId}` },
+      { property: "og:url", content: `https://biosphere.app/shop/${params.productId}` },
       { name: "twitter:card", content: "summary_large_image" },
       ...(loaderData?.product.image ? [
         { property: "og:image", content: loaderData.product.image },
         { name: "twitter:image", content: loaderData.product.image },
       ] : []),
     ],
-    links: [{ rel: "canonical", href: `https://biosphere.lovable.app/shop/${params.productId}` }],
+    links: [{ rel: "canonical", href: `https://biosphere.app/shop/${params.productId}` }],
     scripts: loaderData?.product
       ? [
           {
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/shop/$productId")({
                 price: loaderData.product.price,
                 priceCurrency: "INR",
                 availability: "https://schema.org/InStock",
-                url: `https://biosphere.lovable.app/shop/${params.productId}`,
+                url: `https://biosphere.app/shop/${params.productId}`,
               },
             }),
           },
