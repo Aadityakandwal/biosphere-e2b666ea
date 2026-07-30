@@ -4,13 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/lib/use-auth";
 import { getSupabaseEnvStatus } from "@/lib/supabase-env";
 import { Leaf, Loader2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/auth")({
+export const Route = createFileRoute("/auth/")({
   validateSearch: (search: Record<string, unknown>) => ({
     redirect: typeof search.redirect === "string" && search.redirect.startsWith("/") ? search.redirect : undefined,
   }),
@@ -86,16 +85,17 @@ function AuthPage() {
       return;
     }
     setBusy(true);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: { prompt: "select_account" },
+      },
     });
-    if (result.error) {
+    if (error) {
       setBusy(false);
       toast.error("Could not sign in with Google");
-      return;
     }
-    if (result.redirected) return;
-    navigate({ to: dest, replace: true });
   };
 
   return (
