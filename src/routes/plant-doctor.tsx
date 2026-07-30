@@ -2,12 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { products } from "@/lib/data";
 import { useCart, useProfile, SCAN_LIMITS, PLAN_LABELS } from "@/lib/stores";
 import { useHydrated } from "@/lib/motion";
 
 import { diagnosePlant, type Diagnosis } from "@/lib/plant-doctor.functions";
-import { Camera, Upload, Leaf, AlertCircle, CheckCircle2, Zap, ZapOff, Video, RotateCcw, Droplets, Sun } from "lucide-react";
+import { Camera, Upload, Leaf, CircleAlert as AlertCircle, CircleCheck as CheckCircle2, Zap, ZapOff, Video, RotateCcw, Droplets, Sun, FlaskConical, ShieldCheck, Sprout, Clock, Lightbulb, Info } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/plant-doctor")({
@@ -24,10 +25,34 @@ export const Route = createFileRoute("/plant-doctor")({
   component: PlantDoctor,
 });
 
+function severityColor(s: Diagnosis["severity"]): string {
+  switch (s) {
+    case "High": return "bg-destructive/15 text-destructive";
+    case "Moderate": return "bg-amber-500/15 text-amber-700 dark:text-amber-400";
+    case "Low": return "bg-leaf/20 text-primary";
+    default: return "bg-leaf/20 text-primary";
+  }
+}
+
+function InfoCard({
+  icon: Icon, label, children,
+}: { icon: typeof Leaf; label: string; children: React.ReactNode }) {
+  return (
+    <div className="rounded-2xl border border-border bg-card p-4 shadow-soft">
+      <div className="flex items-center gap-2">
+        <Icon className="h-4 w-4 flex-none text-primary" />
+        <h3 className="text-sm font-semibold text-foreground">{label}</h3>
+      </div>
+      <p className="mt-2 text-sm leading-relaxed text-foreground/75">{children}</p>
+    </div>
+  );
+}
+
 function PlantDoctor() {
   const fileRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<string | null>(null);
+  const [description, setDescription] = useState("");
   const [flash, setFlash] = useState(true);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Diagnosis | null>(null);
@@ -62,10 +87,10 @@ function PlantDoctor() {
     });
     setImage(dataUrl);
     setResult(null);
-    run(dataUrl);
+    run(dataUrl, description);
   };
 
-  const run = async (dataUrl: string) => {
+  const run = async (dataUrl: string, desc?: string) => {
     if (!useScan()) {
       toast.error("Daily scan limit reached — upgrade your plan for more");
       setImage(null);
@@ -73,7 +98,7 @@ function PlantDoctor() {
     }
     setLoading(true);
     try {
-      const res = await diagnosePlant({ data: { image: dataUrl } });
+      const res = await diagnosePlant({ data: { image: dataUrl, description: desc?.trim() || undefined } });
       setResult(res);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Diagnosis failed");
@@ -82,10 +107,10 @@ function PlantDoctor() {
     }
   };
 
-
   const reset = () => {
     setImage(null);
     setResult(null);
+    setDescription("");
   };
 
   return (
@@ -123,7 +148,17 @@ function PlantDoctor() {
             </p>
           )}
 
-
+          {/* Optional description */}
+          <div className="mt-4">
+            <Textarea
+              placeholder="Describe what you see (optional) — e.g. yellow spots on leaves, wilting edges…"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={2}
+              className="resize-none rounded-2xl"
+              maxLength={300}
+            />
+          </div>
 
           {/* Viewfinder */}
           <div className="relative mt-5 aspect-[3/4] overflow-hidden rounded-[2rem] bg-[oklch(0.22_0.04_155)] shadow-elevated">
@@ -184,14 +219,14 @@ function PlantDoctor() {
             <img src={image} alt="Your plant" className="h-56 w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
             {result && (
-              <span className={`absolute right-4 top-4 flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-bold uppercase tracking-wide backdrop-blur-md ${result.healthy ? "bg-white/90 text-primary" : "bg-white/90 text-destructive"}`}>
-                {result.healthy ? <CheckCircle2 className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
-                {result.healthy ? "Looks healthy" : "Issues detected"}
+              <span className={`absolute right-4 top-4 flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-bold uppercase tracking-wide backdrop-blur-md ${result.is_healthy ? "bg-white/90 text-primary" : "bg-white/90 text-destructive"}`}>
+                {result.is_healthy ? <CheckCircle2 className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
+                {result.is_healthy ? "Looks healthy" : "Issues detected"}
               </span>
             )}
             <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-              <p className="font-display text-2xl font-bold leading-tight">{loading ? "Analyzing…" : result?.plant ?? "Your plant"}</p>
-              <p className="text-sm opacity-80">{loading ? "Our AI is reading the leaves" : "Analyzed just now"}</p>
+              <p className="font-display text-2xl font-bold leading-tight">{loading ? "Analyzing…" : result?.disease_name ?? "Your plant"}</p>
+              <p className="text-sm opacity-80">{loading ? "Gemini AI is reading the leaves" : "Analyzed just now"}</p>
             </div>
             <button onClick={reset} className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full bg-black/40 px-3 py-2 text-xs font-semibold text-white backdrop-blur-md press">
               <RotateCcw className="h-3.5 w-3.5" /> Retake
@@ -200,6 +235,13 @@ function PlantDoctor() {
 
           {loading && (
             <div className="space-y-3">
+              <div className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft">
+                <div className="h-10 w-10 animate-pulse rounded-full bg-leaf/30" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />
+                  <div className="h-3 w-1/2 animate-pulse rounded bg-muted" />
+                </div>
+              </div>
               <div className="h-32 animate-pulse rounded-3xl bg-muted" />
               <div className="h-20 animate-pulse rounded-3xl bg-muted" />
             </div>
@@ -207,38 +249,74 @@ function PlantDoctor() {
 
           {result && (
             <>
-              {/* Diagnosis card */}
+              {/* Diagnosis summary card */}
               <div className="rounded-3xl border border-border bg-card p-5 shadow-soft">
                 <div className="flex items-start justify-between gap-3">
                   <h2 className="font-display text-2xl font-bold tracking-tight">Diagnosis</h2>
-                  <span className="rounded-full bg-leaf/25 px-3 py-1.5 text-center text-[11px] font-bold leading-tight text-primary">
-                    {result.match}%<br />Match
-                  </span>
+                  <div className="flex flex-col items-end gap-2">
+                    <span className="rounded-full bg-leaf/25 px-3 py-1.5 text-center text-[11px] font-bold leading-tight text-primary">
+                      {result.confidence}%<br />Match
+                    </span>
+                    <span className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide ${severityColor(result.severity)}`}>
+                      {result.severity}
+                    </span>
+                  </div>
                 </div>
-                <p className="mt-1 font-display text-lg font-semibold text-primary">{result.issue}</p>
-                <p className="mt-2 text-[15px] leading-relaxed text-foreground/80">{result.summary}</p>
+                <p className="mt-1 font-display text-lg font-semibold text-primary">{result.disease_name}</p>
 
-                {result.chips.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-2 border-t border-border pt-4">
-                    {result.chips.map((c, i) => (
-                      <span key={c} className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
-                        {i % 2 === 0 ? <Droplets className="h-3.5 w-3.5" /> : <Sun className="h-3.5 w-3.5" />}
-                        {c}
-                      </span>
-                    ))}
+                <div className="mt-4 flex flex-wrap gap-2 border-t border-border pt-4">
+                  {result.watering_advice && (
+                    <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
+                      <Droplets className="h-3.5 w-3.5" /> {result.watering_advice.slice(0, 40)}
+                    </span>
+                  )}
+                  {result.fertilizer_advice && (
+                    <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
+                      <Sprout className="h-3.5 w-3.5" /> {result.fertilizer_advice.slice(0, 40)}
+                    </span>
+                  )}
+                </div>
+
+                {result.recovery_time && (
+                  <div className="mt-3 flex items-center gap-2 text-sm text-foreground/80">
+                    <Clock className="h-4 w-4 flex-none text-primary" />
+                    <span>Expected recovery: <strong className="font-semibold">{result.recovery_time}</strong></span>
                   </div>
                 )}
+              </div>
 
-                {result.actions.length > 0 && (
-                  <ul className="mt-4 space-y-2">
-                    {result.actions.map((a) => (
-                      <li key={a} className="flex gap-2 text-sm text-foreground/80">
-                        <Leaf className="mt-0.5 h-4 w-4 flex-none text-primary" />
-                        {a}
-                      </li>
-                    ))}
-                  </ul>
+              {/* Detailed sections */}
+              <div className="space-y-3">
+                {result.symptoms && (
+                  <InfoCard icon={AlertCircle} label="Symptoms">{result.symptoms}</InfoCard>
                 )}
+                {result.causes && (
+                  <InfoCard icon={Info} label="Likely Causes">{result.causes}</InfoCard>
+                )}
+                {result.treatment && (
+                  <InfoCard icon={Leaf} label="Treatment Plan">{result.treatment}</InfoCard>
+                )}
+                {result.organic_treatment && (
+                  <InfoCard icon={Sprout} label="Organic Treatment">{result.organic_treatment}</InfoCard>
+                )}
+                {result.chemical_treatment && (
+                  <InfoCard icon={FlaskConical} label="Chemical Treatment">{result.chemical_treatment}</InfoCard>
+                )}
+                {result.prevention && (
+                  <InfoCard icon={ShieldCheck} label="Prevention">{result.prevention}</InfoCard>
+                )}
+                {result.watering_advice && (
+                  <InfoCard icon={Droplets} label="Watering Advice">{result.watering_advice}</InfoCard>
+                )}
+                {result.fertilizer_advice && (
+                  <InfoCard icon={Sprout} label="Fertilizer Advice">{result.fertilizer_advice}</InfoCard>
+                )}
+              </div>
+
+              {/* Disclaimer */}
+              <div className="flex items-start gap-2 rounded-2xl bg-muted/50 p-4">
+                <Lightbulb className="mt-0.5 h-4 w-4 flex-none text-muted-foreground" />
+                <p className="text-xs leading-relaxed text-muted-foreground">{result.disclaimer}</p>
               </div>
 
               {/* BioVelocity solutions */}

@@ -1,82 +1,120 @@
 import { createServerFn } from "@tanstack/react-start";
+import { GoogleGenAI, Type } from "@google/genai";
 
 export type Diagnosis = {
-  plant: string;
-  issue: string;
-  match: number;
-  healthy: boolean;
-  summary: string;
-  chips: string[];
-  actions: string[];
+  disease_name: string;
+  confidence: number;
+  severity: "Low" | "Moderate" | "High" | "None";
+  symptoms: string;
+  causes: string;
+  treatment: string;
+  organic_treatment: string;
+  chemical_treatment: string;
+  prevention: string;
+  watering_advice: string;
+  fertilizer_advice: string;
+  recovery_time: string;
+  is_healthy: boolean;
+  disclaimer: string;
 };
 
+const diagnosisSchema = {
+  type: Type.OBJECT,
+  properties: {
+    disease_name: { type: Type.STRING, description: "Common name of the identified disease or condition. Use 'Healthy Plant' if no issues found." },
+    confidence: { type: Type.NUMBER, description: "Confidence score from 0 to 100" },
+    severity: { type: Type.STRING, description: "Severity level: Low, Moderate, High, or None" },
+    symptoms: { type: Type.STRING, description: "Visible symptoms observed on the plant" },
+    causes: { type: Type.STRING, description: "Likely causes of the condition" },
+    treatment: { type: Type.STRING, description: "General treatment recommendations" },
+    organic_treatment: { type: Type.STRING, description: "Organic or natural treatment options" },
+    chemical_treatment: { type: Type.STRING, description: "Chemical treatment options if applicable" },
+    prevention: { type: Type.STRING, description: "Preventive measures to avoid recurrence" },
+    watering_advice: { type: Type.STRING, description: "Specific watering guidance" },
+    fertilizer_advice: { type: Type.STRING, description: "Specific fertilizer guidance" },
+    recovery_time: { type: Type.STRING, description: "Expected recovery timeframe" },
+    is_healthy: { type: Type.BOOLEAN, description: "Whether the plant appears healthy" },
+    disclaimer: { type: Type.STRING, description: "A brief disclaimer about the AI diagnosis" },
+  },
+  required: [
+    "disease_name", "confidence", "severity", "symptoms", "causes",
+    "treatment", "organic_treatment", "chemical_treatment", "prevention",
+    "watering_advice", "fertilizer_advice", "recovery_time", "is_healthy", "disclaimer",
+  ],
+};
+
+function createClient() {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("Gemini API key is not configured. Set GEMINI_API_KEY in the environment.");
+  return new GoogleGenAI({ apiKey });
+}
+
+let client: GoogleGenAI | undefined;
+function getClient() {
+  if (!client) client = createClient();
+  return client;
+}
+
 export const diagnosePlant = createServerFn({ method: "POST" })
-  .inputValidator((data: { image: string }) => {
+  .inputValidator((data: { image: string; description?: string }) => {
     if (!data?.image?.startsWith("data:image/")) throw new Error("A plant photo is required");
     return data;
   })
   .handler(async ({ data }): Promise<Diagnosis> => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) throw new Error("AI is not configured");
+    const ai = getClient();
+    const base64Data = data.image.split(",")[1];
+    const mimeType = data.image.match(/data:(image\/[a-zA-Z]+);/)?.[1] ?? "image/jpeg";
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "google/gemini-3.6-flash",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are Biosphere's AI Plant Doctor. Identify the plant from the photo and diagnose visible health issues. Be concise, practical and specific to what is visible.",
-          },
-          {
-            role: "user",
-            content: [
-              { type: "text", text: "Diagnose this plant." },
-              { type: "image_url", image_url: { url: data.image } },
-            ],
-          },
+    const prompt = data.description
+      ? `You are Biosphere's AI Plant Doctor, a certified plant pathologist. Analyze this plant image. The user reports: "${data.description}". Identify the plant and diagnose any visible health issues. Provide a thorough, practical assessment.`
+      : "You are Biosphere's AI Plant Doctor, a certified plant pathologist. Analyze this plant image. Identify the plant and diagnose any visible health issues. Provide a thorough, practical assessment.";
+
+    let response;
+    try {
+      response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [
+          { text: prompt },
+          { inlineData: { data: base64Data, mimeType } },
         ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "report_diagnosis",
-              description: "Report the plant diagnosis",
-              parameters: {
-                type: "object",
-                properties: {
-                  plant: { type: "string", description: "Common name of the plant" },
-                  issue: { type: "string", description: "Short issue title, e.g. 'Nitrogen Deficiency'. Use 'Healthy Plant' if none." },
-                  match: { type: "number", description: "Confidence 0-100" },
-                  healthy: { type: "boolean" },
-                  summary: { type: "string", description: "2-3 sentences explaining the diagnosis" },
-                  chips: { type: "array", items: { type: "string" }, description: "2-3 short observations like 'Soil Hydration Low'" },
-                  actions: { type: "array", items: { type: "string" }, description: "3 short care actions" },
-                },
-                required: ["plant", "issue", "match", "healthy", "summary", "chips", "actions"],
-                additionalProperties: false,
-              },
-            },
-          },
-        ],
-        tool_choice: { type: "function", function: { name: "report_diagnosis" } },
-      }),
-    });
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: diagnosisSchema,
+          temperature: 0.4,
+        },
+      });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Unknown error";
+      if (msg.includes("API key")) throw new Error("Gemini API key is invalid or not configured.");
+      if (msg.includes("429") || msg.includes("quota")) throw new Error("Too many requests — please try again in a moment.");
+      if (msg.includes("safety")) throw new Error("The image was blocked by safety filters. Try a clearer photo.");
+      throw new Error("Could not analyze the image. Please try again.");
+    }
 
-    if (res.status === 429) throw new Error("Too many requests — please try again in a moment.");
-    if (res.status === 402) throw new Error("AI credits exhausted. Add credits in Settings → Plans & credits.");
-    if (!res.ok) throw new Error(`Diagnosis failed (${res.status}): ${await res.text()}`);
+    const text = response.text;
+    if (!text) throw new Error("The AI returned an empty response. Try a clearer photo.");
 
-    const json = await res.json();
-    const args = json?.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
-    if (!args) throw new Error("Could not read the diagnosis. Try a clearer photo.");
-    const parsed = JSON.parse(args) as Diagnosis;
+    let parsed: Diagnosis;
+    try {
+      parsed = JSON.parse(text) as Diagnosis;
+    } catch {
+      throw new Error("Could not read the diagnosis. Try a clearer photo.");
+    }
+
     return {
-      ...parsed,
-      match: Math.max(0, Math.min(100, Math.round(parsed.match ?? 0))),
-      chips: parsed.chips?.slice(0, 3) ?? [],
-      actions: parsed.actions?.slice(0, 4) ?? [],
+      disease_name: parsed.disease_name ?? "Unknown",
+      confidence: Math.max(0, Math.min(100, Math.round(parsed.confidence ?? 0))),
+      severity: parsed.severity ?? "None",
+      symptoms: parsed.symptoms ?? "",
+      causes: parsed.causes ?? "",
+      treatment: parsed.treatment ?? "",
+      organic_treatment: parsed.organic_treatment ?? "",
+      chemical_treatment: parsed.chemical_treatment ?? "",
+      prevention: parsed.prevention ?? "",
+      watering_advice: parsed.watering_advice ?? "",
+      fertilizer_advice: parsed.fertilizer_advice ?? "",
+      recovery_time: parsed.recovery_time ?? "",
+      is_healthy: parsed.is_healthy ?? false,
+      disclaimer: parsed.disclaimer ?? "This AI diagnosis is for informational purposes only and is not a substitute for professional advice.",
     };
   });
