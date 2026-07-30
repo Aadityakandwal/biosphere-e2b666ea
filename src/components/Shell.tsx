@@ -3,7 +3,7 @@ import { Home, Wrench, CalendarDays, ShoppingBag, User, ShoppingCart, MapPin } f
 import type { ReactNode } from "react";
 import { useCart, useProfile } from "@/lib/stores";
 import { Badge } from "@/components/ui/badge";
-import logoAsset from "@/assets/biosphere-logo.png.asset.json";
+import logoUrl from "@/assets/biosphere-logo.png";
 import { useLocationPrompt, requestLocation } from "@/lib/use-location";
 
 export function Shell({ children, title }: { children: ReactNode; title?: string }) {
@@ -33,7 +33,7 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
         <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border/60 bg-background/70 px-4 py-3 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
           <div className="flex items-center gap-2">
             <Link to="/" className="group press flex items-center gap-2">
-              <img src={logoAsset.url} alt="Biosphere" className="h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
+              <img src={logoUrl} alt="Biosphere" className="h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
             </Link>
             <span className="leading-tight">
               <Link to="/" className="block font-display text-xl font-semibold tracking-tight text-foreground">Biosphere</Link>
