@@ -9,58 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as PlantDoctorRouteImport } from './routes/plant-doctor'
-import { Route as OrdersRouteImport } from './routes/orders'
-import { Route as ConsultRouteImport } from './routes/consult'
-import { Route as CheckoutRouteImport } from './routes/checkout'
-import { Route as CartRouteImport } from './routes/cart'
-import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ShopIndexRouteImport } from './routes/shop.index'
-import { Route as ServicesIndexRouteImport } from './routes/services.index'
-import { Route as ProfileIndexRouteImport } from './routes/profile.index'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as ConsultRouteImport } from './routes/consult'
+import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as PlantDoctorRouteImport } from './routes/plant-doctor'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as BookingsIndexRouteImport } from './routes/bookings.index'
-import { Route as ShopProductIdRouteImport } from './routes/shop.$productId'
-import { Route as ProfileSupportRouteImport } from './routes/profile.support'
-import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
-import { Route as ProfileMembershipRouteImport } from './routes/profile.membership'
-import { Route as ProfileGreenPointsRouteImport } from './routes/profile.green-points'
-import { Route as ProfileEditRouteImport } from './routes/profile.edit'
-import { Route as ProfileActivityRouteImport } from './routes/profile.activity'
-import { Route as BookingsReviewRouteImport } from './routes/bookings.review'
 import { Route as BookingsIdRouteImport } from './routes/bookings.$id'
+import { Route as BookingsReviewRouteImport } from './routes/bookings.review'
+import { Route as ProfileIndexRouteImport } from './routes/profile.index'
+import { Route as ProfileActivityRouteImport } from './routes/profile.activity'
+import { Route as ProfileEditRouteImport } from './routes/profile.edit'
+import { Route as ProfileGreenPointsRouteImport } from './routes/profile.green-points'
+import { Route as ProfileMembershipRouteImport } from './routes/profile.membership'
+import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
+import { Route as ProfileSupportRouteImport } from './routes/profile.support'
+import { Route as ServicesIndexRouteImport } from './routes/services.index'
+import { Route as ShopIndexRouteImport } from './routes/shop.index'
+import { Route as ShopProductIdRouteImport } from './routes/shop.$productId'
 import { Route as ServicesSlugIndexRouteImport } from './routes/services.$slug.index'
 import { Route as ServicesSlugBookRouteImport } from './routes/services.$slug.book'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlantDoctorRoute = PlantDoctorRouteImport.update({
-  id: '/plant-doctor',
-  path: '/plant-doctor',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OrdersRoute = OrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConsultRoute = ConsultRouteImport.update({
-  id: '/consult',
-  path: '/consult',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CartRoute = CartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -68,24 +43,34 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShopIndexRoute = ShopIndexRouteImport.update({
-  id: '/shop/',
-  path: '/shop/',
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ServicesIndexRoute = ServicesIndexRouteImport.update({
-  id: '/services/',
-  path: '/services/',
+const ConsultRoute = ConsultRouteImport.update({
+  id: '/consult',
+  path: '/consult',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileIndexRoute = ProfileIndexRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlantDoctorRoute = PlantDoctorRouteImport.update({
+  id: '/plant-doctor',
+  path: '/plant-doctor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookingsIndexRoute = BookingsIndexRouteImport.update({
@@ -93,39 +78,9 @@ const BookingsIndexRoute = BookingsIndexRouteImport.update({
   path: '/bookings/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShopProductIdRoute = ShopProductIdRouteImport.update({
-  id: '/shop/$productId',
-  path: '/shop/$productId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileSupportRoute = ProfileSupportRouteImport.update({
-  id: '/profile/support',
-  path: '/profile/support',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
-  id: '/profile/settings',
-  path: '/profile/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileMembershipRoute = ProfileMembershipRouteImport.update({
-  id: '/profile/membership',
-  path: '/profile/membership',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileGreenPointsRoute = ProfileGreenPointsRouteImport.update({
-  id: '/profile/green-points',
-  path: '/profile/green-points',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileEditRoute = ProfileEditRouteImport.update({
-  id: '/profile/edit',
-  path: '/profile/edit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileActivityRoute = ProfileActivityRouteImport.update({
-  id: '/profile/activity',
-  path: '/profile/activity',
+const BookingsIdRoute = BookingsIdRouteImport.update({
+  id: '/bookings/$id',
+  path: '/bookings/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookingsReviewRoute = BookingsReviewRouteImport.update({
@@ -133,9 +88,54 @@ const BookingsReviewRoute = BookingsReviewRouteImport.update({
   path: '/bookings/review',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BookingsIdRoute = BookingsIdRouteImport.update({
-  id: '/bookings/$id',
-  path: '/bookings/$id',
+const ProfileIndexRoute = ProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileActivityRoute = ProfileActivityRouteImport.update({
+  id: '/profile/activity',
+  path: '/profile/activity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileEditRoute = ProfileEditRouteImport.update({
+  id: '/profile/edit',
+  path: '/profile/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileGreenPointsRoute = ProfileGreenPointsRouteImport.update({
+  id: '/profile/green-points',
+  path: '/profile/green-points',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileMembershipRoute = ProfileMembershipRouteImport.update({
+  id: '/profile/membership',
+  path: '/profile/membership',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
+  id: '/profile/settings',
+  path: '/profile/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileSupportRoute = ProfileSupportRouteImport.update({
+  id: '/profile/support',
+  path: '/profile/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesIndexRoute = ServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopIndexRoute = ShopIndexRouteImport.update({
+  id: '/shop/',
+  path: '/shop/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopProductIdRoute = ShopProductIdRouteImport.update({
+  id: '/shop/$productId',
+  path: '/shop/$productId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesSlugIndexRoute = ServicesSlugIndexRouteImport.update({
@@ -331,46 +331,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/plant-doctor': {
-      id: '/plant-doctor'
-      path: '/plant-doctor'
-      fullPath: '/plant-doctor'
-      preLoaderRoute: typeof PlantDoctorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/orders': {
-      id: '/orders'
-      path: '/orders'
-      fullPath: '/orders'
-      preLoaderRoute: typeof OrdersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/consult': {
-      id: '/consult'
-      path: '/consult'
-      fullPath: '/consult'
-      preLoaderRoute: typeof ConsultRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cart': {
-      id: '/cart'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof CartRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -380,32 +345,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/shop/': {
-      id: '/shop/'
-      path: '/shop'
-      fullPath: '/shop/'
-      preLoaderRoute: typeof ShopIndexRouteImport
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/services/': {
-      id: '/services/'
-      path: '/services'
-      fullPath: '/services/'
-      preLoaderRoute: typeof ServicesIndexRouteImport
+    '/consult': {
+      id: '/consult'
+      path: '/consult'
+      fullPath: '/consult'
+      preLoaderRoute: typeof ConsultRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile/': {
-      id: '/profile/'
-      path: '/profile'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof ProfileIndexRouteImport
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plant-doctor': {
+      id: '/plant-doctor'
+      path: '/plant-doctor'
+      fullPath: '/plant-doctor'
+      preLoaderRoute: typeof PlantDoctorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bookings/': {
@@ -415,53 +394,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookingsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/shop/$productId': {
-      id: '/shop/$productId'
-      path: '/shop/$productId'
-      fullPath: '/shop/$productId'
-      preLoaderRoute: typeof ShopProductIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/support': {
-      id: '/profile/support'
-      path: '/profile/support'
-      fullPath: '/profile/support'
-      preLoaderRoute: typeof ProfileSupportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/settings': {
-      id: '/profile/settings'
-      path: '/profile/settings'
-      fullPath: '/profile/settings'
-      preLoaderRoute: typeof ProfileSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/membership': {
-      id: '/profile/membership'
-      path: '/profile/membership'
-      fullPath: '/profile/membership'
-      preLoaderRoute: typeof ProfileMembershipRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/green-points': {
-      id: '/profile/green-points'
-      path: '/profile/green-points'
-      fullPath: '/profile/green-points'
-      preLoaderRoute: typeof ProfileGreenPointsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/edit': {
-      id: '/profile/edit'
-      path: '/profile/edit'
-      fullPath: '/profile/edit'
-      preLoaderRoute: typeof ProfileEditRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/activity': {
-      id: '/profile/activity'
-      path: '/profile/activity'
-      fullPath: '/profile/activity'
-      preLoaderRoute: typeof ProfileActivityRouteImport
+    '/bookings/$id': {
+      id: '/bookings/$id'
+      path: '/bookings/$id'
+      fullPath: '/bookings/$id'
+      preLoaderRoute: typeof BookingsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bookings/review': {
@@ -471,11 +408,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookingsReviewRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/bookings/$id': {
-      id: '/bookings/$id'
-      path: '/bookings/$id'
-      fullPath: '/bookings/$id'
-      preLoaderRoute: typeof BookingsIdRouteImport
+    '/profile/': {
+      id: '/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProfileIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/activity': {
+      id: '/profile/activity'
+      path: '/profile/activity'
+      fullPath: '/profile/activity'
+      preLoaderRoute: typeof ProfileActivityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/edit': {
+      id: '/profile/edit'
+      path: '/profile/edit'
+      fullPath: '/profile/edit'
+      preLoaderRoute: typeof ProfileEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/green-points': {
+      id: '/profile/green-points'
+      path: '/profile/green-points'
+      fullPath: '/profile/green-points'
+      preLoaderRoute: typeof ProfileGreenPointsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/membership': {
+      id: '/profile/membership'
+      path: '/profile/membership'
+      fullPath: '/profile/membership'
+      preLoaderRoute: typeof ProfileMembershipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/settings': {
+      id: '/profile/settings'
+      path: '/profile/settings'
+      fullPath: '/profile/settings'
+      preLoaderRoute: typeof ProfileSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/support': {
+      id: '/profile/support'
+      path: '/profile/support'
+      fullPath: '/profile/support'
+      preLoaderRoute: typeof ProfileSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/': {
+      id: '/services/'
+      path: '/services'
+      fullPath: '/services/'
+      preLoaderRoute: typeof ServicesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop/': {
+      id: '/shop/'
+      path: '/shop'
+      fullPath: '/shop/'
+      preLoaderRoute: typeof ShopIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop/$productId': {
+      id: '/shop/$productId'
+      path: '/shop/$productId'
+      fullPath: '/shop/$productId'
+      preLoaderRoute: typeof ShopProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services/$slug/': {
@@ -523,3 +523,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
