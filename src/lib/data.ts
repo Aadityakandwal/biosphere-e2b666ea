@@ -1,5 +1,5 @@
-import neervaAsset from "@/assets/neerva-bottle-full.png.asset.json";
-import biobloomAsset from "@/assets/biobloom-yardhak.png.asset.json";
+import neervaUrl from "@/assets/neerva-bottle-full.png";
+import biobloomUrl from "@/assets/biobloom-yardhak.png";
 import snakePlantImg from "@/assets/product-snake-plant.jpg";
 import prunerImg from "@/assets/product-pruner.jpg";
 import lawnCareImg from "@/assets/service-lawn-care.jpg";
@@ -129,7 +129,7 @@ export type Product = {
 
 export const products: Product[] = [
   { id: "neerva", name: "Neerva — Bio Growth Tonic (1L)", price: 249, mrp: 300, category: "biovelocity", popular: true,
-    image: neervaAsset.url,
+    image: neervaUrl,
     short: "Microbial bio-formula for foliar, soil, and drip application.",
     description: "Neerva Biovelocity is a live microbial bio-liquid that rebuilds soil biology instead of force-feeding the plant. The consortium of beneficial bacteria fixes nitrogen, unlocks bound phosphorus and potassium, and improves root uptake — so leaves green up, flowering improves and stress recovery is faster. Safe for edibles, indoor pots and full field use.",
     highlights: ["1 litre concentrate — up to 12 L of spray", "Works as foliar spray, soil drench or drip", "100% organic, residue-free, safe for edibles", "Visible response in 10–14 days"],
@@ -164,7 +164,7 @@ export const products: Product[] = [
     care: "Rinse off soil and dry after use; store indoors during monsoon." },
 
   { id: "biobloom", name: "BioBloom Flower Booster", price: 349, category: "biovelocity",
-    image: biobloomAsset.url,
+    image: biobloomUrl,
     short: "Organic bloom accelerator.",
     description: "BioBloom is a potassium- and phosphorus-rich organic bloom stimulant for flowering and fruiting plants. It encourages more flower buds, deeper petal colour and better fruit set in hibiscus, rose, jasmine, chilli and tomato — without the salt build-up you get from chemical bloom boosters.",
     highlights: ["500 ml concentrate", "Boosts bud count and petal colour", "Organic, residue-free on edibles", "Best used through the flowering cycle"],
@@ -325,7 +325,7 @@ export const initialOrders = [
     eta: "Arriving today by 7 PM",
     stage: 2,
     address: "Flat 402, Green Meadows, Greenwich",
-    images: [neervaAsset.url, "https://images.unsplash.com/photo-1462530260150-162092dbf011?w=400"],
+    images: [neervaUrl, "https://images.unsplash.com/photo-1462530260150-162092dbf011?w=400"],
   },
   {
     id: "ord-1048",
@@ -350,7 +350,7 @@ export const initialOrders = [
     deliveredOn: "Delivered on Sat, 14 Jul",
     stage: 3,
     address: "Flat 402, Green Meadows, Greenwich",
-    images: [neervaAsset.url],
+    images: [neervaUrl],
   },
   {
     id: "ord-1039",

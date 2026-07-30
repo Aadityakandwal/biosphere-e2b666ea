@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import logoAsset from "@/assets/biosphere-logo.png.asset.json";
+import logoUrl from "@/assets/biosphere-logo.png";
 import { useApplyReducedMotion } from "@/lib/motion";
 
 /** Small inline spinner: growing leaf ring. */
@@ -74,7 +74,7 @@ export function Splash() {
 
 
         <img
-          src={logoAsset.url}
+          src={logoUrl}
           alt="Biosphere"
           className="splash-logo h-24 w-24 rounded-3xl object-contain"
         />
