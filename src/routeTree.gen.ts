@@ -9,58 +9,34 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as CartRouteImport } from './routes/cart'
-import { Route as CheckoutRouteImport } from './routes/checkout'
-import { Route as ConsultRouteImport } from './routes/consult'
-import { Route as OrdersRouteImport } from './routes/orders'
-import { Route as PlantDoctorRouteImport } from './routes/plant-doctor'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as BookingsIndexRouteImport } from './routes/bookings.index'
-import { Route as BookingsIdRouteImport } from './routes/bookings.$id'
-import { Route as BookingsReviewRouteImport } from './routes/bookings.review'
-import { Route as ProfileIndexRouteImport } from './routes/profile.index'
-import { Route as ProfileActivityRouteImport } from './routes/profile.activity'
-import { Route as ProfileEditRouteImport } from './routes/profile.edit'
-import { Route as ProfileGreenPointsRouteImport } from './routes/profile.green-points'
-import { Route as ProfileMembershipRouteImport } from './routes/profile.membership'
-import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
-import { Route as ProfileSupportRouteImport } from './routes/profile.support'
-import { Route as ServicesIndexRouteImport } from './routes/services.index'
+import { Route as PlantDoctorRouteImport } from './routes/plant-doctor'
+import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as ConsultRouteImport } from './routes/consult'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
+import { Route as ServicesIndexRouteImport } from './routes/services.index'
+import { Route as ProfileIndexRouteImport } from './routes/profile.index'
+import { Route as BookingsIndexRouteImport } from './routes/bookings.index'
+import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as ShopProductIdRouteImport } from './routes/shop.$productId'
+import { Route as ProfileSupportRouteImport } from './routes/profile.support'
+import { Route as ProfileSettingsRouteImport } from './routes/profile.settings'
+import { Route as ProfileMembershipRouteImport } from './routes/profile.membership'
+import { Route as ProfileGreenPointsRouteImport } from './routes/profile.green-points'
+import { Route as ProfileEditRouteImport } from './routes/profile.edit'
+import { Route as ProfileActivityRouteImport } from './routes/profile.activity'
+import { Route as BookingsReviewRouteImport } from './routes/bookings.review'
+import { Route as BookingsIdRouteImport } from './routes/bookings.$id'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ServicesSlugIndexRouteImport } from './routes/services.$slug.index'
 import { Route as ServicesSlugBookRouteImport } from './routes/services.$slug.book'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CartRoute = CartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConsultRoute = ConsultRouteImport.update({
-  id: '/consult',
-  path: '/consult',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OrdersRoute = OrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlantDoctorRoute = PlantDoctorRouteImport.update({
@@ -68,64 +44,29 @@ const PlantDoctorRoute = PlantDoctorRouteImport.update({
   path: '/plant-doctor',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BookingsIndexRoute = BookingsIndexRouteImport.update({
-  id: '/bookings/',
-  path: '/bookings/',
+const ConsultRoute = ConsultRouteImport.update({
+  id: '/consult',
+  path: '/consult',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BookingsIdRoute = BookingsIdRouteImport.update({
-  id: '/bookings/$id',
-  path: '/bookings/$id',
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BookingsReviewRoute = BookingsReviewRouteImport.update({
-  id: '/bookings/review',
-  path: '/bookings/review',
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileIndexRoute = ProfileIndexRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileActivityRoute = ProfileActivityRouteImport.update({
-  id: '/profile/activity',
-  path: '/profile/activity',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileEditRoute = ProfileEditRouteImport.update({
-  id: '/profile/edit',
-  path: '/profile/edit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileGreenPointsRoute = ProfileGreenPointsRouteImport.update({
-  id: '/profile/green-points',
-  path: '/profile/green-points',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileMembershipRoute = ProfileMembershipRouteImport.update({
-  id: '/profile/membership',
-  path: '/profile/membership',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
-  id: '/profile/settings',
-  path: '/profile/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileSupportRoute = ProfileSupportRouteImport.update({
-  id: '/profile/support',
-  path: '/profile/support',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ServicesIndexRoute = ServicesIndexRouteImport.update({
-  id: '/services/',
-  path: '/services/',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopIndexRoute = ShopIndexRouteImport.update({
@@ -133,9 +74,74 @@ const ShopIndexRoute = ShopIndexRouteImport.update({
   path: '/shop/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesIndexRoute = ServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileIndexRoute = ProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingsIndexRoute = BookingsIndexRouteImport.update({
+  id: '/bookings/',
+  path: '/bookings/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: '/auth/',
+  path: '/auth/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopProductIdRoute = ShopProductIdRouteImport.update({
   id: '/shop/$productId',
   path: '/shop/$productId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileSupportRoute = ProfileSupportRouteImport.update({
+  id: '/profile/support',
+  path: '/profile/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileSettingsRoute = ProfileSettingsRouteImport.update({
+  id: '/profile/settings',
+  path: '/profile/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileMembershipRoute = ProfileMembershipRouteImport.update({
+  id: '/profile/membership',
+  path: '/profile/membership',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileGreenPointsRoute = ProfileGreenPointsRouteImport.update({
+  id: '/profile/green-points',
+  path: '/profile/green-points',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileEditRoute = ProfileEditRouteImport.update({
+  id: '/profile/edit',
+  path: '/profile/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileActivityRoute = ProfileActivityRouteImport.update({
+  id: '/profile/activity',
+  path: '/profile/activity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingsReviewRoute = BookingsReviewRouteImport.update({
+  id: '/bookings/review',
+  path: '/bookings/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingsIdRoute = BookingsIdRouteImport.update({
+  id: '/bookings/$id',
+  path: '/bookings/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesSlugIndexRoute = ServicesSlugIndexRouteImport.update({
@@ -151,13 +157,13 @@ const ServicesSlugBookRoute = ServicesSlugBookRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
+  '/auth/': typeof AuthIndexRoute
   '/bookings/': typeof BookingsIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/services/': typeof ServicesIndexRoute
@@ -176,13 +183,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
+  '/auth': typeof AuthIndexRoute
   '/bookings': typeof BookingsIndexRoute
   '/profile': typeof ProfileIndexRoute
   '/services': typeof ServicesIndexRoute
@@ -202,13 +210,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/consult': typeof ConsultRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/bookings/$id': typeof BookingsIdRoute
   '/bookings/review': typeof BookingsReviewRoute
   '/profile/activity': typeof ProfileActivityRoute
@@ -218,6 +226,7 @@ export interface FileRoutesById {
   '/profile/settings': typeof ProfileSettingsRoute
   '/profile/support': typeof ProfileSupportRoute
   '/shop/$productId': typeof ShopProductIdRoute
+  '/auth/': typeof AuthIndexRoute
   '/bookings/': typeof BookingsIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/services/': typeof ServicesIndexRoute
@@ -229,13 +238,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/auth'
     | '/cart'
     | '/checkout'
     | '/consult'
     | '/orders'
     | '/plant-doctor'
     | '/sitemap.xml'
+    | '/auth/callback'
     | '/bookings/$id'
     | '/bookings/review'
     | '/profile/activity'
@@ -245,6 +254,7 @@ export interface FileRouteTypes {
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
+    | '/auth/'
     | '/bookings/'
     | '/profile/'
     | '/services/'
@@ -254,13 +264,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/auth'
     | '/cart'
     | '/checkout'
     | '/consult'
     | '/orders'
     | '/plant-doctor'
     | '/sitemap.xml'
+    | '/auth/callback'
     | '/bookings/$id'
     | '/bookings/review'
     | '/profile/activity'
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
+    | '/auth'
     | '/bookings'
     | '/profile'
     | '/services'
@@ -279,13 +290,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/auth'
     | '/cart'
     | '/checkout'
     | '/consult'
     | '/orders'
     | '/plant-doctor'
     | '/sitemap.xml'
+    | '/auth/callback'
     | '/bookings/$id'
     | '/bookings/review'
     | '/profile/activity'
@@ -295,6 +306,7 @@ export interface FileRouteTypes {
     | '/profile/settings'
     | '/profile/support'
     | '/shop/$productId'
+    | '/auth/'
     | '/bookings/'
     | '/profile/'
     | '/services/'
@@ -305,13 +317,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   ConsultRoute: typeof ConsultRoute
   OrdersRoute: typeof OrdersRoute
   PlantDoctorRoute: typeof PlantDoctorRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   BookingsIdRoute: typeof BookingsIdRoute
   BookingsReviewRoute: typeof BookingsReviewRoute
   ProfileActivityRoute: typeof ProfileActivityRoute
@@ -321,6 +333,7 @@ export interface RootRouteChildren {
   ProfileSettingsRoute: typeof ProfileSettingsRoute
   ProfileSupportRoute: typeof ProfileSupportRoute
   ShopProductIdRoute: typeof ShopProductIdRoute
+  AuthIndexRoute: typeof AuthIndexRoute
   BookingsIndexRoute: typeof BookingsIndexRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
@@ -331,46 +344,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cart': {
-      id: '/cart'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof CartRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/consult': {
-      id: '/consult'
-      path: '/consult'
-      fullPath: '/consult'
-      preLoaderRoute: typeof ConsultRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/orders': {
-      id: '/orders'
-      path: '/orders'
-      fullPath: '/orders'
-      preLoaderRoute: typeof OrdersRouteImport
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/plant-doctor': {
@@ -380,88 +358,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlantDoctorRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/bookings/': {
-      id: '/bookings/'
-      path: '/bookings'
-      fullPath: '/bookings/'
-      preLoaderRoute: typeof BookingsIndexRouteImport
+    '/consult': {
+      id: '/consult'
+      path: '/consult'
+      fullPath: '/consult'
+      preLoaderRoute: typeof ConsultRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/bookings/$id': {
-      id: '/bookings/$id'
-      path: '/bookings/$id'
-      fullPath: '/bookings/$id'
-      preLoaderRoute: typeof BookingsIdRouteImport
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/bookings/review': {
-      id: '/bookings/review'
-      path: '/bookings/review'
-      fullPath: '/bookings/review'
-      preLoaderRoute: typeof BookingsReviewRouteImport
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile/': {
-      id: '/profile/'
-      path: '/profile'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof ProfileIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/activity': {
-      id: '/profile/activity'
-      path: '/profile/activity'
-      fullPath: '/profile/activity'
-      preLoaderRoute: typeof ProfileActivityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/edit': {
-      id: '/profile/edit'
-      path: '/profile/edit'
-      fullPath: '/profile/edit'
-      preLoaderRoute: typeof ProfileEditRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/green-points': {
-      id: '/profile/green-points'
-      path: '/profile/green-points'
-      fullPath: '/profile/green-points'
-      preLoaderRoute: typeof ProfileGreenPointsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/membership': {
-      id: '/profile/membership'
-      path: '/profile/membership'
-      fullPath: '/profile/membership'
-      preLoaderRoute: typeof ProfileMembershipRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/settings': {
-      id: '/profile/settings'
-      path: '/profile/settings'
-      fullPath: '/profile/settings'
-      preLoaderRoute: typeof ProfileSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/support': {
-      id: '/profile/support'
-      path: '/profile/support'
-      fullPath: '/profile/support'
-      preLoaderRoute: typeof ProfileSupportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/services/': {
-      id: '/services/'
-      path: '/services'
-      fullPath: '/services/'
-      preLoaderRoute: typeof ServicesIndexRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop/': {
@@ -471,11 +400,102 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/': {
+      id: '/services/'
+      path: '/services'
+      fullPath: '/services/'
+      preLoaderRoute: typeof ServicesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/': {
+      id: '/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProfileIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookings/': {
+      id: '/bookings/'
+      path: '/bookings'
+      fullPath: '/bookings/'
+      preLoaderRoute: typeof BookingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/': {
+      id: '/auth/'
+      path: '/auth'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop/$productId': {
       id: '/shop/$productId'
       path: '/shop/$productId'
       fullPath: '/shop/$productId'
       preLoaderRoute: typeof ShopProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/support': {
+      id: '/profile/support'
+      path: '/profile/support'
+      fullPath: '/profile/support'
+      preLoaderRoute: typeof ProfileSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/settings': {
+      id: '/profile/settings'
+      path: '/profile/settings'
+      fullPath: '/profile/settings'
+      preLoaderRoute: typeof ProfileSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/membership': {
+      id: '/profile/membership'
+      path: '/profile/membership'
+      fullPath: '/profile/membership'
+      preLoaderRoute: typeof ProfileMembershipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/green-points': {
+      id: '/profile/green-points'
+      path: '/profile/green-points'
+      fullPath: '/profile/green-points'
+      preLoaderRoute: typeof ProfileGreenPointsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/edit': {
+      id: '/profile/edit'
+      path: '/profile/edit'
+      fullPath: '/profile/edit'
+      preLoaderRoute: typeof ProfileEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/activity': {
+      id: '/profile/activity'
+      path: '/profile/activity'
+      fullPath: '/profile/activity'
+      preLoaderRoute: typeof ProfileActivityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookings/review': {
+      id: '/bookings/review'
+      path: '/bookings/review'
+      fullPath: '/bookings/review'
+      preLoaderRoute: typeof BookingsReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookings/$id': {
+      id: '/bookings/$id'
+      path: '/bookings/$id'
+      fullPath: '/bookings/$id'
+      preLoaderRoute: typeof BookingsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services/$slug/': {
@@ -497,13 +517,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   ConsultRoute: ConsultRoute,
   OrdersRoute: OrdersRoute,
   PlantDoctorRoute: PlantDoctorRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   BookingsIdRoute: BookingsIdRoute,
   BookingsReviewRoute: BookingsReviewRoute,
   ProfileActivityRoute: ProfileActivityRoute,
@@ -513,6 +533,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileSettingsRoute: ProfileSettingsRoute,
   ProfileSupportRoute: ProfileSupportRoute,
   ShopProductIdRoute: ShopProductIdRoute,
+  AuthIndexRoute: AuthIndexRoute,
   BookingsIndexRoute: BookingsIndexRoute,
   ProfileIndexRoute: ProfileIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
@@ -523,13 +544,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
