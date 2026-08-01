@@ -12,6 +12,7 @@ import { services, products } from "@/lib/data";
 import { useAddresses, useBookings, useCart, useProfile } from "@/lib/stores";
 import { useRazorpay } from "@/lib/use-razorpay";
 import { useAuth } from "@/lib/use-auth";
+import { supabase } from "@/integrations/supabase/client";
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ArrowLeft, MapPin, Plus, Check, CalendarDays, Clock, Home, Loader2 } from "lucide-react";
@@ -131,7 +132,7 @@ function BookPage() {
       label: `${service.name} · ${date?.toDateString() ?? ""} ${slot}`,
       receipt: id,
       prefill: { name: profile.name, email: profile.email, contact: profile.phone },
-      onSuccess: (paymentId) => {
+      onSuccess: async (paymentId) => {
         extras.forEach(pid => {
           const p = bio.find(x => x.id === pid)!;
           cart.add({ id: p.id, name: p.name, price: p.price, image: p.image });
@@ -142,7 +143,52 @@ function BookPage() {
           address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr), status: "upcoming", price: total, note: fullNote,
           paymentId,
         });
-        profile.addPoints(pointsEarned);
+     const {
+  data: { user },
+} = await supabase.auth.getUser();
+
+if (user) {
+  // 1️⃣ Save booking to Supabase
+  const { data: bookingData, error: bookingError } = await supabase
+  .from("bookings")
+  .insert({
+    id,
+    user_id: user.id,
+    service_slug: service.slug,
+    booking_date: date?.toISOString().slice(0, 10),
+    booking_time: slot,
+    gardener: extend
+      ? past.find((p) => p.id === extend)?.gardener
+      : "Auto-assigned",
+    address: isRemote
+      ? "Video call"
+      : (addresses.find((a) => a.id === addrId)?.line ?? newAddr),
+    status: "upcoming",
+    price: total,
+    note: fullNote,
+    payment_id: paymentId,
+  })
+  .select();
+
+console.log("BOOKING DATA:", bookingData);
+console.log("BOOKING ERROR:", bookingError);
+
+  // 2️⃣ Update Green Points
+  const currentPoints = useProfile.getState().greenPoints;
+  const newPoints = currentPoints + pointsEarned;
+
+  useProfile.getState().setPoints(newPoints);
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      green_points: newPoints,
+    })
+    .eq("id", user.id);
+
+  console.log("POINT UPDATE ERROR:", error);
+  console.log("NEW POINTS:", newPoints);
+}
         toast.success("Payment successful — booking confirmed! Green points added.");
         navigate({ to: "/bookings" });
       },

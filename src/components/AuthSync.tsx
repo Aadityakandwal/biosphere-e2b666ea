@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfile, resetUserData, type PlanId } from "@/lib/stores";
-import { isSupabaseConfigured } from "@/lib/supabase-env";
 
 const LAST_USER_KEY = "bio-last-user";
 
@@ -11,8 +10,6 @@ const LAST_USER_KEY = "bio-last-user";
  */
 export function AuthSync() {
   useEffect(() => {
-    if (!isSupabaseConfigured()) return;
-
     let cancelled = false;
 
     const load = async (userId: string, fallbackEmail?: string | null) => {
@@ -23,11 +20,18 @@ export function AuthSync() {
         localStorage.setItem(LAST_USER_KEY, userId);
       }
 
-      const { data } = await supabase
-        .from("profiles")
-        .select("full_name, email, phone, address, avatar_url, plan, green_points")
-        .eq("id", userId)
-        .maybeSingle();
+      const result = await supabase
+  .from("profiles")
+  .select("*")
+  .eq("id", userId)
+  .maybeSingle();
+
+console.log("PROFILE RESULT:", result);
+
+const { data, error } = result;
+
+console.log("PROFILE DATA:", data);
+console.log("PROFILE ERROR:", error);
       if (cancelled || !data) return;
       const s = useProfile.getState();
       s.update({
@@ -37,8 +41,24 @@ export function AuthSync() {
         address: data.address || s.address,
         avatar: data.avatar_url || s.avatar,
       });
+      console.log("STORE AFTER UPDATE:", useProfile.getState());
       s.setPoints(data.green_points ?? 0);
-      if (data.plan) s.setPlan(data.plan as PlanId);
+
+if (data.membership) {
+  const membership = data.membership.toLowerCase();
+
+  if (
+    membership === "free" ||
+    membership === "basic" ||
+    membership === "pro" ||
+    membership === "elite"
+  ) {
+    s.setPlan(membership as PlanId);
+
+console.log("MEMBERSHIP FROM DB:", data.membership);
+console.log("PLAN IN STORE:", useProfile.getState().plan);
+  }
+}
     };
 
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {

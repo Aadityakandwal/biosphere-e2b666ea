@@ -6,6 +6,7 @@ import { useProfile } from "@/lib/stores";
 import { products } from "@/lib/data";
 import { ArrowLeft, Leaf, Sparkles, Gift, Check } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/profile/green-points")({
   head: () => ({
@@ -32,11 +33,34 @@ function GreenPointsPage() {
   const next = rewards.filter((r) => r.cost > p.greenPoints).sort((a, b) => a.cost - b.cost)[0];
   const pct = next ? Math.min(100, Math.round((p.greenPoints / next.cost) * 100)) : 100;
 
-  const redeem = (r: Reward) => {
-    if (p.greenPoints < r.cost) return toast.error("Not enough Green Points yet");
-    p.update({ greenPoints: p.greenPoints - r.cost } as any);
-    toast.success(`${r.name} redeemed — we'll take it from here.`);
-  };
+  const redeem = async (r: Reward) => {
+  if (p.greenPoints < r.cost) {
+    return toast.error("Not enough Green Points yet");
+  }
+
+  const newPoints = p.greenPoints - r.cost;
+
+  // Update local store
+  p.setPoints(newPoints);
+
+  // Update Supabase
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        green_points: newPoints,
+      })
+      .eq("id", user.id);
+
+    console.log(error);
+  }
+
+  toast.success(`${r.name} redeemed — we'll take it from here.`);
+};
 
   return (
     <Shell>
