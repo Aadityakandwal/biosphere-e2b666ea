@@ -1,7 +1,0 @@
-[35msrc/components/AuthSync.tsx[m[36m:[m      s.setPoints(data.[1;31mgreen_points[m ?? 0);
-[35msrc/integrations/supabase/types.ts[m[36m:[m          [1;31mgreen_points[m: number
-[35msrc/integrations/supabase/types.ts[m[36m:[m          [1;31mgreen_points[m?: number
-[35msrc/integrations/supabase/types.ts[m[36m:[m          [1;31mgreen_points[m?: number
-[35msrc/routes/profile.green-points.tsx[m[36m:[m        [1;31mgreen_points[m: newPoints,
-[35msrc/routes/services.$slug.book.tsx[m[36m:[m      [1;31mgreen_points[m: newPoints,
-[35msupabase/migrations/20260728092019_9c2c10a7-cb2f-4b93-9cb7-bba0b9946c37.sql[m[36m:[m  [1;31mgreen_points[m INTEGER NOT NULL DEFAULT 0,
