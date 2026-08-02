@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "aadityakandwal-biosphere-e2b666ea",
+  "compatibility_date": "2026-08-02",
+  "main": "./.output/server/index.mjs",
+  "assets": {
+    "directory": "./.output/public",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "VITE_SUPABASE_URL": "https://fyhawagtanjylbsmfdvo.supabase.co",
+    "VITE_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_QXMrBpJYaZ67ez-Sh8NLHg_5i-WKlJb",
+    "SUPABASE_URL": "https://fyhawagtanjylbsmfdvo.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_QXMrBpJYaZ67ez-Sh8NLHg_5i-WKlJb",
+    "RAZORPAY_KEY_ID": "rzp_test_TIsC5QDvvG8v2V",
+    "RAZORPAY_KEY_SECRET": "dTNidnmhtqSt8OmnQEt6lc6u"
+  }
+}
