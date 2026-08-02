@@ -168,35 +168,55 @@ export const diagnosePlant = createServerFn({ method: "POST" })
     return { image, description };
   })
   .handler(async ({ data }): Promise<Diagnosis> => {
-    let ai: GoogleGenAI | undefined;
-    try {
-      ai = getClient();
-    } catch {
-      return getFallbackDiagnosis(data.description);
-    }
-
-    const base64Data = data.image.split(",")[1];
-    const mimeType = data.image.match(/data:(image\/[a-zA-Z]+);/)?.[1] ?? "image/jpeg";
-
-    const prompt = data.description
-      ? `You are Biosphere's AI Plant Doctor, a certified plant pathologist. Analyze this plant image. The user reports: "${data.description}". Identify the plant and diagnose any visible health issues. Provide a thorough, practical assessment.`
-      : "You are Biosphere's AI Plant Doctor, a certified plant pathologist. Analyze this plant image. Identify the plant and diagnose any visible health issues. Provide a thorough, practical assessment.";
+    const apiKey =
+      typeof process !== "undefined"
+        ? process.env?.GEMINI_API_KEY || process.env?.VITE_GEMINI_API_KEY || ""
+        : "";
 
     try {
-      const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: [
-          { text: prompt },
-          { inlineData: { data: base64Data, mimeType } },
-        ],
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: diagnosisSchema,
-          temperature: 0.4,
-        },
+      const parts = data.image.split(",");
+      const base64Data = parts[1] || parts[0];
+      const mimeType = data.image.match(/data:(image\/[a-zA-Z]+);/)?.[1] ?? "image/jpeg";
+
+      const prompt = data.description
+        ? `You are Biosphere's AI Plant Doctor, a certified plant pathologist. Analyze this plant image. The user reports: "${data.description}". Identify the plant and diagnose any visible health issues. Provide a thorough, practical assessment in JSON with keys: disease_name, confidence, severity, symptoms, causes, treatment, organic_treatment, chemical_treatment, prevention, watering_advice, fertilizer_advice, recovery_time, is_healthy, disclaimer.`
+        : "You are Biosphere's AI Plant Doctor, a certified plant pathologist. Analyze this plant image. Identify the plant and diagnose any visible health issues. Provide a thorough, practical assessment in JSON with keys: disease_name, confidence, severity, symptoms, causes, treatment, organic_treatment, chemical_treatment, prevention, watering_advice, fertilizer_advice, recovery_time, is_healthy, disclaimer.";
+
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { text: prompt },
+                { inlineData: { mimeType, data: base64Data } },
+              ],
+            },
+          ],
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.4,
+          },
+        }),
       });
 
-      const text = response.text;
+      if (!res.ok) {
+        console.warn(`Gemini API returned status ${res.status}`);
+        return getFallbackDiagnosis(data.description);
+      }
+
+      const json = (await res.json()) as {
+        candidates?: Array<{
+          content?: {
+            parts?: Array<{ text?: string }>;
+          };
+        }>;
+      };
+
+      const text = json?.candidates?.[0]?.content?.parts?.[0]?.text;
       if (!text) return getFallbackDiagnosis(data.description);
 
       const cleanedText = text
@@ -205,10 +225,10 @@ export const diagnosePlant = createServerFn({ method: "POST" })
         .replace(/\s*```$/i, "")
         .trim();
 
-      const parsed = JSON.parse(cleanedText) as unknown;
+      const parsed = JSON.parse(cleanedText);
       return normalizeDiagnosis(parsed);
-    } catch (e) {
-      console.warn("Gemini AI diagnosis error, using fallback diagnosis:", e);
+    } catch (err) {
+      console.warn("Plant doctor error, using fallback:", err);
       return getFallbackDiagnosis(data.description);
     }
   });
