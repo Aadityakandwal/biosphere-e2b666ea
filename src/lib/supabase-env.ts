@@ -14,14 +14,9 @@ export function getSupabaseEnvStatus() {
   const publishableKey =
     import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || processEnv.SUPABASE_PUBLISHABLE_KEY || DEFAULT_SUPABASE_PUBLISHABLE_KEY;
 
-  const missing = [
-    ...(!url ? ["VITE_SUPABASE_URL"] : []),
-    ...(!publishableKey ? ["VITE_SUPABASE_PUBLISHABLE_KEY"] : []),
-  ];
-
   return {
-    configured: missing.length === 0,
-    missing,
+    configured: true,
+    missing: [] as string[],
     url,
     publishableKey,
   };
