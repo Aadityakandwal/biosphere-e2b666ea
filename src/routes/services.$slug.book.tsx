@@ -143,13 +143,18 @@ function BookPage() {
           address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr), status: "upcoming", price: total, note: fullNote,
           paymentId,
         });
-     const {
+   const {
   data: { user },
 } = await supabase.auth.getUser();
 
-if (user) {
-  // 1️⃣ Save booking to Supabase
-  const { data: bookingData, error: bookingError } = await supabase
+console.log("AUTH USER:", user);
+
+if (!user) {
+  console.log("NO USER FOUND");
+  return;
+}
+
+const { data: bookingData, error: bookingError } = await supabase
   .from("bookings")
   .insert({
     id,
@@ -172,6 +177,11 @@ if (user) {
 
 console.log("BOOKING DATA:", bookingData);
 console.log("BOOKING ERROR:", bookingError);
+if (bookingError) {
+  console.error("INSERT FAILED:", bookingError);
+  toast.error(bookingError.message);
+  return;
+}
 
   // 2️⃣ Update Green Points
   const currentPoints = useProfile.getState().greenPoints;
@@ -188,12 +198,13 @@ console.log("BOOKING ERROR:", bookingError);
 
   console.log("POINT UPDATE ERROR:", error);
   console.log("NEW POINTS:", newPoints);
-}
-        toast.success("Payment successful — booking confirmed! Green points added.");
-        navigate({ to: "/bookings" });
-      },
-      onFailure: (msg) => toast.error(msg),
-      onDismiss: () => toast.info("Payment cancelled — your booking wasn't placed"),
+
+  toast.success("Payment successful — booking confirmed! Green points added.");
+  navigate({ to: "/bookings" });
+}, // <-- onSuccess ends HERE
+
+onFailure: (msg) => toast.error(msg),
+onDismiss: () => toast.info("Payment cancelled — your booking wasn't placed"),
     });
   };
 

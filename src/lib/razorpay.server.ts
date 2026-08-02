@@ -5,8 +5,8 @@ const TEST_KEY_ID = "rzp_test_TIsC5QDvvG8v2V";
 const TEST_KEY_SECRET = "dTNidnmhtqSt8OmnQEt6lc6u";
 
 function creds() {
-  const keyId = process.env.RAZORPAY_KEY_ID || TEST_KEY_ID;
-  const keySecret = process.env.RAZORPAY_KEY_SECRET || TEST_KEY_SECRET;
+  const keyId = (typeof process !== "undefined" ? process.env?.RAZORPAY_KEY_ID : undefined) || TEST_KEY_ID;
+  const keySecret = (typeof process !== "undefined" ? process.env?.RAZORPAY_KEY_SECRET : undefined) || TEST_KEY_SECRET;
   return { keyId, keySecret };
 }
 

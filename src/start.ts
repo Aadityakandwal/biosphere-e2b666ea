@@ -5,14 +5,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase-env";
 import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
 
-const errorMiddleware = createMiddleware().server(async ({ next }) => {
+const errorMiddleware = createMiddleware().server(async ({ next, request }) => {
   try {
     return await next();
   } catch (error) {
     if (error != null && typeof error === "object" && "statusCode" in error) {
       throw error;
     }
-    console.error(error);
+    console.error("Start server middleware error:", error);
+
+    const accept = request?.headers.get("accept") || "";
+    const isServerFn = request?.url?.includes("/_serverFn") || request?.headers.get("x-server-fn");
+    if (isServerFn || accept.includes("application/json")) {
+      throw error;
+    }
+
     return new Response(renderErrorPage(), {
       status: 500,
       headers: { "content-type": "text/html; charset=utf-8" },
@@ -20,11 +27,15 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
   }
 });
 
-// Start installs this automatically when src/start.ts is absent; defining the
-// file opts out, so re-add it explicitly to keep server functions protected
-// from cross-site requests.
 const csrfMiddleware = createCsrfMiddleware({
-  filter: (ctx) => ctx.handlerType === "serverFn",
+  filter: (ctx) => {
+    if (ctx.handlerType !== "serverFn") return false;
+    const origin = ctx.request.headers.get("origin") || "";
+    if (origin.includes("localhost") || origin.includes("capacitor") || origin.includes("workers.dev")) {
+      return false;
+    }
+    return true;
+  },
 });
 
 const safeAttachSupabaseAuth = createMiddleware({ type: "function" }).client(async ({ next }) => {

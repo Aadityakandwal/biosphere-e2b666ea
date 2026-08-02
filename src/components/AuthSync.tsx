@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase-env";
 import { useProfile, resetUserData, type PlanId } from "@/lib/stores";
 
 const LAST_USER_KEY = "bio-last-user";
@@ -10,6 +11,10 @@ const LAST_USER_KEY = "bio-last-user";
  */
 export function AuthSync() {
   useEffect(() => {
+    if (!isSupabaseConfigured()) {
+      return;
+    }
+
     let cancelled = false;
 
     const load = async (userId: string, fallbackEmail?: string | null) => {

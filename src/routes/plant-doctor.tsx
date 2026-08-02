@@ -1,13 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { diagnosePlant, normalizeDiagnosis, getFallbackDiagnosis, type Diagnosis } from "@/lib/plant-doctor.functions";
 import { products } from "@/lib/data";
 import { useCart, useProfile, SCAN_LIMITS, PLAN_LABELS } from "@/lib/stores";
 import { useHydrated } from "@/lib/motion";
 
-import { diagnosePlant, type Diagnosis } from "@/lib/plant-doctor.functions";
 import { Camera, Upload, Leaf, CircleAlert as AlertCircle, CircleCheck as CheckCircle2, Zap, ZapOff, Video, RotateCcw, Droplets, Sun, FlaskConical, ShieldCheck, Sprout, Clock, Lightbulb, Info } from "lucide-react";
 import { toast } from "sonner";
 
@@ -51,6 +51,7 @@ function InfoCard({
 function PlantDoctor() {
   const fileRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
   const [image, setImage] = useState<string | null>(null);
   const [description, setDescription] = useState("");
   const [flash, setFlash] = useState(true);
@@ -63,6 +64,12 @@ function PlantDoctor() {
   const useScan = useProfile((s) => s.useScan);
   const hydrated = useHydrated();
   const solutions = products.filter((p) => p.category === "biovelocity");
+  const diagnosis = result ? normalizeDiagnosis(result) : null;
+
+  useEffect(() => {
+    if (!diagnosis) return;
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [diagnosis]);
 
   const limit = SCAN_LIMITS[plan];
   const usedToday = scanDate === new Date().toISOString().slice(0, 10) ? scanCount : 0;
@@ -70,6 +77,7 @@ function PlantDoctor() {
   const exhausted = hydrated && left <= 0;
 
   const onPick = async (file?: File | null) => {
+    console.log("onPick fired", file);
     if (!file) return;
     if (exhausted) {
       toast.error("Daily scan limit reached — upgrade your plan for more");
@@ -98,10 +106,21 @@ function PlantDoctor() {
     }
     setLoading(true);
     try {
-      const res = await diagnosePlant({ data: { image: dataUrl, description: desc?.trim() || undefined } });
-      setResult(res);
+      console.log("Calling diagnosePlant...");
+      const res = await diagnosePlant({
+        data: {
+          image: dataUrl,
+          description: desc?.trim() || undefined,
+        },
+      });
+      const data = normalizeDiagnosis(res);
+      toast.success("Diagnosis received!");
+      setResult(data);
     } catch (e) {
+      console.warn("Plant doctor server call error:", e);
       toast.error(e instanceof Error ? e.message : "Diagnosis failed");
+      const fallback = getFallbackDiagnosis(desc);
+      setResult(fallback);
     } finally {
       setLoading(false);
     }
@@ -213,19 +232,19 @@ function PlantDoctor() {
       )}
 
       {image && (
-        <div className="mt-2 space-y-4">
+          <div ref={resultsRef} className="mt-2 space-y-4">
           {/* Photo header */}
           <div className="relative overflow-hidden rounded-3xl shadow-elevated">
             <img src={image} alt="Your plant" className="h-56 w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-            {result && (
-              <span className={`absolute right-4 top-4 flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-bold uppercase tracking-wide backdrop-blur-md ${result.is_healthy ? "bg-white/90 text-primary" : "bg-white/90 text-destructive"}`}>
-                {result.is_healthy ? <CheckCircle2 className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
-                {result.is_healthy ? "Looks healthy" : "Issues detected"}
+            {diagnosis && (
+              <span className={`absolute right-4 top-4 flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-bold uppercase tracking-wide backdrop-blur-md ${diagnosis.is_healthy ? "bg-white/90 text-primary" : "bg-white/90 text-destructive"}`}>
+                {diagnosis.is_healthy ? <CheckCircle2 className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
+                {diagnosis.is_healthy ? "Looks healthy" : "Issues detected"}
               </span>
             )}
             <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-              <p className="font-display text-2xl font-bold leading-tight">{loading ? "Analyzing…" : result?.disease_name ?? "Your plant"}</p>
+              <p className="font-display text-2xl font-bold leading-tight">{loading ? "Analyzing…" : diagnosis?.disease_name ?? "Your plant"}</p>
               <p className="text-sm opacity-80">{loading ? "Gemini AI is reading the leaves" : "Analyzed just now"}</p>
             </div>
             <button onClick={reset} className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full bg-black/40 px-3 py-2 text-xs font-semibold text-white backdrop-blur-md press">
@@ -247,7 +266,7 @@ function PlantDoctor() {
             </div>
           )}
 
-          {result && (
+          {diagnosis && (
             <>
               {/* Diagnosis summary card */}
               <div className="rounded-3xl border border-border bg-card p-5 shadow-soft">
@@ -255,68 +274,68 @@ function PlantDoctor() {
                   <h2 className="font-display text-2xl font-bold tracking-tight">Diagnosis</h2>
                   <div className="flex flex-col items-end gap-2">
                     <span className="rounded-full bg-leaf/25 px-3 py-1.5 text-center text-[11px] font-bold leading-tight text-primary">
-                      {result.confidence}%<br />Match
+                      {diagnosis.confidence}%<br />Match
                     </span>
-                    <span className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide ${severityColor(result.severity)}`}>
-                      {result.severity}
+                    <span className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide ${severityColor(diagnosis.severity)}`}>
+                      {diagnosis.severity}
                     </span>
                   </div>
                 </div>
-                <p className="mt-1 font-display text-lg font-semibold text-primary">{result.disease_name}</p>
+                <p className="mt-1 font-display text-lg font-semibold text-primary">{diagnosis.disease_name}</p>
 
                 <div className="mt-4 flex flex-wrap gap-2 border-t border-border pt-4">
-                  {result.watering_advice && (
+                  {diagnosis.watering_advice && (
                     <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
-                      <Droplets className="h-3.5 w-3.5" /> {result.watering_advice.slice(0, 40)}
+                      <Droplets className="h-3.5 w-3.5" /> {diagnosis.watering_advice.slice(0, 40)}
                     </span>
                   )}
-                  {result.fertilizer_advice && (
+                  {diagnosis.fertilizer_advice && (
                     <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
-                      <Sprout className="h-3.5 w-3.5" /> {result.fertilizer_advice.slice(0, 40)}
+                      <Sprout className="h-3.5 w-3.5" /> {diagnosis.fertilizer_advice.slice(0, 40)}
                     </span>
                   )}
                 </div>
 
-                {result.recovery_time && (
+                {diagnosis.recovery_time && (
                   <div className="mt-3 flex items-center gap-2 text-sm text-foreground/80">
                     <Clock className="h-4 w-4 flex-none text-primary" />
-                    <span>Expected recovery: <strong className="font-semibold">{result.recovery_time}</strong></span>
+                    <span>Expected recovery: <strong className="font-semibold">{diagnosis.recovery_time}</strong></span>
                   </div>
                 )}
               </div>
 
               {/* Detailed sections */}
               <div className="space-y-3">
-                {result.symptoms && (
-                  <InfoCard icon={AlertCircle} label="Symptoms">{result.symptoms}</InfoCard>
+                {diagnosis.symptoms && (
+                  <InfoCard icon={AlertCircle} label="Symptoms">{diagnosis.symptoms}</InfoCard>
                 )}
-                {result.causes && (
-                  <InfoCard icon={Info} label="Likely Causes">{result.causes}</InfoCard>
+                {diagnosis.causes && (
+                  <InfoCard icon={Info} label="Likely Causes">{diagnosis.causes}</InfoCard>
                 )}
-                {result.treatment && (
-                  <InfoCard icon={Leaf} label="Treatment Plan">{result.treatment}</InfoCard>
+                {diagnosis.treatment && (
+                  <InfoCard icon={Leaf} label="Treatment Plan">{diagnosis.treatment}</InfoCard>
                 )}
-                {result.organic_treatment && (
-                  <InfoCard icon={Sprout} label="Organic Treatment">{result.organic_treatment}</InfoCard>
+                {diagnosis.organic_treatment && (
+                  <InfoCard icon={Sprout} label="Organic Treatment">{diagnosis.organic_treatment}</InfoCard>
                 )}
-                {result.chemical_treatment && (
-                  <InfoCard icon={FlaskConical} label="Chemical Treatment">{result.chemical_treatment}</InfoCard>
+                {diagnosis.chemical_treatment && (
+                  <InfoCard icon={FlaskConical} label="Chemical Treatment">{diagnosis.chemical_treatment}</InfoCard>
                 )}
-                {result.prevention && (
-                  <InfoCard icon={ShieldCheck} label="Prevention">{result.prevention}</InfoCard>
+                {diagnosis.prevention && (
+                  <InfoCard icon={ShieldCheck} label="Prevention">{diagnosis.prevention}</InfoCard>
                 )}
-                {result.watering_advice && (
-                  <InfoCard icon={Droplets} label="Watering Advice">{result.watering_advice}</InfoCard>
+                {diagnosis.watering_advice && (
+                  <InfoCard icon={Droplets} label="Watering Advice">{diagnosis.watering_advice}</InfoCard>
                 )}
-                {result.fertilizer_advice && (
-                  <InfoCard icon={Sprout} label="Fertilizer Advice">{result.fertilizer_advice}</InfoCard>
+                {diagnosis.fertilizer_advice && (
+                  <InfoCard icon={Sprout} label="Fertilizer Advice">{diagnosis.fertilizer_advice}</InfoCard>
                 )}
               </div>
 
               {/* Disclaimer */}
               <div className="flex items-start gap-2 rounded-2xl bg-muted/50 p-4">
                 <Lightbulb className="mt-0.5 h-4 w-4 flex-none text-muted-foreground" />
-                <p className="text-xs leading-relaxed text-muted-foreground">{result.disclaimer}</p>
+                <p className="text-xs leading-relaxed text-muted-foreground">{diagnosis.disclaimer}</p>
               </div>
 
               {/* BioVelocity solutions */}
@@ -324,7 +343,7 @@ function PlantDoctor() {
                 <h2 className="font-display text-xl font-bold tracking-tight">BioVelocity Solutions</h2>
                 <Link to="/shop" className="text-sm font-semibold text-primary hover:underline">View All</Link>
               </div>
-              <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
+              <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2"> 
                 {solutions.map((p) => (
                   <div key={p.id} className="w-60 flex-none snap-start rounded-3xl border border-border bg-card p-3 shadow-soft">
                     <img src={p.image} alt={p.name} className="h-32 w-full rounded-2xl object-cover" />

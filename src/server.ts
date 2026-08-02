@@ -1,5 +1,15 @@
 import "./lib/error-capture";
 
+// Polyfill global process for environments (like Cloudflare Workers) that do not define it.
+// This prevents ReferenceError when auto-generated or library files access process.env.
+if (typeof globalThis.process === "undefined") {
+  // @ts-ignore
+  globalThis.process = { env: {} };
+} else if (typeof globalThis.process.env === "undefined") {
+  // @ts-ignore
+  globalThis.process.env = {};
+}
+
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 
@@ -46,6 +56,25 @@ function isH3SwallowedErrorBody(body: string): boolean {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    if (typeof globalThis.process === "undefined") {
+      // @ts-ignore
+      globalThis.process = { env: {} };
+    } else if (typeof globalThis.process.env === "undefined") {
+      // @ts-ignore
+      globalThis.process.env = {};
+    }
+
+    if (env && typeof env === "object") {
+      try {
+        for (const [k, v] of Object.entries(env as Record<string, unknown>)) {
+          if (typeof v === "string") {
+            process.env[k] = v;
+          }
+        }
+      } catch (err) {
+        console.error("Failed to populate process.env from Cloudflare env bindings:", err);
+      }
+    }
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

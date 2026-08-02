@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Shell } from "@/components/Shell";
-import { useBookings } from "@/lib/stores";
 import { useHydrated } from "@/lib/motion";
 import { BookingsSkeleton } from "@/components/Skeletons";
 import { services, categories } from "@/lib/data";
+import { useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { Booking } from "@/lib/stores";
 import { CalendarDays, Clock, Star, CheckCircle2, RotateCw, Plus, Leaf } from "lucide-react";
 
 export const Route = createFileRoute("/bookings/")({
@@ -20,14 +22,60 @@ export const Route = createFileRoute("/bookings/")({
   }),
   component: BookingsPage,
 });
-
 function BookingsPage() {
-  const bookings = useBookings((s) => s.bookings);
+  console.log("BOOKINGS PAGE COMPONENT");
+  alert("BOOKINGS PAGE LOADED");
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
   const upcoming = bookings.filter((b) => b.status === "upcoming");
   const past = bookings.filter((b) => b.status === "past");
   const hydrated = useHydrated();
+ useEffect(() => {
+  console.log("BOOKINGS PAGE MOUNTED");
 
+  async function loadBookings() {
+    console.log("LOAD BOOKINGS STARTED");
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    console.log("AUTH ERROR:", authError);
+    console.log("AUTH USER:", user);
+
+    if (!user) return;
+
+    const result = await supabase
+      .from("bookings")
+      .select("*")
+      .eq("user_id", user.id);
+
+    console.log("SUPABASE RESULT:", result);
+
+    if (result.error) {
+      console.error(result.error);
+      return;
+    }
+
+    setBookings(
+      (result.data ?? []).map((b: any) => ({
+        id: b.id,
+        serviceSlug: b.service_slug,
+        date: b.booking_date,
+        time: b.booking_time,
+        gardener: b.gardener,
+        address: b.address,
+        status: b.status,
+        price: b.price,
+        note: b.note,
+        paymentId: b.payment_id,
+      }))
+    );
+  }
+
+  loadBookings();
+}, []);
   if (!hydrated) {
     return (
       <Shell>
