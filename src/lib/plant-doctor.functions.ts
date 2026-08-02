@@ -204,8 +204,10 @@ export const diagnosePlant = createServerFn({ method: "POST" })
       });
 
       if (!res.ok) {
-        console.warn(`Gemini API returned status ${res.status}`);
-        return getFallbackDiagnosis(data.description);
+        const errorBody = await res.text().catch(() => "");
+        const errorMsg = `Gemini API error (${res.status}): ${errorBody}`;
+        console.warn(errorMsg);
+        throw new Error(`API Error ${res.status}: ${errorBody.slice(0, 100)}`);
       }
 
       const json = (await res.json()) as {
@@ -214,10 +216,15 @@ export const diagnosePlant = createServerFn({ method: "POST" })
             parts?: Array<{ text?: string }>;
           };
         }>;
+        error?: { message?: string };
       };
 
+      if (json.error) {
+        throw new Error(`Gemini API: ${json.error.message}`);
+      }
+
       const text = json?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!text) return getFallbackDiagnosis(data.description);
+      if (!text) throw new Error("No response from Gemini API");
 
       const cleanedText = text
         .replace(/^```json\s*/i, "")
@@ -228,7 +235,8 @@ export const diagnosePlant = createServerFn({ method: "POST" })
       const parsed = JSON.parse(cleanedText);
       return normalizeDiagnosis(parsed);
     } catch (err) {
-      console.warn("Plant doctor error, using fallback:", err);
-      return getFallbackDiagnosis(data.description);
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      console.error("Plant doctor error:", errorMsg);
+      throw new Error(`Plant diagnosis failed: ${errorMsg}`);
     }
   });

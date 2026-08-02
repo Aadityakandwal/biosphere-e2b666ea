@@ -117,10 +117,18 @@ function PlantDoctor() {
       toast.success("Diagnosis received!");
       setResult(data);
     } catch (e) {
-      console.warn("Plant doctor server call error:", e);
-      toast.error(e instanceof Error ? e.message : "Diagnosis failed");
-      const fallback = getFallbackDiagnosis(desc);
-      setResult(fallback);
+      const errorMsg = e instanceof Error ? e.message : String(e);
+      console.error("Plant doctor server call error:", errorMsg);
+      
+      // Show actual error to user
+      if (errorMsg.includes("API Error 429")) {
+        toast.error("Low API credits — please check your Gemini API quota");
+      } else if (errorMsg.includes("API Error")) {
+        toast.error(`API error: ${errorMsg}`);
+      } else {
+        toast.error(errorMsg || "Diagnosis failed");
+      }
+      setImage(null);
     } finally {
       setLoading(false);
     }

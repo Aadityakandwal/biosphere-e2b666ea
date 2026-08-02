@@ -13,6 +13,9 @@ export default defineConfig(({ mode }) => {
     "import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY": JSON.stringify(
       loadedEnv.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_QXMrBpJYaZ67ez-Sh8NLHg_5i-WKlJb"
     ),
+    "import.meta.env.VITE_GEMINI_API_KEY": JSON.stringify(
+      loadedEnv.VITE_GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || ""
+    ),
   };
   for (const [key, value] of Object.entries(loadedEnv)) {
     envDefine[`import.meta.env.${key}`] = JSON.stringify(value);
