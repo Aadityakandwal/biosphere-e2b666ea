@@ -6,7 +6,14 @@ import tsConfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(({ mode }) => {
   const loadedEnv = loadEnv(mode, process.cwd(), "VITE_");
-  const envDefine: Record<string, string> = {};
+  const envDefine: Record<string, string> = {
+    "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(
+      loadedEnv.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL || "https://fyhawagtanjylbsmfdvo.supabase.co"
+    ),
+    "import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY": JSON.stringify(
+      loadedEnv.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_QXMrBpJYaZ67ez-Sh8NLHg_5i-WKlJb"
+    ),
+  };
   for (const [key, value] of Object.entries(loadedEnv)) {
     envDefine[`import.meta.env.${key}`] = JSON.stringify(value);
   }
