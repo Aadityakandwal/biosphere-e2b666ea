@@ -422,7 +422,7 @@ function HomePage() {
 
             {/* Service 2: Balcony & Setup */}
             <Link
-              to="/services/$slug/index"
+              to="/services/$slug"
               params={{ slug: "balcony-garden" }}
               className="group press flex items-center justify-between rounded-2xl border border-border/70 bg-card p-4 transition hover:border-primary/40 hover:shadow-soft"
             >
@@ -445,7 +445,7 @@ function HomePage() {
 
             {/* Service 3: Garden Care */}
             <Link
-              to="/services/$slug/index"
+              to="/services/$slug"
               params={{ slug: "garden-care" }}
               className="group press flex items-center justify-between rounded-2xl border border-border/70 bg-card p-4 transition hover:border-primary/40 hover:shadow-soft"
             >

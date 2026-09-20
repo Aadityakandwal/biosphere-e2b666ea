@@ -45,7 +45,7 @@ const serviceCategoryChips = [
 
 function ServicesPage() {
   const { tab: tabParam, cat: catParam } = Route.useSearch();
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: "/services/" });
 
   const [mainTab, setMainTab] = useState<"plans" | "services">(
     tabParam === "plans" ? "plans" : "services"
@@ -343,7 +343,7 @@ function ServicesPage() {
 
                       <div className="pt-2.5 flex items-center justify-between gap-2 border-t border-border/40">
                         <Link
-                          to="/services/$slug/index"
+                          to="/services/$slug"
                           params={{ slug: service.slug }}
                           className="text-xs font-semibold text-primary hover:underline"
                         >

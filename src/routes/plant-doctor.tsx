@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { diagnosePlant, normalizeDiagnosis, type Diagnosis, type PlantCondition } from "@/lib/plant-doctor.functions";
 import { products, services } from "@/lib/data";

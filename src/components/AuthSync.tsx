@@ -49,21 +49,18 @@ console.log("PROFILE ERROR:", error);
       console.log("STORE AFTER UPDATE:", useProfile.getState());
       s.setPoints(data.green_points ?? 0);
 
-if (data.membership) {
-  const membership = data.membership.toLowerCase();
-
-  if (
-    membership === "free" ||
-    membership === "basic" ||
-    membership === "pro" ||
-    membership === "elite"
-  ) {
-    s.setPlan(membership as PlanId);
-
-console.log("MEMBERSHIP FROM DB:", data.membership);
-console.log("PLAN IN STORE:", useProfile.getState().plan);
-  }
-}
+      const rawPlan = (data.plan || (data as Record<string, unknown>).membership) as string | undefined;
+      if (rawPlan) {
+        const planLower = rawPlan.toLowerCase();
+        if (
+          planLower === "free" ||
+          planLower === "basic" ||
+          planLower === "pro" ||
+          planLower === "elite"
+        ) {
+          s.setPlan(planLower as PlanId);
+        }
+      }
     };
 
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {

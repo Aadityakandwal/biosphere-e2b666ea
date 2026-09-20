@@ -65,7 +65,7 @@ function AuthCallback() {
           <h1 className="text-lg font-semibold text-foreground">Sign-in failed</h1>
           <p className="mt-2 text-sm text-muted-foreground">{error}</p>
           <button
-            onClick={() => navigate({ to: "/auth", replace: true })}
+            onClick={() => navigate({ to: "/auth", search: { redirect: undefined }, replace: true })}
             className="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground"
           >
             Back to sign in

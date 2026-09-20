@@ -9,7 +9,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { services, products } from "@/lib/data";
-import { useAddresses, useBookings, useCart, useProfile } from "@/lib/stores";
+import { useAddresses, useBookings, useCart, useProfile, useGarden } from "@/lib/stores";
 import { useRazorpay } from "@/lib/use-razorpay";
 import { useAuth } from "@/lib/use-auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -155,10 +155,11 @@ function BookPage() {
     if (user) {
       await supabase.from("bookings").insert({
         id,
+        ref: id,
         user_id: user.id,
         service_slug: service.slug,
-        booking_date: date?.toISOString().slice(0, 10),
-        booking_time: slot,
+        scheduled_date: date?.toISOString().slice(0, 10),
+        slot,
         gardener: "My Gardener Professional",
         address: addresses.find((a) => a.id === addrId)?.line ?? newAddr,
         status: "upcoming",
@@ -216,10 +217,11 @@ const { data: bookingData, error: bookingError } = await supabase
   .from("bookings")
   .insert({
     id,
+    ref: id,
     user_id: user.id,
     service_slug: service.slug,
-    booking_date: date?.toISOString().slice(0, 10),
-    booking_time: slot,
+    scheduled_date: date?.toISOString().slice(0, 10),
+    slot,
     gardener: extend
       ? past.find((p) => p.id === extend)?.gardener
       : "My Gardener Professional",
