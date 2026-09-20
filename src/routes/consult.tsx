@@ -10,7 +10,7 @@ import { useBookings } from "@/lib/stores";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/consult")({
-  head: () => ({ meta: [{ title: "Virtual Botanist — Biosphere" }, { name: "description", content: "Book a video consultation with a certified botanist." }] }),
+  head: () => ({ meta: [{ title: "Virtual Consultation — My Gardener" }, { name: "description", content: "Book a 1-on-1 video consultation with a My Gardener professional." }] }),
   component: ConsultPage,
 });
 
@@ -27,10 +27,10 @@ function ConsultPage() {
     add({
       id: "b" + Date.now(), serviceSlug: "video-consult",
       date: date?.toISOString().slice(0,10) ?? "", time: slot,
-      gardener: "Dr. Anita R.", address: "Video call", status: "upcoming", price: 299, note,
+      gardener: "My Gardener Professional", address: "Video call", status: "upcoming", price: 299, note,
     });
-    toast.success("Consultation booked!");
-    navigate({ to: "/bookings" });
+    toast.success("Consultation booked! Recorded in your Garden Dashboard.");
+    navigate({ to: "/garden" });
   };
 
   return (
@@ -39,8 +39,8 @@ function ConsultPage() {
       <div className="flex items-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground"><Video className="h-6 w-6" /></div>
         <div>
-          <h1 className="font-display text-2xl font-semibold">Virtual Botanist</h1>
-          <p className="text-sm text-muted-foreground">30-min video consultation · ₹299</p>
+          <h1 className="font-display text-2xl font-semibold">Virtual Consultation</h1>
+          <p className="text-sm text-muted-foreground">30-min 1-on-1 video session with a My Gardener professional · ₹299</p>
         </div>
       </div>
 

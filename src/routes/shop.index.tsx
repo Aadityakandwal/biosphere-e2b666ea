@@ -1,10 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { Reveal } from "@/components/Reveal";
+import { useState, useMemo } from "react";
 import { Shell } from "@/components/Shell";
 import { products } from "@/lib/data";
 import { useCart } from "@/lib/stores";
-import { Sprout, Hammer, FlaskConical, Flower2, LayoutGrid, Plus, ChevronRight, Sparkles } from "lucide-react";
+import {
+  Sprout,
+  Hammer,
+  FlaskConical,
+  Flower2,
+  LayoutGrid,
+  Plus,
+  ArrowRight,
+  Sparkles,
+  Coins,
+  ChevronRight,
+  ShieldCheck,
+} from "lucide-react";
 import { SearchBar } from "@/components/SearchBar";
 import { toast } from "sonner";
 
@@ -14,37 +25,60 @@ export const Route = createFileRoute("/shop/")({
   }),
   head: () => ({
     meta: [
-      { title: "Shop — Biosphere" },
-      { name: "description", content: "Plants, tools, planters, and Fertilizers." },
-      { property: "og:title", content: "Shop — Biosphere" },
-      { property: "og:description", content: "Plants, tools, planters, and Fertilizers." },
+      { title: "Garden Essentials & Plants — My Gardener" },
+      {
+        name: "description",
+        content:
+          "Thoughtfully selected indoor and outdoor plants, precision gardening tools, terracotta planters, and organic bio-fertilizers.",
+      },
+      { property: "og:title", content: "Garden Essentials & Plants — My Gardener" },
+      {
+        property: "og:description",
+        content:
+          "Thoughtfully selected indoor and outdoor plants, precision gardening tools, terracotta planters, and organic bio-fertilizers.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ShopPage,
 });
 
-const CATS = [
-  { id: "all", label: "All Categories", icon: LayoutGrid },
-  { id: "plants", label: "Plants", icon: Sprout },
-  { id: "tools", label: "Tools", icon: Hammer },
-  { id: "biovelocity", label: "Fertilizers", icon: FlaskConical },
-  { id: "pots", label: "Pots", icon: Flower2 },
+const CATEGORIES = [
+  { id: "all", label: "All Essentials", emoji: "🌿", icon: LayoutGrid },
+  { id: "biovelocity", label: "Growth Tonics", emoji: "🧪", icon: FlaskConical },
+  { id: "plants", label: "Living Plants", emoji: "🌱", icon: Sprout },
+  { id: "tools", label: "Precision Tools", emoji: "✂️", icon: Hammer },
+  { id: "pots", label: "Planters", emoji: "🪴", icon: Flower2 },
 ] as const;
 
-const SECTIONS = [
-  { id: "plants", title: "Plants", blurb: "Living greenery for every corner" },
-  { id: "tools", title: "Tools", blurb: "Built to last, easy to handle" },
-  { id: "biovelocity", title: "Fertilizers", blurb: "Microbial nutrition that works fast" },
-  { id: "pots", title: "Pots & Planters", blurb: "Homes that suit your plants" },
-] as const;
-
-const CAT_LABEL: Record<string, string> = {
-  plants: "PLANTS",
-  tools: "TOOLS",
-  biovelocity: "FERTILIZERS",
-  pots: "PLANTERS",
+const SECTION_META: Record<
+  string,
+  { title: string; subtitle: string; categoryLabel: string; emoji: string }
+> = {
+  biovelocity: {
+    title: "Bio Growth Tonics",
+    subtitle: "Organic live microbial formulas to activate soil biology and accelerate root vitality.",
+    categoryLabel: "GROWTH TONICS",
+    emoji: "🧪",
+  },
+  plants: {
+    title: "Living Plants",
+    subtitle: "Nursery-hardened foliage grown to thrive in Indian homes, balconies, and gardens.",
+    categoryLabel: "LIVING PLANTS",
+    emoji: "🌱",
+  },
+  tools: {
+    title: "Precision Tools",
+    subtitle: "Forged carbon-steel hand tools and bypass pruners built for clean cuts and longevity.",
+    categoryLabel: "PRECISION TOOLS",
+    emoji: "✂️",
+  },
+  pots: {
+    title: "Planters & Pots",
+    subtitle: "Breathable terracotta clay and matte ceramic vessels designed for optimal root respiration.",
+    categoryLabel: "PLANTERS",
+    emoji: "🪴",
+  },
 };
 
 type Product = (typeof products)[number];
@@ -52,188 +86,358 @@ type Product = (typeof products)[number];
 function ShopPage() {
   const { cat: catParam } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const [q, setQ] = useState("");
-  const cat = catParam ?? "all";
-  const setCat = (next: string) =>
-    navigate({ search: { cat: next === "all" ? undefined : next }, replace: true });
-  const add = useCart((s) => s.add);
+  const [searchQuery, setSearchQuery] = useState("");
+  const activeCategory = catParam ?? "all";
 
-  const matchesQuery = (p: Product) => p.name.toLowerCase().includes(q.trim().toLowerCase());
-  const filtered = products.filter((p) => (cat === "all" || p.category === cat) && matchesQuery(p));
-
-  const rare = cat === "all" ? filtered.filter((p) => p.popular || p.category === "plants").slice(0, 4) : [];
-
-  const addToCart = (p: Product) => {
-    add({ id: p.id, name: p.name, price: p.price, image: p.image });
-    toast.success("Added to cart");
+  const setCategory = (next: string) => {
+    navigate({
+      search: { cat: next === "all" ? undefined : next },
+      replace: true,
+    });
   };
 
-  const Card = ({ p }: { p: Product }) => (
-    <div className="group">
-      <Link
-        to="/shop/$productId"
-        params={{ productId: p.id }}
-        className="media-zoom relative block overflow-hidden rounded-3xl shadow-soft ring-1 ring-border/40 transition-shadow duration-300 group-hover:shadow-elevated"
-      >
-        <img
-          src={p.image}
-          alt={p.name}
-          loading="lazy"
-          className="aspect-square w-full bg-muted object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </Link>
-      <button
-        onClick={() => addToCart(p)}
-        aria-label={`Add ${p.name} to cart`}
-        className="press relative z-10 -mt-9 ml-auto mr-3 flex h-11 w-11 items-center justify-center rounded-full bg-card shadow-elevated transition-colors hover:bg-primary hover:text-primary-foreground"
-      >
-        <Plus className="h-5 w-5" />
-      </button>
-      <p className="mt-1 text-[10px] font-semibold tracking-widest text-muted-foreground">{CAT_LABEL[p.category]}</p>
-      <Link to="/shop/$productId" params={{ productId: p.id }}>
-        <p className="mt-0.5 font-semibold leading-snug transition-colors group-hover:text-primary">{p.name}</p>
-      </Link>
-      <p className="mt-1 font-semibold text-primary">₹{p.price}</p>
-    </div>
-  );
+  const add = useCart((s) => s.add);
+
+  const filteredProducts = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return products.filter((p) => {
+      const matchesCat = activeCategory === "all" || p.category === activeCategory;
+      const matchesSearch =
+        !q ||
+        p.name.toLowerCase().includes(q) ||
+        p.short.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q);
+      return matchesCat && matchesSearch;
+    });
+  }, [activeCategory, searchQuery]);
+
+  // Curated spotlight items
+  const featuredProducts = useMemo(() => {
+    return products.filter((p) => p.popular || p.id === "monstera" || p.id === "pruner");
+  }, []);
+
+  const handleAddToCart = (p: Product, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    add({ id: p.id, name: p.name, price: p.price, image: p.image });
+    toast.success(`Added ${p.name} to cart`);
+  };
 
   return (
     <Shell>
-      <h1 className="sr-only">Shop plants, tools, planters, and fertilizers</h1>
-      {/* Search */}
-      <SearchBar
-        value={q}
-        onValueChange={setQ}
-        scope="products"
-        placeholder="Search for rare plants, tools…"
-      />
+      <div className="pb-10 space-y-7 sm:space-y-9">
+        {/* =========================================================================
+            1. REFINED EDITORIAL SHOP HERO
+            ========================================================================= */}
+        <section className="px-5 sm:px-6 pt-1">
+          <div className="space-y-1">
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-primary/80">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
+              Garden Essentials
+            </span>
+            <h1 className="font-display text-2xl font-normal tracking-tight text-foreground sm:text-3xl leading-tight">
+              Everything Your Garden Needs
+            </h1>
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-sm">
+              Thoughtfully selected plants, tools and organic products for everyday growing.
+            </p>
+          </div>
+        </section>
 
+        {/* =========================================================================
+            2. SEARCH BAR & DISCOVERY CATEGORIES
+            ========================================================================= */}
+        <section className="px-5 sm:px-6 space-y-3">
+          {/* Search */}
+          <SearchBar
+            value={searchQuery}
+            onValueChange={setSearchQuery}
+            scope="products"
+            placeholder="Search plants, tools, bio tonics, planters…"
+          />
 
-      {/* Categories */}
-      <div className="-mx-4 mt-4 flex gap-2.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {CATS.map((c) => {
-          const Icon = c.icon;
-          const active = cat === c.id;
-          return (
-            <button
-              key={c.id}
-              onClick={() => setCat(c.id)}
-              className={`press flex shrink-0 items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all duration-300 ${
-                active
-                  ? "bg-primary text-primary-foreground shadow-glow"
-                  : "bg-muted/70 text-foreground/80 hover:bg-muted"
-              }`}
-            >
-              <Icon className="h-4 w-4" />
-              {c.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {cat === "all" ? (
-        <>
-          {/* Rare Finds carousel */}
-          {rare.length > 0 && (
-            <>
-              <div className="mt-7 flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <h2 className="font-display text-2xl font-semibold tracking-tight">Rare Finds</h2>
-                  <p className="mt-0.5 text-sm text-muted-foreground">Curated botanical treasures for your collection</p>
-                </div>
+          {/* Horizontal Category Selector */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+            {CATEGORIES.map((c) => {
+              const active = activeCategory === c.id;
+              return (
                 <button
-                  onClick={() => setCat("plants")}
-                  className="press mt-1 flex shrink-0 items-center gap-1 text-sm font-medium text-primary"
+                  key={c.id}
+                  onClick={() => setCategory(c.id)}
+                  className={`press flex flex-none items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200 ${
+                    active
+                      ? "bg-[#1A3D2F] text-white shadow-xs ring-1 ring-emerald-900"
+                      : "border border-border/60 bg-card text-foreground/80 hover:bg-muted/70"
+                  }`}
                 >
-                  View all <ChevronRight className="h-4 w-4" />
+                  <span className="text-xs">{c.emoji}</span>
+                  <span>{c.label}</span>
                 </button>
-              </div>
+              );
+            })}
+          </div>
+        </section>
 
-              <Reveal className="-mx-4 mt-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                {rare.map((p) => (
+        {/* =========================================================================
+            3. GREEN POINTS REWARD BADGE
+            ========================================================================= */}
+        <section className="px-5 sm:px-6">
+          <div className="flex items-center justify-between rounded-2xl border border-primary/15 bg-primary/[0.03] p-3 text-xs">
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Coins className="h-3.5 w-3.5" />
+              </div>
+              <div>
+                <p className="font-semibold text-foreground text-xs leading-none">Earn Green Points</p>
+                <p className="text-[10.5px] text-muted-foreground mt-0.5">
+                  Get 5% back in points on every botanical purchase
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/profile"
+              className="rounded-full border border-primary/20 bg-background px-2.5 py-1 text-[10px] font-semibold text-primary hover:bg-primary/5 press shrink-0"
+            >
+              Learn More
+            </Link>
+          </div>
+        </section>
+
+        {/* =========================================================================
+            4. CURATED SPOTLIGHT (When viewing 'all' and no search filter)
+            ========================================================================= */}
+        {activeCategory === "all" && !searchQuery.trim() && (
+          <section className="space-y-3">
+            <div className="px-5 sm:px-6 flex items-center justify-between">
+              <div>
+                <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-primary/80">
+                  Featured
+                </span>
+                <h2 className="font-display text-lg font-normal tracking-tight text-foreground sm:text-xl">
+                  Curated for Your Garden
+                </h2>
+              </div>
+            </div>
+
+            {/* Horizontal Curated Scroll Track */}
+            <div className="flex gap-3.5 overflow-x-auto px-5 sm:px-6 pb-2 no-scrollbar snap-x snap-mandatory">
+              {featuredProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className="w-64 sm:w-72 flex-none snap-start group rounded-3xl border border-border/70 bg-card p-3 shadow-2xs transition-all hover:border-primary/40 flex flex-col justify-between"
+                >
                   <Link
-                    key={p.id}
                     to="/shop/$productId"
-                    params={{ productId: p.id }}
-                    className="press lift group relative min-w-[78%] snap-start overflow-hidden rounded-3xl shadow-elevated"
+                    params={{ productId: product.id }}
+                    className="block space-y-2.5"
                   >
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      className="h-80 w-full bg-muted object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/15 to-transparent" />
-                    <div className="absolute inset-x-5 bottom-5">
-                      <span className="rounded-full bg-primary px-3 py-1.5 text-[10px] font-bold tracking-widest text-primary-foreground">
-                        {p.popular ? "BEST SELLER" : "COLLECTOR'S EDITION"}
+                    <div className="relative aspect-4/3 w-full overflow-hidden rounded-2xl bg-muted/30">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      {product.popular && (
+                        <span className="absolute left-2.5 top-2.5 rounded-full bg-[#1A3D2F]/90 px-2 py-0.5 text-[8px] font-bold tracking-wider text-white backdrop-blur-xs">
+                          POPULAR
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="space-y-0.5">
+                      <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-primary">
+                        {SECTION_META[product.category]?.categoryLabel || "ESSENTIAL"}
                       </span>
-                      <p className="mt-3 font-display text-2xl font-semibold leading-tight text-primary-foreground">{p.name}</p>
-                      <p className="mt-1 text-sm font-medium text-primary-foreground/90">₹{p.price}</p>
+                      <h3 className="font-display text-sm font-medium tracking-tight text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                        {product.name}
+                      </h3>
+                      <p className="text-[11px] text-muted-foreground line-clamp-1 leading-snug">
+                        {product.short}
+                      </p>
                     </div>
                   </Link>
-                ))}
-              </Reveal>
-            </>
-          )}
 
-          {/* Every category, sectioned */}
-          {SECTIONS.map((s) => {
-            const items = filtered.filter((p) => p.category === s.id);
-            if (items.length === 0) return null;
+                  <div className="mt-3 pt-2.5 border-t border-border/40 flex items-center justify-between">
+                    <div>
+                      <span className="font-display text-sm sm:text-base font-semibold text-foreground">
+                        ₹{product.price}
+                      </span>
+                      {product.mrp && product.mrp > product.price && (
+                        <span className="ml-1 text-[10px] text-muted-foreground line-through">
+                          ₹{product.mrp}
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => handleAddToCart(product, e)}
+                      className="press inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[10px] font-semibold text-primary-foreground shadow-2xs hover:bg-primary/90"
+                    >
+                      <Plus className="h-3 w-3" />
+                      <span>Add</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* =========================================================================
+            5. CATEGORY SECTIONS / SEARCH RESULTS
+            ========================================================================= */}
+        {activeCategory === "all" && !searchQuery.trim() ? (
+          // Grouped Sections: Living Plants, Growth Tonics, Tools, Planters
+          ["plants", "biovelocity", "tools", "pots"].map((catKey) => {
+            const items = products.filter((p) => p.category === catKey);
+            const meta = SECTION_META[catKey];
+            if (items.length === 0 || !meta) return null;
+
             return (
-              <Reveal as="section" key={s.id} className="mt-8">
-                <div className="flex items-end justify-between gap-3">
+              <section key={catKey} className="px-5 sm:px-6 space-y-3">
+                <div className="flex items-center justify-between border-b border-border/40 pb-2">
                   <div className="min-w-0">
-                    <h2 className="font-display text-xl font-semibold tracking-tight">{s.title}</h2>
-                    <p className="mt-0.5 text-sm text-muted-foreground">{s.blurb}</p>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs">{meta.emoji}</span>
+                      <h2 className="font-display text-base font-normal tracking-tight text-foreground sm:text-lg">
+                        {meta.title}
+                      </h2>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">
+                      {meta.subtitle}
+                    </p>
                   </div>
                   <button
-                    onClick={() => setCat(s.id)}
-                    className="press flex shrink-0 items-center gap-1 text-sm font-medium text-primary"
+                    type="button"
+                    onClick={() => setCategory(catKey)}
+                    className="press flex items-center gap-0.5 text-[11px] font-semibold text-primary hover:underline shrink-0 ml-2"
                   >
-                    See all <ChevronRight className="h-4 w-4" />
+                    <span>View all</span>
+                    <ChevronRight className="h-3.5 w-3.5" />
                   </button>
                 </div>
-                <div className="stagger-children is-visible mt-4 grid grid-cols-2 gap-x-4 gap-y-6">
+
+                {/* 2-Column Clean Editorial Grid */}
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   {items.map((p) => (
-                    <Card key={p.id} p={p} />
+                    <ProductCard key={p.id} product={p} onAdd={handleAddToCart} />
                   ))}
                 </div>
-              </Reveal>
+              </section>
             );
-          })}
-
-          {filtered.length === 0 && (
-            <p className="py-12 text-center text-sm text-muted-foreground">No products match “{q}”.</p>
-          )}
-          <div className="h-6" />
-        </>
-      ) : (
-        <>
-          <div className="mt-7 flex items-end justify-between gap-3">
-            <div className="min-w-0">
-              <h2 className="font-display text-2xl font-semibold tracking-tight">
-                {SECTIONS.find((s) => s.id === cat)?.title ?? "Products"}
-              </h2>
-              <p className="mt-0.5 text-sm text-muted-foreground">
-                {SECTIONS.find((s) => s.id === cat)?.blurb}
-              </p>
+          })
+        ) : (
+          // Filtered View by Category or Search
+          <section className="px-5 sm:px-6 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="font-display text-lg font-normal tracking-tight text-foreground">
+                  {searchQuery.trim()
+                    ? `Search Results for "${searchQuery}"`
+                    : SECTION_META[activeCategory]?.title || "Products"}
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  {filteredProducts.length} items available
+                </p>
+              </div>
             </div>
-            <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-leaf/15 px-3 py-1.5 text-xs font-semibold text-primary">
-              <Sparkles className="h-3.5 w-3.5" /> {filtered.length} items
-            </span>
-          </div>
 
-          <Reveal stagger className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 pb-6">
-            {filtered.map((p) => (
-              <Card key={p.id} p={p} />
-            ))}
-            {filtered.length === 0 && (
-              <p className="col-span-2 py-12 text-center text-sm text-muted-foreground">No products found here yet.</p>
+            {filteredProducts.length === 0 ? (
+              <div className="rounded-3xl border border-border/80 bg-card p-8 text-center space-y-2">
+                <p className="font-display text-base font-normal text-foreground">
+                  No products found
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Try clearing your search or selecting another category.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setCategory("all");
+                  }}
+                  className="mt-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground"
+                >
+                  View All Products
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                {filteredProducts.map((p) => (
+                  <ProductCard key={p.id} product={p} onAdd={handleAddToCart} />
+                ))}
+              </div>
             )}
-          </Reveal>
-        </>
-      )}
+          </section>
+        )}
+      </div>
     </Shell>
+  );
+}
+
+// Clean Editorial Product Card
+function ProductCard({
+  product,
+  onAdd,
+}: {
+  product: Product;
+  onAdd: (p: Product, e?: React.MouseEvent) => void;
+}) {
+  return (
+    <div className="group rounded-3xl border border-border/60 bg-card p-2.5 sm:p-3 shadow-2xs transition-all hover:border-primary/40 hover:shadow-xs flex flex-col justify-between">
+      <Link
+        to="/shop/$productId"
+        params={{ productId: product.id }}
+        className="block space-y-2"
+      >
+        <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-muted/30">
+          <img
+            src={product.image}
+            alt={product.name}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          {product.popular && (
+            <span className="absolute left-2 top-2 rounded-full bg-[#1A3D2F]/90 px-2 py-0.5 text-[8px] font-bold tracking-wider text-white backdrop-blur-xs">
+              POPULAR
+            </span>
+          )}
+        </div>
+
+        <div className="space-y-0.5">
+          <span className="text-[8.5px] font-bold uppercase tracking-[0.14em] text-primary">
+            {SECTION_META[product.category]?.categoryLabel || "PRODUCT"}
+          </span>
+          <h3 className="font-display text-xs sm:text-sm font-medium tracking-tight text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+            {product.name}
+          </h3>
+          <p className="text-[10px] text-muted-foreground line-clamp-1 leading-snug">
+            {product.short}
+          </p>
+        </div>
+      </Link>
+
+      <div className="mt-2.5 pt-2 border-t border-border/40 flex items-center justify-between gap-1">
+        <div className="min-w-0">
+          <span className="font-display text-xs sm:text-sm font-semibold text-foreground">
+            ₹{product.price}
+          </span>
+          {product.mrp && product.mrp > product.price && (
+            <span className="ml-1 text-[9px] text-muted-foreground line-through">
+              ₹{product.mrp}
+            </span>
+          )}
+        </div>
+
+        <button
+          type="button"
+          onClick={(e) => onAdd(product, e)}
+          className="press flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors shrink-0 shadow-2xs"
+          aria-label={`Add ${product.name} to cart`}
+        >
+          <Plus className="h-3 w-3" />
+        </button>
+      </div>
+    </div>
   );
 }

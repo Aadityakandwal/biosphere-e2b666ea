@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ConsultRouteImport } from './routes/consult'
+import { Route as GardenRouteImport } from './routes/garden'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as PlantDoctorRouteImport } from './routes/plant-doctor'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -52,6 +53,11 @@ const CheckoutRoute = CheckoutRouteImport.update({
 const ConsultRoute = ConsultRouteImport.update({
   id: '/consult',
   path: '/consult',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GardenRoute = GardenRouteImport.update({
+  id: '/garden',
+  path: '/garden',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrdersRoute = OrdersRouteImport.update({
@@ -160,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/consult': typeof ConsultRoute
+  '/garden': typeof GardenRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -186,6 +193,7 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/consult': typeof ConsultRoute
+  '/garden': typeof GardenRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -213,6 +221,7 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/consult': typeof ConsultRoute
+  '/garden': typeof GardenRoute
   '/orders': typeof OrdersRoute
   '/plant-doctor': typeof PlantDoctorRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -241,6 +250,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/consult'
+    | '/garden'
     | '/orders'
     | '/plant-doctor'
     | '/sitemap.xml'
@@ -267,6 +277,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/consult'
+    | '/garden'
     | '/orders'
     | '/plant-doctor'
     | '/sitemap.xml'
@@ -293,6 +304,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/consult'
+    | '/garden'
     | '/orders'
     | '/plant-doctor'
     | '/sitemap.xml'
@@ -320,6 +332,7 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   ConsultRoute: typeof ConsultRoute
+  GardenRoute: typeof GardenRoute
   OrdersRoute: typeof OrdersRoute
   PlantDoctorRoute: typeof PlantDoctorRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -370,6 +383,13 @@ declare module '@tanstack/react-router' {
       path: '/consult'
       fullPath: '/consult'
       preLoaderRoute: typeof ConsultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/garden': {
+      id: '/garden'
+      path: '/garden'
+      fullPath: '/garden'
+      preLoaderRoute: typeof GardenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/orders': {
@@ -520,6 +540,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   ConsultRoute: ConsultRoute,
+  GardenRoute: GardenRoute,
   OrdersRoute: OrdersRoute,
   PlantDoctorRoute: PlantDoctorRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

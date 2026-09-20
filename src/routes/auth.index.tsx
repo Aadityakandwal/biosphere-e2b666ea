@@ -15,10 +15,10 @@ export const Route = createFileRoute("/auth/")({
   }),
   head: () => ({
     meta: [
-      { title: "Sign in — Biosphere" },
-      { name: "description", content: "Sign in or create your Biosphere account to book plant care, track orders and earn green points." },
-      { property: "og:title", content: "Sign in — Biosphere" },
-      { property: "og:description", content: "Sign in or create your Biosphere account to book plant care, track orders and earn green points." },
+      { title: "Sign in — My Gardener" },
+      { name: "description", content: "Sign in or create your My Gardener account to book plant care, track orders and earn green points." },
+      { property: "og:title", content: "Sign in — My Gardener" },
+      { property: "og:description", content: "Sign in or create your My Gardener account to book plant care, track orders and earn green points." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -58,22 +58,19 @@ function AuthPage() {
         const { error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
-          options: {
-            emailRedirectTo: window.location.origin,
-            data: { full_name: name.trim() },
-          },
+          options: { data: { full_name: name.trim() || undefined } },
         });
         if (error) throw error;
-        toast.success("Account created — check your inbox to confirm your email.");
+        toast.success("Account created! Check your email to confirm, or sign in now.");
+        setMode("signin");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
         if (error) throw error;
-        toast.success("Welcome back 🌿");
+        toast.success("Welcome back!");
         navigate({ to: dest, replace: true });
       }
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Something went wrong";
-      toast.error(msg.includes("Invalid login") ? "Wrong email or password" : msg);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Authentication failed");
     } finally {
       setBusy(false);
     }
@@ -81,20 +78,20 @@ function AuthPage() {
 
   const google = async () => {
     if (!supabaseEnv.configured) {
-      toast.error("Supabase is not configured. Add your VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY, then restart the app.");
+      toast.error("Supabase is not configured.");
       return;
     }
     setBusy(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-        queryParams: { prompt: "select_account" },
-      },
-    });
-    if (error) {
+    try {
+      const redirectTo = `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(dest)}`;
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo },
+      });
+      if (error) throw error;
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Google sign-in failed");
       setBusy(false);
-      toast.error("Could not sign in with Google");
     }
   };
 
@@ -115,7 +112,7 @@ function AuthPage() {
           <p className="mt-1 text-sm text-muted-foreground">
             {mode === "signin"
               ? "Sign in to manage bookings, orders and green points."
-              : "Join Biosphere to book plant care and earn green points."}
+              : "Join My Gardener to book plant care and earn green points."}
           </p>
         </div>
 
@@ -182,7 +179,7 @@ function AuthPage() {
         </form>
 
         <p className="mt-5 text-center text-xs text-muted-foreground">
-          By continuing you agree to Biosphere's terms and privacy policy.
+          By continuing you agree to My Garden's terms and privacy policy.
         </p>
       </div>
     </main>

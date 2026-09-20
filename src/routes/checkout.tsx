@@ -12,10 +12,10 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
-      { title: "Secure checkout — Biosphere" },
-      { name: "description", content: "Pay for your Biosphere plant care order securely with Razorpay test mode. No real money is charged." },
-      { property: "og:title", content: "Secure checkout — Biosphere" },
-      { property: "og:description", content: "Pay for your Biosphere order securely with Razorpay test mode." },
+      { title: "Secure checkout — My Garden" },
+      { name: "description", content: "Pay for your My Garden plant care order securely with Razorpay test mode. No real money is charged." },
+      { property: "og:title", content: "Secure checkout — My Garden" },
+      { property: "og:description", content: "Pay for your My Garden order securely with Razorpay test mode." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -52,7 +52,7 @@ function CheckoutPage() {
     void pay({
       amount: total,
       kind: "shop",
-      label: `Biosphere order (${items.length} item${items.length > 1 ? "s" : ""})`,
+      label: `My Garden order (${items.length} item${items.length > 1 ? "s" : ""})`,
       receipt: id,
       prefill: { name: profile.name, email: profile.email, contact: profile.phone },
       onSuccess: (pid) => {

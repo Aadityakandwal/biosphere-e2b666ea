@@ -32,7 +32,7 @@ export const Route = createFileRoute("/services/$slug/book")({
     return { service: s };
   },
   head: ({ loaderData }) => ({
-    meta: [{ title: `Book ${loaderData?.service.name ?? "service"} — Biosphere` }],
+    meta: [{ title: `Book ${loaderData?.service.name ?? "service"} — My Gardener` }],
   }),
   component: BookPage,
 });
@@ -115,10 +115,68 @@ function BookPage() {
 
 
   const isRemote = service.slug === "video-consult";
+  const isFreeCheck = service.slug === "free-garden-check" || total === 0;
+  const freeCheckClaimed = useGarden((s) => s.freeCheckClaimed);
+  const claimFreeCheck = useGarden((s) => s.claimFreeCheck);
 
   const past = bookings.filter(b => b.status === "past").slice(0, 5);
 
+  const handleFreeConfirm = async () => {
+    if (!authLoading && !isAuthenticated) {
+      toast.error("Please sign in to confirm your Free Garden Check");
+      navigate({ to: "/auth", search: { redirect: window.location.pathname + window.location.search } });
+      return;
+    }
+
+    if (freeCheckClaimed || bookings.some((b) => b.serviceSlug === "free-garden-check")) {
+      toast.error("Only 1 Free Garden Check is available per registered account. Browse our full care services!");
+      navigate({ to: "/services" });
+      return;
+    }
+
+    const id = "b" + Date.now();
+    const fullNote = [customParam && `Custom setup — ${customParam}`, note, "Free Garden Check (First-time Assessment)"].filter(Boolean).join(" | ");
+
+    addBook({
+      id,
+      serviceSlug: service.slug,
+      date: date?.toISOString().slice(0, 10) ?? "",
+      time: slot,
+      gardener: "My Gardener Professional",
+      address: addresses.find((a) => a.id === addrId)?.line ?? newAddr,
+      status: "upcoming",
+      price: 0,
+      note: fullNote,
+    });
+
+    claimFreeCheck();
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      await supabase.from("bookings").insert({
+        id,
+        user_id: user.id,
+        service_slug: service.slug,
+        booking_date: date?.toISOString().slice(0, 10),
+        booking_time: slot,
+        gardener: "My Gardener Professional",
+        address: addresses.find((a) => a.id === addrId)?.line ?? newAddr,
+        status: "upcoming",
+        price: 0,
+        note: fullNote,
+      });
+    }
+
+    toast.success("Free Garden Check booked! A My Gardener professional will visit at your selected time.");
+    navigate({ to: "/garden" });
+  };
+
   const handlePay = () => {
+    if (isFreeCheck) {
+      void handleFreeConfirm();
+      return;
+    }
+
     if (!authLoading && !isAuthenticated) {
       toast.error("Please sign in to complete your booking");
       navigate({ to: "/auth", search: { redirect: window.location.pathname + window.location.search } });
@@ -139,7 +197,7 @@ function BookPage() {
         });
         addBook({
           id, serviceSlug: service.slug, date: date?.toISOString().slice(0,10) ?? "",
-          time: slot, gardener: extend ? past.find(p => p.id === extend)!.gardener : "Auto-assigned",
+          time: slot, gardener: extend ? past.find(p => p.id === extend)!.gardener : "My Gardener Professional",
           address: isRemote ? "Video call" : (addresses.find(a => a.id === addrId)?.line ?? newAddr), status: "upcoming", price: total, note: fullNote,
           paymentId,
         });
@@ -164,7 +222,7 @@ const { data: bookingData, error: bookingError } = await supabase
     booking_time: slot,
     gardener: extend
       ? past.find((p) => p.id === extend)?.gardener
-      : "Auto-assigned",
+      : "My Gardener Professional",
     address: isRemote
       ? "Video call"
       : (addresses.find((a) => a.id === addrId)?.line ?? newAddr),
@@ -200,7 +258,7 @@ if (bookingError) {
   console.log("NEW POINTS:", newPoints);
 
   toast.success("Payment successful — booking confirmed! Green points added.");
-  navigate({ to: "/bookings" });
+  navigate({ to: "/garden" });
 }, // <-- onSuccess ends HERE
 
 onFailure: (msg) => toast.error(msg),
@@ -447,7 +505,23 @@ onDismiss: () => toast.info("Payment cancelled — your booking wasn't placed"),
         <div className="mx-auto flex max-w-md items-center gap-2 border-t border-border bg-background/95 px-4 py-3 backdrop-blur">
           {step > 1 && <Button variant="outline" onClick={() => setStep(step - 1)} className="flex-1">Back</Button>}
           {step < 3 && <Button className="flex-1" onClick={() => setStep(step + 1)}>Continue</Button>}
-          {step === 3 && <Button className="flex-1" onClick={handlePay} disabled={paying}>{paying ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" /> Opening Razorpay…</> : <><Check className="mr-1 h-4 w-4" /> {`Pay ₹${total}`}</>}</Button>}
+          {step === 3 && (
+            <Button className="flex-1 bg-primary font-semibold text-primary-foreground" onClick={handlePay} disabled={paying}>
+              {isFreeCheck ? (
+                <>
+                  <Check className="mr-1.5 h-4 w-4" /> Confirm Free Garden Check (₹0)
+                </>
+              ) : paying ? (
+                <>
+                  <Loader2 className="mr-1 h-4 w-4 animate-spin" /> Opening Razorpay…
+                </>
+              ) : (
+                <>
+                  <Check className="mr-1 h-4 w-4" /> {`Pay ₹${total}`}
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </div>
       <div className="h-20" />

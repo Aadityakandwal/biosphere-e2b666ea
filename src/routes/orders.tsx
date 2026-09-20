@@ -9,16 +9,16 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/orders")({
   head: () => ({
     meta: [
-      { title: "Order History — Biosphere" },
+      { title: "Order History — My Garden" },
       {
         name: "description",
         content:
-          "View your Biosphere order history to track current deliveries and review past purchases of plant care products and services.",
+          "View your My Garden order history to track current deliveries and review past purchases of plant care products and services.",
       },
-      { property: "og:title", content: "Order History — Biosphere" },
+      { property: "og:title", content: "Order History — My Garden" },
       {
         property: "og:description",
-        content: "Track current deliveries and review past Biosphere plant care purchases in one place.",
+        content: "Track current deliveries and review past My Garden plant care purchases in one place.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

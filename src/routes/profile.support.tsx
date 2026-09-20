@@ -4,14 +4,14 @@ import { Card } from "@/components/ui/card";
 import { ArrowLeft, MessageCircle, Mail, Phone } from "lucide-react";
 
 export const Route = createFileRoute("/profile/support")({
-  head: () => ({ meta: [{ title: "Help & Support — Biosphere" }] }),
+  head: () => ({ meta: [{ title: "Help & Support — My Gardener" }] }),
   component: SupportPage,
 });
 
 function SupportPage() {
   const options = [
     { icon: MessageCircle, label: "WhatsApp chatbot", hint: "Instant help, 24/7", href: "https://wa.me/919999999999", color: "bg-green-500" },
-    { icon: Mail, label: "Email us", hint: "support@biosphere.app", href: "mailto:support@biosphere.app", color: "bg-blue-500" },
+    { icon: Mail, label: "Email us", hint: "support@mygarden.app", href: "mailto:support@mygarden.app", color: "bg-blue-500" },
     { icon: Phone, label: "Call support", hint: "+91 8847 6888 38 · 9am–7pm", href: "tel:+918847688838", color: "bg-primary" },
   ];
 

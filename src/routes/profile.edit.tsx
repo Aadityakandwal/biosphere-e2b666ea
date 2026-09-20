@@ -12,7 +12,7 @@ import { ArrowLeft, Camera, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/profile/edit")({
-  head: () => ({ meta: [{ title: "Edit profile — Biosphere" }] }),
+  head: () => ({ meta: [{ title: "Edit profile — My Gardener" }] }),
   component: EditProfile,
 });
 

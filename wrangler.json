@@ -2,9 +2,12 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "aadityakandwal-biosphere-e2b666ea",
   "compatibility_date": "2026-08-02",
-  "main": "./.output/server/index.mjs",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "main": "./dist/server/server.js",
   "assets": {
-    "directory": "./.output/public",
+    "directory": "./dist/client",
     "binding": "ASSETS"
   },
   "vars": {

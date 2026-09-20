@@ -38,6 +38,10 @@ export const categories = [
 ];
 
 export const services: Service[] = [
+  // Free Acquisition Feature
+  { slug: "free-garden-check", name: "Free Garden Check", category: "consult", emoji: "🌿", price: 0, duration: "45 min", rating: 5.0, reviews: 480,
+    description: "Get your first professional Garden Check FREE. A My Gardener professional conducts an on-site inspection of your garden, assesses plant health, inspects soil and drainage, and creates your baseline digital garden record.",
+    image: gardenInspectionImg },
   // Plant Setup
   { slug: "indoor-setup", name: "Indoor Plant Setup", category: "setup", emoji: "🪴", price: 799, duration: "1-2 hrs", rating: 4.8, reviews: 214,
     description: "Transform your indoor spaces into a fresh, green, and relaxing environment with our customized indoor plant setup. We provide carefully selected indoor plants, stylish pots, plant stands, healthy soil, and grow light solutions to help your plants thrive while enhancing the beauty and air quality of your home or workspace.",
@@ -73,7 +77,7 @@ export const services: Service[] = [
     image: "https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=800" },
   // Plant Care
   { slug: "basic-maintenance", name: "Basic Maintenance", category: "care", emoji: "💧", price: 499, duration: "1 hr", rating: 4.7, reviews: 512,
-    description: "Routine care by trained gardeners — pick what you need below.",
+    description: "Routine care by a My Gardener professional — pick the specific care needed.",
     image: "https://images.unsplash.com/photo-1459156212016-c812468e2115?w=800",
     subs: [
       { id: "watering", name: "Watering", price: 199 },
@@ -81,7 +85,7 @@ export const services: Service[] = [
       { id: "repotting", name: "Repotting", price: 349 },
     ] },
   { slug: "garden-care", name: "Garden Care", category: "care", emoji: "🌾", price: 799, duration: "1-2 hrs", rating: 4.8, reviews: 289,
-    description: "Deeper care for established gardens with health-first practices.",
+    description: "Deeper care for established gardens with health-first botanical practices.",
     image: gardenCareImg,
     subs: [
       { id: "fertilizer", name: "Fertilizer Application", price: 349 },
@@ -99,13 +103,13 @@ export const services: Service[] = [
     ] },
   // Consultation
   { slug: "video-consult", name: "Video Consultation", category: "consult", emoji: "📹", price: 299, duration: "30 min", rating: 4.9, reviews: 620,
-    description: "One-on-one video call with a certified botanist.",
+    description: "One-on-one video call with a My Gardener professional.",
     image: videoConsultImg },
   { slug: "garden-inspection", name: "Garden Inspection", category: "consult", emoji: "🔍", price: 599, duration: "1 hr", rating: 4.8, reviews: 143,
     description: "In-person walkthrough with a detailed report on soil, pests, and layout.",
     image: gardenInspectionImg },
   { slug: "soil-testing", name: "Soil Testing Guidance", category: "consult", emoji: "🧪", price: 449, duration: "45 min", rating: 4.7, reviews: 87,
-    description: "Guided sampling and lab-grade analysis of your soil health.",
+    description: "Guided sampling and analysis of your soil health.",
     image: soilTestingImg },
 ];
 
@@ -369,8 +373,55 @@ export const initialOrders = [
 ];
 
 
-export const membershipPlans = [
-  { id: "basic", name: "Basic", price: 199, perks: ["6 AI Scans/day", "5% OFF paid gardener visits", "1 Free Video Call/mo", "Green Points"] },
-  { id: "pro", name: "Pro", price: 399, popular: true, perks: ["15 AI Scans/day", "10% OFF paid gardener visits", "2 Free Video Calls/mo", "Double Green Points", "1 quarterly/monthly inspection visit"] },
-  { id: "elite", name: "Elite", price: 699, perks: ["Unlimited AI Scans", "15% OFF paid gardener visits", "3 Free Video Calls/mo", "VIP Priority", "1 On-site Visit/month included"] },
+export type GardenCarePlan = {
+  id: string;
+  name: string;
+  badge?: string;
+  price: number;
+  duration: string;
+  visits: number;
+  popular?: boolean;
+  includedServices: string[];
+  perks: string[];
+  terms: string;
+};
+
+export const gardenCarePlans: GardenCarePlan[] = [
+  {
+    id: "basic",
+    name: "Essential Care",
+    badge: "Seasonal Foundation",
+    price: 399,
+    duration: "monthly",
+    visits: 1,
+    includedServices: ["Full garden health assessment", "Pruning & deadheading", "Organic pest inspection"],
+    perks: ["1 Monthly gardener visit", "5% OFF one-time services", "6 AI Plant Doctor scans/day", "Green Points on every visit"],
+    terms: "Flexible monthly schedule with 1 on-site maintenance visit."
+  },
+  {
+    id: "pro",
+    name: "Complete Care",
+    badge: "Most Popular",
+    price: 799,
+    duration: "monthly",
+    visits: 2,
+    popular: true,
+    includedServices: ["2 On-site visits / month", "Pruning, repotting guidance & soil nourishment", "Fertilizer & bio-tonic application", "Preventive pest protection"],
+    perks: ["2 Monthly gardener visits", "10% OFF one-time services", "15 AI Plant Doctor scans/day", "Double Green Points", "1 Free Video Consultation/mo"],
+    terms: "Fortnightly maintenance for healthy, flourishing gardens."
+  },
+  {
+    id: "elite",
+    name: "Master Care",
+    badge: "Full Botanical Stewardship",
+    price: 1499,
+    duration: "monthly",
+    visits: 4,
+    includedServices: ["Weekly comprehensive garden care", "Lawn, hedge & terrace management", "Bio-nutrition feeding", "Digital visit logs with photos"],
+    perks: ["4 Monthly gardener visits (Weekly)", "15% OFF one-time services", "Unlimited AI Plant Doctor scans", "VIP Priority booking", "2 Free Video Consultations/mo"],
+    terms: "Weekly professional stewardship for large gardens, terraces, and urban green spaces."
+  }
 ];
+
+export const membershipPlans = gardenCarePlans;
+

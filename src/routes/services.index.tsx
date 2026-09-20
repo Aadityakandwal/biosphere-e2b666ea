@@ -1,240 +1,373 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { Reveal } from "@/components/Reveal";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { Shell } from "@/components/Shell";
-import { services } from "@/lib/data";
-import { ChevronRight, Video, ClipboardCheck, FlaskConical } from "lucide-react";
+import { services, gardenCarePlans } from "@/lib/data";
+import { useProfile, useBookings } from "@/lib/stores";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  ShieldCheck,
+  Wrench,
+  Check,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
 
 export const Route = createFileRoute("/services/")({
-  validateSearch: (search: Record<string, unknown>): { cat?: string } => ({
+  validateSearch: (search: Record<string, unknown>): { tab?: string; cat?: string } => ({
+    tab: typeof search.tab === "string" ? search.tab : undefined,
     cat: typeof search.cat === "string" ? search.cat : undefined,
   }),
   head: () => ({
     meta: [
-      { title: "Services — Biosphere" },
-      { name: "description", content: "Browse plant setup, care, and consultation services." },
-      { property: "og:title", content: "Services — Biosphere" },
-      { property: "og:description", content: "Browse plant setup, care, and consultation services." },
+      { title: "Garden Care & Services — My Gardener" },
+      {
+        name: "description",
+        content:
+          "Garden Care Plans and specialized one-time gardening services by My Gardener professionals.",
+      },
+      { property: "og:title", content: "Garden Care & Services — My Gardener" },
+      {
+        property: "og:description",
+        content: "Garden Care Plans and specialized one-time gardening services.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ServicesPage,
 });
 
-const taglines: Record<string, string> = {
-  "indoor-setup": "Homes & offices",
-  "outdoor-setup": "Backyards & entries",
-  "balcony-garden": "Small space design",
-  "terrace-garden": "Rooftop transformation",
-  "kitchen-garden": "Herbs & vegetables",
-  "basic-maintenance": "Watering, pruning, and repotting services.",
-  "garden-care": "Fertilizer application , pest control, and health check-ups.",
-  "lawn-garden": "Mowing, hedge trimming, and weed removal.",
-  "video-consult": "Live 1-on-1",
-  "garden-inspection": "In-person visit",
-  "soil-testing": "Expert nutrient analysis",
-};
-
-const chips = [
-  { id: "all", label: "Explore All" },
-  { id: "setup", label: "Setups" },
-  { id: "care", label: "Care" },
+const serviceCategoryChips = [
+  { id: "all", label: "All Services" },
+  { id: "setup", label: "Plant Setup" },
+  { id: "care", label: "Care & Maintenance" },
   { id: "consult", label: "Consultation" },
 ];
 
-function SectionTitle({ title, count }: { title: string; count: number }) {
-  return (
-    <div className="mb-4 mt-9 border-b border-border pb-2">
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 className="font-display text-2xl font-semibold tracking-tight">{title}</h2>
-        <span className="shrink-0 text-[11px] font-semibold tracking-widest text-muted-foreground">
-          {String(count).padStart(2, "0")} SERVICES
-        </span>
-      </div>
-    </div>
-  );
-}
-
 function ServicesPage() {
-  const { cat } = Route.useSearch();
-  const navigate = Route.useNavigate();
-  const tab = cat ?? "all";
-  const setTab = (next: string) =>
-    navigate({ search: { cat: next === "all" ? undefined : next }, replace: true });
-  const show = (cat: string) => tab === "all" || tab === cat;
+  const { tab: tabParam, cat: catParam } = Route.useSearch();
+  const navigate = useNavigate();
 
-  const setup = services.filter((s) => s.category === "setup");
-  const care = services.filter((s) => s.category === "care");
-  const consult = services.filter((s) => s.category === "consult");
+  const [mainTab, setMainTab] = useState<"plans" | "services">(
+    tabParam === "plans" ? "plans" : "services"
+  );
+  const [selectedCat, setSelectedCat] = useState<string>(catParam ?? "all");
 
-  const featured = setup[0];
-  const restSetup = setup.slice(1);
-  const soil = consult.find((s) => s.slug === "soil-testing");
-  const consultTiles = consult.filter((s) => s.slug !== "soil-testing");
-  const consultIcons = [Video, ClipboardCheck];
+  const plan = useProfile((s) => s.plan);
+  const localBookings = useBookings((s) => s.bookings);
+  const [dbBookings, setDbBookings] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadBookings() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from("bookings")
+        .select("*")
+        .eq("user_id", user.id);
+      if (data) setDbBookings(data);
+    }
+    void loadBookings();
+  }, []);
+
+  const allBookings = dbBookings.length > 0 ? dbBookings : localBookings;
+  const completedVisits = allBookings.filter(
+    (b: any) => b.status === "past" || b.status === "completed"
+  ).length;
+
+  const currentPlan = gardenCarePlans.find((p) => p.id === plan);
+  const hasActivePlan = plan !== "free" && currentPlan;
+
+  const filteredServices = services.filter((s) => {
+    if (selectedCat === "all") return true;
+    return s.category === selectedCat;
+  });
 
   return (
     <Shell>
-      <h1 className="sr-only">Plant setup, care, and gardening consultation services</h1>
-      {/* Promo hero */}
-      <Reveal className="group relative mt-3 overflow-hidden rounded-3xl shadow-elevated">
-        <img
-          src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=900"
-          alt="Lush greenhouse full of plants"
-          className="h-52 w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/75 to-primary/10" />
-        <div className="absolute inset-0 flex flex-col justify-center p-5">
-          <span className="w-fit rounded-full bg-primary-foreground/15 px-3 py-1 text-[10px] font-bold tracking-widest text-primary-foreground backdrop-blur-sm">
-            SPECIAL OFFER
+      <div className="px-5 sm:px-6 pt-2 pb-10 space-y-6 sm:space-y-8">
+        {/* =========================================================================
+            1. SERVICES PAGE HERO — EDITORIAL BOTANICAL HEADER
+            ========================================================================= */}
+        <section className="space-y-1.5">
+          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
+            BOTANICAL SERVICES
           </span>
-          <p className="mt-3 max-w-[70%] font-display text-3xl font-bold leading-tight text-primary-foreground">
-            20% Off Maintenance
+          <h1 className="font-display text-2xl sm:text-3xl font-normal leading-[1.2] tracking-tight text-foreground">
+            Garden Care &amp; Services
+          </h1>
+          <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
+            Choose between ongoing garden stewardship plans or one-time professional visits.
           </p>
-          <p className="mt-1 max-w-[65%] text-sm text-primary-foreground/85">
-            Premium care for your urban jungle.
-          </p>
-        </div>
-      </Reveal>
+        </section>
 
-      {/* Category chips */}
-      <div className="-mx-4 mt-5 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {chips.map((c) => (
+        {/* =========================================================================
+            2. PLAN / SERVICE TOGGLE SWITCHER
+            ========================================================================= */}
+        <div className="grid grid-cols-2 gap-1 rounded-full border border-border/80 bg-secondary/30 p-1 shadow-2xs">
           <button
-            key={c.id}
-            onClick={() => setTab(c.id)}
-            className={`press shrink-0 rounded-full px-5 py-2.5 text-sm font-semibold transition-all ${
-              tab === c.id
-                ? "bg-primary text-primary-foreground shadow-glow"
-                : "border border-border bg-card text-foreground/80 shadow-soft hover:border-primary/30"
+            onClick={() => {
+              setMainTab("services");
+              navigate({ search: { tab: "services", cat: selectedCat }, replace: true });
+            }}
+            className={`press flex items-center justify-center gap-2 rounded-full py-2.5 text-xs font-semibold transition-all ${
+              mainTab === "services"
+                ? "bg-primary text-primary-foreground shadow-xs"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {c.label}
+            <Wrench className="h-3.5 w-3.5" />
+            <span>One-Time Services</span>
           </button>
-        ))}
-      </div>
 
-      {/* Plant Setup */}
-      {show("setup") && (
-        <Reveal as="section">
-          <SectionTitle title="Plant Setup" count={setup.length} />
-          <Link
-            to="/services/$slug"
-            params={{ slug: featured.slug }}
-            className="press group relative block overflow-hidden rounded-3xl shadow-elevated"
+          <button
+            onClick={() => {
+              setMainTab("plans");
+              navigate({ search: { tab: "plans", cat: undefined }, replace: true });
+            }}
+            className={`press flex items-center justify-center gap-2 rounded-full py-2.5 text-xs font-semibold transition-all ${
+              mainTab === "plans"
+                ? "bg-primary text-primary-foreground shadow-xs"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
           >
-            <img src={featured.image} alt={featured.name} className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-            <div className="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-full bg-card/90 px-5 py-3 shadow-soft backdrop-blur-md">
-              <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold">{featured.name}</p>
-                <p className="truncate text-xs text-muted-foreground">{taglines[featured.slug]}</p>
+            <ShieldCheck className="h-3.5 w-3.5" />
+            <span>Garden Care Plans</span>
+          </button>
+        </div>
+
+        {/* =========================================================================
+            3. SECTION A: GARDEN CARE PLANS
+            ========================================================================= */}
+        {mainTab === "plans" && (
+          <div className="space-y-6">
+            {/* Active Plan Card (if subscribed) */}
+            {hasActivePlan && (
+              <div className="rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-5 sm:p-6 shadow-xs space-y-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[10px] font-bold text-primary">
+                      My Active Plan
+                    </span>
+                    <h3 className="mt-1.5 font-display text-xl font-normal tracking-tight text-foreground">
+                      {currentPlan.name}
+                    </h3>
+                    <p className="text-xs text-muted-foreground">Active Monthly Botanical Stewardship</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-display text-2xl font-normal text-primary">₹{currentPlan.price}</p>
+                    <p className="text-[10px] text-muted-foreground">/ month</p>
+                  </div>
+                </div>
+
+                {/* Usage & Visit Counters */}
+                <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                  <div className="rounded-2xl border border-border/70 bg-background/80 p-2.5">
+                    <p className="font-display text-base font-normal text-foreground">{currentPlan.visits}</p>
+                    <p className="text-[10px] text-muted-foreground">Total Visits/mo</p>
+                  </div>
+                  <div className="rounded-2xl border border-border/70 bg-background/80 p-2.5">
+                    <p className="font-display text-base font-normal text-foreground">{completedVisits}</p>
+                    <p className="text-[10px] text-muted-foreground">Completed</p>
+                  </div>
+                  <div className="rounded-2xl border border-border/70 bg-background/80 p-2.5">
+                    <p className="font-display text-base font-normal text-primary">
+                      {Math.max(0, currentPlan.visits - completedVisits)}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground">Remaining</p>
+                  </div>
+                </div>
+
+                {/* Included Benefits Summary */}
+                <div className="space-y-1.5 border-t border-border/50 pt-3 text-xs text-foreground/85">
+                  <p className="font-semibold text-foreground">Included in your plan:</p>
+                  {currentPlan.perks.map((perk, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <Check className="h-3.5 w-3.5 text-primary" />
+                      <span>{perk}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <ChevronRight className="h-5 w-5 shrink-0 text-foreground/70" />
+            )}
+
+            {/* Catalog of Care Plans */}
+            <div className="space-y-4">
+              <div>
+                <h2 className="font-display text-xl font-normal tracking-tight text-foreground">
+                  Available Garden Care Plans
+                </h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  All plans include dedicated visits by My Gardener professionals
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                {gardenCarePlans.map((p) => {
+                  const isCurrent = plan === p.id;
+                  return (
+                    <div
+                      key={p.id}
+                      className={`relative rounded-3xl border p-5 sm:p-6 transition hover:border-primary/40 hover:shadow-soft ${
+                        isCurrent
+                          ? "border-primary bg-primary/[0.04] ring-1 ring-primary/20"
+                          : p.popular
+                          ? "border-primary/40 bg-card shadow-soft"
+                          : "border-border/70 bg-card"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          {p.badge && (
+                            <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold text-primary">
+                              {p.badge}
+                            </span>
+                          )}
+                          <h3 className="mt-1 font-display text-xl font-normal tracking-tight text-foreground">
+                            {p.name}
+                          </h3>
+                          <p className="text-xs text-muted-foreground">
+                            {p.visits} on-site professional visit{p.visits > 1 ? "s" : ""} / month
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-display text-2xl font-normal text-foreground">₹{p.price}</p>
+                          <p className="text-[10px] text-muted-foreground">/ month</p>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 space-y-2 border-t border-border/50 pt-3.5">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                          Included Care:
+                        </p>
+                        <ul className="space-y-1.5 text-xs text-foreground/80">
+                          {p.includedServices.map((inc, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <Check className="mt-0.5 h-3.5 w-3.5 flex-none text-primary" />
+                              <span>{inc}</span>
+                            </li>
+                          ))}
+                        </ul>
+
+                        <p className="pt-2 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                          Plan Benefits:
+                        </p>
+                        <ul className="space-y-1.5 text-xs text-foreground/80">
+                          {p.perks.map((perk, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <Sparkles className="mt-0.5 h-3.5 w-3.5 flex-none text-primary" />
+                              <span>{perk}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="mt-5 border-t border-border/50 pt-4">
+                        {isCurrent ? (
+                          <div className="flex items-center justify-center rounded-full bg-secondary py-2.5 text-xs font-semibold text-muted-foreground">
+                            <Check className="mr-1.5 h-4 w-4 text-primary" /> Current Active Plan
+                          </div>
+                        ) : (
+                          <Link
+                            to="/profile/membership"
+                            className="press flex w-full items-center justify-center rounded-full bg-primary py-3 text-xs font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
+                          >
+                            <span>Subscribe to {p.name} · ₹{p.price}/mo</span>
+                            <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </Link>
-
-          <div className="stagger-children is-visible mt-3 space-y-3">
-            {restSetup.map((s) => (
-              <div key={s.slug} className="surface surface-hover media-zoom lift flex items-center gap-4 rounded-3xl p-4">
-                <img src={s.image} alt={s.name} className="h-16 w-16 shrink-0 rounded-full object-cover" />
-                <div className="min-w-0 flex-1">
-                  <Link to="/services/$slug" params={{ slug: s.slug }} className="block">
-                    <p className="font-semibold leading-snug">{s.name}</p>
-                    <p className="mt-0.5 text-sm leading-snug text-muted-foreground">{taglines[s.slug]}</p>
-                  </Link>
-                  <div className="mt-2 flex items-center justify-between gap-3">
-                    <p className="font-display text-xl font-bold">₹{s.price}</p>
-                    <Link
-                      to="/services/$slug/book"
-                      params={{ slug: s.slug }}
-                      className="press rounded-full bg-primary px-5 py-2 text-[11px] font-bold tracking-widest text-primary-foreground shadow-soft hover:shadow-glow"
-                    >
-                      BOOK
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
+        )}
 
-          <p className="mt-3 text-center text-xs italic text-muted-foreground">more setup services coming soon…</p>
-        </Reveal>
-      )}
-
-      {/* Care & Maintenance */}
-      {show("care") && (
-        <Reveal as="section">
-          <SectionTitle title="Care & Maintenance" count={care.length} />
-          <div className="stagger-children is-visible space-y-3">
-            {care.map((s) => (
-              <div key={s.slug} className="surface surface-hover media-zoom lift flex items-center gap-4 rounded-3xl p-4">
-                <img src={s.image} alt={s.name} className="h-16 w-16 shrink-0 rounded-full object-cover" />
-                <div className="min-w-0 flex-1">
-                  <Link to="/services/$slug" params={{ slug: s.slug }} className="block">
-                    <p className="font-semibold leading-snug">{s.name}</p>
-                    <p className="mt-0.5 text-sm leading-snug text-muted-foreground">{taglines[s.slug]}</p>
-                  </Link>
-                  <div className="mt-2 flex items-center justify-between gap-3">
-                    <p className="font-display text-xl font-bold">₹{s.price}</p>
-                    <Link
-                      to="/services/$slug/book"
-                      params={{ slug: s.slug }}
-                      className="press rounded-full bg-primary px-5 py-2 text-[11px] font-bold tracking-widest text-primary-foreground shadow-soft hover:shadow-glow"
-                    >
-                      BOOK
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-      )}
-
-      {/* Consultation */}
-      {show("consult") && (
-        <Reveal as="section" className="pb-6">
-          <SectionTitle title="Consultation" count={consult.length} />
-          <div className="stagger-children is-visible grid grid-cols-2 gap-3">
-            {consultTiles.map((s, i) => {
-              const Icon = consultIcons[i] ?? Video;
-              return (
-                <Link
-                  key={s.slug}
-                  to="/services/$slug"
-                  params={{ slug: s.slug }}
-                  className="surface surface-hover press rounded-3xl p-4"
+        {/* =========================================================================
+            4. SECTION B: ONE-TIME SERVICES
+            ========================================================================= */}
+        {mainTab === "services" && (
+          <div className="space-y-4">
+            {/* Category Chips */}
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+              {serviceCategoryChips.map((chip) => (
+                <button
+                  key={chip.id}
+                  onClick={() => {
+                    setSelectedCat(chip.id);
+                    navigate({ search: { tab: "services", cat: chip.id }, replace: true });
+                  }}
+                  className={`press shrink-0 rounded-full px-4 py-1.5 text-xs transition-all ${
+                    selectedCat === chip.id
+                      ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                      : "border border-border/70 bg-card text-foreground/80 font-medium hover:border-primary/40"
+                  }`}
                 >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-secondary">
-                    <Icon className="h-5 w-5 text-primary" />
-                  </span>
-                  <p className="mt-4 font-semibold leading-snug">{s.name.replace(" Consultation", " Call").replace("Garden Inspection", "Inspection")}</p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">{taglines[s.slug]}</p>
-                  <p className="mt-2 font-semibold">₹{s.price}</p>
-                </Link>
-              );
-            })}
-          </div>
+                  {chip.label}
+                </button>
+              ))}
+            </div>
 
-          {soil && (
-            <Link
-              to="/services/$slug"
-              params={{ slug: soil.slug }}
-              className="press sheen mt-3 flex items-center gap-3 rounded-3xl bg-secondary/70 p-4 shadow-soft transition hover:shadow-elevated"
-            >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-card">
-                <FlaskConical className="h-5 w-5 text-primary" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-primary">{soil.name}</p>
-                <p className="truncate text-xs text-muted-foreground">{taglines[soil.slug]}</p>
-              </div>
-              <ChevronRight className="h-5 w-5 shrink-0 text-primary" />
-            </Link>
-          )}
-        </Reveal>
-      )}
+            {/* Services Roster */}
+            <div className="space-y-3.5">
+              {filteredServices.map((service) => (
+                <div
+                  key={service.slug}
+                  className="rounded-2xl border border-border/70 bg-card p-4 sm:p-5 transition hover:border-primary/40 hover:shadow-soft"
+                >
+                  <div className="flex items-start gap-3.5">
+                    <img
+                      src={service.image}
+                      alt={service.name}
+                      className="h-20 w-20 flex-none rounded-xl object-cover object-center bg-secondary"
+                    />
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <h3 className="font-display text-base font-normal tracking-tight text-foreground">
+                            {service.name}
+                          </h3>
+                          <p className="text-[11px] text-muted-foreground">{service.duration}</p>
+                        </div>
+                        <span className="font-display text-base font-semibold text-primary">
+                          {service.price === 0 ? "FREE" : `₹${service.price}`}
+                        </span>
+                      </div>
+
+                      <p className="line-clamp-2 text-xs leading-relaxed text-foreground/75 font-normal">
+                        {service.description}
+                      </p>
+
+                      <div className="pt-2.5 flex items-center justify-between gap-2 border-t border-border/40">
+                        <Link
+                          to="/services/$slug/index"
+                          params={{ slug: service.slug }}
+                          className="text-xs font-semibold text-primary hover:underline"
+                        >
+                          View Details
+                        </Link>
+
+                        <Link
+                          to="/services/$slug/book"
+                          params={{ slug: service.slug }}
+                          className="press inline-flex items-center gap-1 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs transition hover:bg-primary/90"
+                        >
+                          <span>{service.price === 0 ? "Book Free Check" : "Book Service"}</span>
+                          <ArrowRight className="h-3 w-3" />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </Shell>
   );
 }
+

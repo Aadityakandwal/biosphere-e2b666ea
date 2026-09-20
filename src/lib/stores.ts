@@ -188,6 +188,136 @@ export const useAddresses = create<AddrState>()(
   )
 );
 
+/* ---------- Garden Dashboard & Authentic Garden Records ---------- */
+export type PlantCondition = "Healthy" | "Needs Attention" | "Requires Immediate Attention";
+
+export type GardenPlant = {
+  id: string;
+  name: string;
+  species?: string;
+  condition: PlantCondition;
+  addedAt: string;
+  notes?: string;
+  image?: string;
+  lastDiagnosis?: string;
+};
+
+export type GardenIssue = {
+  id: string;
+  title: string;
+  plantName?: string;
+  severity: "Low" | "Moderate" | "High";
+  symptoms: string;
+  status: "active" | "resolved";
+  reportedAt: string;
+  resolvedAt?: string;
+};
+
+export type ApprovedDiagnosis = {
+  id: string;
+  date: string;
+  plantName: string;
+  condition: PlantCondition;
+  diseaseName: string;
+  symptoms: string;
+  treatment: string;
+  image?: string;
+};
+
+export type ActivePlanDetails = {
+  planId: string;
+  planName: string;
+  totalVisits: number;
+  completedVisits: number;
+  remainingVisits: number;
+  validUntil: string;
+  includedServices: string[];
+};
+
+type GardenState = {
+  plants: GardenPlant[];
+  issues: GardenIssue[];
+  approvedDiagnoses: ApprovedDiagnosis[];
+  freeCheckClaimed: boolean;
+  activePlan: ActivePlanDetails | null;
+  addPlant: (p: Omit<GardenPlant, "id" | "addedAt">) => void;
+  removePlant: (id: string) => void;
+  updatePlant: (id: string, updates: Partial<GardenPlant>) => void;
+  addIssue: (issue: Omit<GardenIssue, "id" | "reportedAt">) => void;
+  resolveIssue: (id: string) => void;
+  saveApprovedDiagnosis: (d: Omit<ApprovedDiagnosis, "id" | "date">) => void;
+  claimFreeCheck: () => void;
+  setActivePlan: (p: ActivePlanDetails | null) => void;
+  clear: () => void;
+};
+
+export const useGarden = create<GardenState>()(
+  persist(
+    (set) => ({
+      plants: [],
+      issues: [],
+      approvedDiagnoses: [],
+      freeCheckClaimed: false,
+      activePlan: null,
+      addPlant: (p) =>
+        set((s) => ({
+          plants: [
+            {
+              ...p,
+              id: "plt-" + Date.now() + "-" + Math.random().toString(36).substring(2, 6),
+              addedAt: new Date().toISOString().slice(0, 10),
+            },
+            ...s.plants,
+          ],
+        })),
+      removePlant: (id) => set((s) => ({ plants: s.plants.filter((p) => p.id !== id) })),
+      updatePlant: (id, updates) =>
+        set((s) => ({
+          plants: s.plants.map((p) => (p.id === id ? { ...p, ...updates } : p)),
+        })),
+      addIssue: (issue) =>
+        set((s) => ({
+          issues: [
+            {
+              ...issue,
+              id: "iss-" + Date.now(),
+              reportedAt: new Date().toISOString().slice(0, 10),
+            },
+            ...s.issues,
+          ],
+        })),
+      resolveIssue: (id) =>
+        set((s) => ({
+          issues: s.issues.map((i) =>
+            i.id === id ? { ...i, status: "resolved" as const, resolvedAt: new Date().toISOString().slice(0, 10) } : i
+          ),
+        })),
+      saveApprovedDiagnosis: (d) =>
+        set((s) => ({
+          approvedDiagnoses: [
+            {
+              ...d,
+              id: "diag-" + Date.now(),
+              date: new Date().toISOString().slice(0, 10),
+            },
+            ...s.approvedDiagnoses,
+          ],
+        })),
+      claimFreeCheck: () => set({ freeCheckClaimed: true }),
+      setActivePlan: (activePlan) => set({ activePlan }),
+      clear: () =>
+        set({
+          plants: [],
+          issues: [],
+          approvedDiagnoses: [],
+          freeCheckClaimed: false,
+          activePlan: null,
+        }),
+    }),
+    { name: "my-gardener-records-v2" }
+  )
+);
+
 /** Wipes all local user data — used when a new user signs in or on sign-out. */
 export function resetUserData() {
   useProfile.getState().reset();
@@ -195,6 +325,7 @@ export function resetUserData() {
   useOrders.getState().clear();
   useAddresses.getState().clear();
   useCart.getState().clear();
+  useGarden.getState().clear();
 }
 
 /* ---------- UI preferences (reduced motion) ---------- */

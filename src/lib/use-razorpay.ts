@@ -64,11 +64,11 @@ export function useRazorpay() {
             key: order.keyId,
             amount: order.amount,
             currency: "INR",
-            name: "Biosphere",
+            name: "My Gardener",
             description: args.label,
             order_id: order.orderId,
             prefill: args.prefill ?? {},
-            theme: { color: "#1f6b3b" },
+            theme: { color: "#1A3D2F" },
             modal: {
               ondismiss: () => {
                 args.onDismiss?.();

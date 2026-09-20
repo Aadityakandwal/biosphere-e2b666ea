@@ -5,15 +5,15 @@ import { Reveal } from "@/components/Reveal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { membershipPlans } from "@/lib/data";
+import { gardenCarePlans, type GardenCarePlan } from "@/lib/data";
 import { useProfile, type PlanId } from "@/lib/stores";
 import { useRazorpay } from "@/lib/use-razorpay";
 import { useAuth } from "@/lib/use-auth";
-import { ArrowLeft, Check, Loader2, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, Loader2, ShieldCheck, Sparkles, Sprout } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/profile/membership")({
-  head: () => ({ meta: [{ title: "Membership — Biosphere" }] }),
+  head: () => ({ meta: [{ title: "Garden Care Plans — My Gardener" }] }),
   component: MembershipPage,
 });
 
@@ -38,10 +38,10 @@ function MembershipPage() {
     timers.current.push(setTimeout(fn, ms));
   };
 
-  function subscribe(p: { id: string; name: string; price: number }) {
+  function subscribe(p: GardenCarePlan) {
     if (authLoading || flow !== "idle") return;
     if (!isAuthenticated) {
-      toast.info("Please sign in to buy a membership");
+      toast.info("Please sign in to subscribe to a Garden Care Plan");
       navigate({ to: "/auth", search: { redirect: "/profile/membership" } });
       return;
     }
@@ -51,7 +51,7 @@ function MembershipPage() {
     void pay({
       amount,
       kind: "membership",
-      label: `Biosphere ${p.name} membership (${cycle})`,
+      label: `My Gardener ${p.name} (${cycle})`,
       receipt: `mem-${p.id}-${Date.now()}`.slice(0, 40),
       prefill: { name: profile.name, email: profile.email, contact: profile.phone },
       onSuccess: () => {
@@ -60,10 +60,11 @@ function MembershipPage() {
           setPlan(p.id as PlanId);
           setFlow("success");
           setJustActivated(p.id);
-          toast.success(`${p.name} membership activated`);
+          toast.success(`${p.name} activated`);
           later(() => {
             setFlow("idle");
             setPayingId(null);
+            navigate({ to: "/garden" });
           }, 1400);
           later(() => setJustActivated(null), 2600);
         }, 650);
@@ -81,23 +82,25 @@ function MembershipPage() {
   }
 
   const busy = flow !== "idle";
-  const activePlan = membershipPlans.find((p) => p.id === payingId);
+  const activePlan = gardenCarePlans.find((p) => p.id === payingId);
 
   return (
     <Shell>
       <Link
         to="/profile"
-        className="mb-2 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        className="mb-2 inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" /> Back
+        <ArrowLeft className="h-4 w-4" /> Back to Profile
       </Link>
       <Reveal>
-        <h1 className="font-display text-2xl font-semibold">Membership Pass</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Save on visits, unlock AI scans, and priority support.
+        <span className="text-xs font-bold uppercase tracking-widest text-primary">Botanical Stewardship</span>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">Garden Care Plans</h1>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Dedicated on-site visits by My Gardener professionals, priority scheduling, and unlimited AI support.
         </p>
       </Reveal>
 
+      {/* Billing Cycle Switcher */}
       <Reveal delay={80}>
         <div className="relative mt-4 inline-flex rounded-full border border-border bg-card p-1">
           <span
@@ -109,67 +112,86 @@ function MembershipPage() {
             <button
               key={c}
               onClick={() => setCycle(c)}
-              className={`relative z-10 min-w-24 rounded-full px-4 py-1.5 text-sm capitalize transition-colors duration-300 ${
+              className={`relative z-10 min-w-24 rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-colors duration-300 ${
                 cycle === c ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {c}
+              {c} {c === "yearly" && "(Save 17%)"}
             </button>
           ))}
         </div>
       </Reveal>
 
       <Reveal stagger className="mt-4 space-y-3">
-        {membershipPlans.map((p) => {
+        {gardenCarePlans.map((p) => {
           const isCurrent = plan === p.id;
           const isPaying = payingId === p.id && busy;
           return (
             <Card
               key={p.id}
-              className={`lift p-4 transition-[box-shadow,transform,border-color] duration-500 ${
-                isCurrent ? "ring-2 ring-primary" : p.popular ? "ring-2 ring-primary/40" : ""
+              className={`surface p-5 transition-all duration-300 ${
+                isCurrent ? "ring-2 ring-primary" : p.popular ? "ring-2 ring-primary/40 shadow-elevated" : ""
               } ${justActivated === p.id ? "plan-pop ring-pulse" : ""} ${
                 busy && !isPaying ? "opacity-60" : ""
               }`}
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="font-display text-xl font-semibold">{p.name}</p>
-                  {p.popular && <Badge className="mt-1">Most Popular</Badge>}
+                  {p.badge && (
+                    <Badge className="bg-primary/10 text-[10px] font-bold text-primary">
+                      {p.badge}
+                    </Badge>
+                  )}
+                  <p className="mt-1 font-display text-lg font-bold text-foreground">{p.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {p.visits} on-site visit{p.visits > 1 ? "s" : ""} / month
+                  </p>
                 </div>
-                <div className="overflow-hidden text-right">
-                  <p key={`${p.id}-${cycle}`} className="price-roll text-2xl font-semibold">
+                <div className="text-right">
+                  <p className="font-display text-2xl font-bold text-foreground">
                     ₹{p.price * factor}
                   </p>
-                  <p className="text-xs text-muted-foreground">/{cycle === "monthly" ? "mo" : "yr"}</p>
+                  <p className="text-[10px] text-muted-foreground">/{cycle === "monthly" ? "mo" : "yr"}</p>
                 </div>
               </div>
-              <ul className="mt-3 space-y-1.5 text-sm">
-                {p.perks.map((perk) => (
-                  <li key={perk} className="flex gap-2">
-                    <Check className="h-4 w-4 flex-none text-primary" /> <span>{perk}</span>
-                  </li>
+
+              <div className="mt-3 space-y-1.5 border-t border-border/60 pt-3 text-xs text-foreground/85">
+                <p className="font-semibold text-foreground">Included in this plan:</p>
+                {p.includedServices.map((inc) => (
+                  <div key={inc} className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-3.5 w-3.5 flex-none text-primary" />
+                    <span>{inc}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
+
+              <div className="mt-3 space-y-1.5 border-t border-border/40 pt-2 text-xs text-foreground/80">
+                <p className="font-semibold text-foreground">Member Benefits:</p>
+                {p.perks.map((perk) => (
+                  <div key={perk} className="flex items-start gap-2">
+                    <Sparkles className="mt-0.5 h-3.5 w-3.5 flex-none text-primary" />
+                    <span>{perk}</span>
+                  </div>
+                ))}
+              </div>
+
               <Button
-                className="press mt-4 w-full transition-all duration-300"
+                className="press mt-4 w-full rounded-full bg-primary font-semibold text-primary-foreground shadow-soft transition-all"
                 disabled={isCurrent || loading || busy}
                 onClick={() => subscribe(p)}
               >
-                <span className="inline-flex items-center transition-opacity duration-300">
-                  {isPaying ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {flow === "verifying" ? "Verifying payment…" : "Opening payment…"}
-                    </>
-                  ) : isCurrent ? (
-                    <>
-                      <Check className="mr-2 h-4 w-4" /> Current plan
-                    </>
-                  ) : (
-                    `Get ${p.name} · ₹${p.price * factor}`
-                  )}
-                </span>
+                {isPaying ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {flow === "verifying" ? "Verifying payment…" : "Opening payment…"}
+                  </>
+                ) : isCurrent ? (
+                  <>
+                    <Check className="mr-2 h-4 w-4" /> Current Active Plan
+                  </>
+                ) : (
+                  `Subscribe to ${p.name} · ₹${p.price * factor}/${cycle === "monthly" ? "mo" : "yr"}`
+                )}
               </Button>
             </Card>
           );
@@ -184,10 +206,10 @@ function MembershipPage() {
                 <div className="check-pop mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
                   <Sparkles className="h-7 w-7" />
                 </div>
-                <p className="mt-3 font-display text-lg font-semibold">
-                  {activePlan?.name} activated
+                <p className="mt-3 font-display text-lg font-bold text-foreground">
+                  {activePlan?.name} Activated
                 </p>
-                <p className="mt-1 text-sm text-muted-foreground">Your new benefits are live.</p>
+                <p className="mt-1 text-xs text-muted-foreground">Your plan visits and benefits are live in your Garden Dashboard.</p>
               </>
             ) : (
               <>
@@ -198,17 +220,14 @@ function MembershipPage() {
                     <Loader2 className="h-7 w-7 animate-spin" />
                   )}
                 </div>
-                <p className="mt-3 font-display text-lg font-semibold">
-                  {flow === "verifying" ? "Verifying payment" : "Opening secure payment"}
+                <p className="mt-3 font-display text-lg font-bold text-foreground">
+                  {flow === "verifying" ? "Verifying Payment" : "Opening Secure Checkout"}
                 </p>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {flow === "verifying"
-                    ? "Hang tight while we confirm with Razorpay."
+                    ? "Confirming transaction with Razorpay..."
                     : `Redirecting to Razorpay for ${activePlan?.name ?? "your plan"}.`}
                 </p>
-                <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-muted">
-                  <div className="shimmer h-full w-1/2 rounded-full bg-primary/60" />
-                </div>
               </>
             )}
           </div>

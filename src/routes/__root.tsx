@@ -76,19 +76,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Biosphere — Plant Care & Gardening Services" },
+      { title: "My Gardener — Plant Care & Botanical Services" },
       {
         name: "description",
         content:
-          "Biosphere is your all-in-one plant care companion: AI plant doctor, expert gardening services, and BioVelocity growth products delivered to your door.",
+          "My Gardener is your all-in-one plant care companion: AI plant doctor, expert gardening services, and BioVelocity growth products delivered to your door.",
       },
-      { name: "author", content: "Biosphere" },
-      { property: "og:site_name", content: "Biosphere" },
-      { property: "og:title", content: "Biosphere — Plant Care & Gardening Services" },
+      { name: "author", content: "My Gardener" },
+      { property: "og:site_name", content: "My Gardener" },
+      { property: "og:title", content: "My Gardener — Plant Care & Botanical Services" },
       {
         property: "og:description",
         content:
-          "AI plant doctor, expert gardening services, and BioVelocity growth products — all in one plant care app.",
+          "AI plant doctor, expert gardening services, and BioVelocity growth products — all in one botanical care app.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -106,7 +106,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "Biosphere",
+          name: "My Gardener",
           url: "https://biosphere.app",
           description:
             "Plant care companion offering AI plant diagnosis, gardening services, and organic plant nutrition products.",
@@ -117,7 +117,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
-          name: "Biosphere",
+          name: "My Gardener",
           url: "https://biosphere.app",
         }),
       },

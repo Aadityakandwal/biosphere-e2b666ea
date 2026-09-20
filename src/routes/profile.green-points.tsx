@@ -11,10 +11,10 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/profile/green-points")({
   head: () => ({
     meta: [
-      { title: "Green Points — Biosphere" },
-      { name: "description", content: "Track your Biosphere Green Points balance and redeem them for plant care products and service perks." },
-      { property: "og:title", content: "Green Points — Biosphere" },
-      { property: "og:description", content: "Track your Green Points and redeem rewards on Biosphere." },
+      { title: "Green Points — My Gardener" },
+      { name: "description", content: "Track your My Gardener Green Points balance and redeem them for plant care products and service perks." },
+      { property: "og:title", content: "Green Points — My Gardener" },
+      { property: "og:description", content: "Track your Green Points and redeem rewards on My Gardener." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

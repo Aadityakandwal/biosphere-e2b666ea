@@ -10,7 +10,7 @@ import { usePrefs } from "@/lib/stores";
 import { useReducedMotion } from "@/lib/motion";
 
 export const Route = createFileRoute("/profile/settings")({
-  head: () => ({ meta: [{ title: "Settings — Biosphere" }] }),
+  head: () => ({ meta: [{ title: "Settings — My Gardener" }] }),
   component: SettingsPage,
 });
 

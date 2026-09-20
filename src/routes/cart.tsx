@@ -8,16 +8,16 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 export const Route = createFileRoute("/cart")({
   head: () => ({
     meta: [
-      { title: "Your Cart — Biosphere" },
+      { title: "Your Cart — My Garden" },
       {
         name: "description",
         content:
-          "Review your selected plants, tools, planters, and BioVelocity products before completing your Biosphere purchase.",
+          "Review your selected plants, tools, planters, and BioVelocity products before completing your My Garden purchase.",
       },
-      { property: "og:title", content: "Your Cart — Biosphere" },
+      { property: "og:title", content: "Your Cart — My Garden" },
       {
         property: "og:description",
-        content: "Review your selected plants, tools, and plant care products before checkout on Biosphere.",
+        content: "Review your selected plants, tools, and plant care products before checkout on My Garden.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import logoUrl from "@/assets/biosphere-logo.png";
+import logoUrl from "@/assets/my-garden-logo.png";
 import { useApplyReducedMotion } from "@/lib/motion";
 
 /** Small inline spinner: growing leaf ring. */
@@ -75,11 +75,11 @@ export function Splash() {
 
         <img
           src={logoUrl}
-          alt="Biosphere"
+          alt="My Gardener"
           className="splash-logo h-24 w-24 rounded-3xl object-contain"
         />
         <h1 className="splash-word mt-6 font-display text-3xl font-semibold tracking-tight text-foreground">
-          Biosphere
+          My Gardener
         </h1>
         <p className="splash-word mt-1 text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground [animation-delay:0.25s]">
           Grow with care

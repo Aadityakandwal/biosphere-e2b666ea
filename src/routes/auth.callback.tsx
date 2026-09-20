@@ -8,10 +8,10 @@ export const Route = createFileRoute("/auth/callback")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Signing you in — Biosphere" },
-      { name: "description", content: "Completing your secure sign-in to Biosphere." },
-      { property: "og:title", content: "Signing you in — Biosphere" },
-      { property: "og:description", content: "Completing your secure sign-in to Biosphere." },
+      { title: "Signing you in — My Garden" },
+      { name: "description", content: "Completing your secure sign-in to My Garden." },
+      { property: "og:title", content: "Signing you in — My Garden" },
+      { property: "og:description", content: "Completing your secure sign-in to My Garden." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },

@@ -16,9 +16,9 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/profile/activity")({
   head: () => ({
     meta: [
-      { title: "My Bookings & Orders — Biosphere" },
-      { name: "description", content: "All your Biosphere service bookings and product orders in one place — track deliveries, rebook services and download invoices." },
-      { property: "og:title", content: "My Bookings & Orders — Biosphere" },
+      { title: "My Bookings & Orders — My Gardener" },
+      { name: "description", content: "All your My Gardener service bookings and product orders in one place — track deliveries, rebook services and download invoices." },
+      { property: "og:title", content: "My Bookings & Orders — My Gardener" },
       { property: "og:description", content: "Track bookings and deliveries, rebook services and download invoices." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
