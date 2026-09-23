@@ -30,6 +30,7 @@ import {
   ArrowRight,
   PlusCircle,
   HelpCircle,
+  Check,
 } from "lucide-react";
 import { toast } from "sonner";
 

@@ -263,9 +263,12 @@ export const diagnosePlant = createServerFn({ method: "POST" })
   })
   .handler(async ({ data }): Promise<Diagnosis> => {
     const apiKey =
-      typeof process !== "undefined"
-        ? process.env?.GEMINI_API_KEY || process.env?.VITE_GEMINI_API_KEY || ""
-        : "";
+      (typeof process !== "undefined"
+        ? process.env?.GEMINI_API_KEY || process.env?.VITE_GEMINI_API_KEY
+        : undefined) ||
+      (import.meta as any)?.env?.VITE_GEMINI_API_KEY ||
+      (import.meta as any)?.env?.GEMINI_API_KEY ||
+      "";
 
     try {
       const parts = data.image.split(",");
