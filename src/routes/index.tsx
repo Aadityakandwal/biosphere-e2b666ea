@@ -1,8 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { useGarden, useBookings, useProfile, useCart } from "@/lib/stores";
 import { products, reviews, gardenCarePlans } from "@/lib/data";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 import {
   ArrowRight,
   Sparkles,
@@ -92,6 +98,7 @@ function HomePage() {
   const profileName = useProfile((s) => s.name);
   const points = useProfile((s) => s.points);
   const add = useCart((s) => s.add);
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [activeOfferIndex, setActiveOfferIndex] = useState(0);
 
   const firstName = profileName?.trim().split(/\s+/)[0] || "";
@@ -124,6 +131,7 @@ function HomePage() {
       to: isEligibleForFreeCheck ? "/services/$slug/book" : "/garden",
       params: isEligibleForFreeCheck ? { slug: "free-garden-check" } : undefined,
       tag: "₹0",
+      image: "https://images.unsplash.com/photo-1545241047-6083a3684587?w=800&auto=format&fit=crop&q=80",
     },
     {
       badge: "SPECIAL WELCOME",
@@ -132,6 +140,7 @@ function HomePage() {
       cta: "Explore Services",
       to: "/services",
       tag: "BIO20",
+      image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&auto=format&fit=crop&q=80",
     },
     {
       badge: "TONIC BUNDLE",
@@ -140,8 +149,21 @@ function HomePage() {
       cta: "Shop Tonics",
       to: "/shop",
       tag: "BIO3",
+      image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&auto=format&fit=crop&q=80",
     },
   ];
+
+  useEffect(() => {
+    if (!carouselApi) return;
+    const onSelect = () => {
+      setActiveOfferIndex(carouselApi.selectedScrollSnap());
+    };
+    carouselApi.on("select", onSelect);
+    carouselApi.on("reInit", onSelect);
+    return () => {
+      carouselApi.off("select", onSelect);
+    };
+  }, [carouselApi]);
 
   return (
     <Shell>
@@ -170,89 +192,111 @@ function HomePage() {
         </section>
 
         {/* =========================================================================
-            1. HERO BANNER — EDITORIAL PHOTO COMPOSITION MATCHING REFERENCE
+            1. HERO BANNER — SLIDEABLE SWIPEABLE OFFERS CAROUSEL
             ========================================================================= */}
         <section className="px-5">
-          <div className="relative overflow-hidden rounded-[26px] bg-[#EDE8DE] border border-[#E2DDD2] shadow-soft">
-            {/* Background botanical imagery with natural gradient fade */}
-            <div className="absolute right-0 top-0 bottom-0 w-3/5 sm:w-1/2 overflow-hidden pointer-events-none">
-              <img
-                src="https://images.unsplash.com/photo-1545241047-6083a3684587?w=800&auto=format&fit=crop&q=80"
-                alt="Lush botanical plants and terracotta pot"
-                className="h-full w-full object-cover object-center mix-blend-multiply opacity-90 scale-105 transition-transform duration-700 hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#EDE8DE] via-[#EDE8DE]/60 to-transparent" />
-            </div>
+          <Carousel
+            setApi={setCarouselApi}
+            opts={{
+              loop: true,
+              align: "start",
+            }}
+            className="w-full cursor-grab active:cursor-grabbing select-none"
+          >
+            <CarouselContent className="-ml-0">
+              {offers.map((offer, idx) => (
+                <CarouselItem key={idx} className="pl-0 basis-full">
+                  <div className="relative overflow-hidden rounded-[26px] bg-[#EDE8DE] border border-[#E2DDD2] shadow-soft">
+                    {/* Background botanical imagery with natural gradient fade */}
+                    <div className="absolute right-0 top-0 bottom-0 w-3/5 sm:w-1/2 overflow-hidden pointer-events-none">
+                      <img
+                        src={offer.image}
+                        alt={offer.title.replace("\n", " ")}
+                        className="h-full w-full object-cover object-center mix-blend-multiply opacity-90 scale-105 transition-transform duration-700 hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-r from-[#EDE8DE] via-[#EDE8DE]/60 to-transparent" />
+                    </div>
 
-            <div className="relative z-10 p-5 sm:p-6 max-w-[65%] sm:max-w-[60%] space-y-3">
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.16em] text-[#55695B]">
-                {offers[activeOfferIndex].badge}
-              </span>
+                    <div className="relative z-10 p-5 sm:p-6 max-w-[65%] sm:max-w-[60%] space-y-3">
+                      <span className="inline-block text-[10px] font-bold uppercase tracking-[0.16em] text-[#55695B]">
+                        {offer.badge}
+                      </span>
 
-              <h2 className="font-display text-[22px] sm:text-[26px] font-bold leading-[1.15] tracking-tight text-[#183626] whitespace-pre-line">
-                {offers[activeOfferIndex].title}
-              </h2>
+                      <h2 className="font-display text-[22px] sm:text-[26px] font-bold leading-[1.15] tracking-tight text-[#183626] whitespace-pre-line">
+                        {offer.title}
+                      </h2>
 
-              <p className="text-[11px] sm:text-xs leading-relaxed text-[#526357]">
-                {offers[activeOfferIndex].desc}
-              </p>
+                      <p className="text-[11px] sm:text-xs leading-relaxed text-[#526357]">
+                        {offer.desc}
+                      </p>
 
-              <div className="pt-1.5 flex items-center gap-2">
-                <Link
-                  to={offers[activeOfferIndex].to as any}
-                  params={offers[activeOfferIndex].params as any}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-[#18392B] px-4 py-2 text-xs font-semibold text-white shadow-soft transition-all duration-200 hover:bg-[#122D22] active:scale-95"
-                >
-                  <span>{offers[activeOfferIndex].cta}</span>
-                  <ArrowRight className="h-3 w-3" />
-                </Link>
-              </div>
+                      <div className="pt-1.5 flex items-center gap-2">
+                        <Link
+                          to={offer.to as any}
+                          params={offer.params as any}
+                          className="inline-flex items-center gap-1.5 rounded-full bg-[#18392B] px-4 py-2 text-xs font-semibold text-white shadow-soft transition-all duration-200 hover:bg-[#122D22] active:scale-95"
+                        >
+                          <span>{offer.cta}</span>
+                          <ArrowRight className="h-3 w-3" />
+                        </Link>
+                      </div>
 
-              {/* Offer Pagination Dots */}
-              <div className="pt-1 flex items-center gap-1.5">
-                {offers.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveOfferIndex(idx)}
-                    aria-label={`Show offer ${idx + 1}`}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      activeOfferIndex === idx ? "w-5 bg-[#18392B]" : "w-1.5 bg-[#C5CEBF]"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
+                      {/* Offer Pagination Dots */}
+                      <div className="pt-1 flex items-center gap-1.5">
+                        {offers.map((_, dotIdx) => (
+                          <button
+                            key={dotIdx}
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              carouselApi?.scrollTo(dotIdx);
+                            }}
+                            aria-label={`Show offer ${dotIdx + 1}`}
+                            className={`h-1.5 rounded-full transition-all duration-300 ${
+                              activeOfferIndex === dotIdx ? "w-5 bg-[#18392B]" : "w-1.5 bg-[#C5CEBF]"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         </section>
 
         {/* =========================================================================
-            2. MY GARDEN SECTION — BOTANICAL SUMMARY CARD MATCHING REFERENCE
+            2. AI PLANT DOCTOR SECTION — FEATURED CARD BELOW OFFERS
             ========================================================================= */}
         <section className="px-5">
           <Link
-            to="/garden"
+            to="/plant-doctor"
             className="group block relative overflow-hidden rounded-[24px] bg-[#EBF0E8] border border-[#DCE5DA] p-5 shadow-soft transition-all duration-200 hover:border-[#C0D1BD]"
           >
-            {/* Circular foliage cutout on right */}
+            {/* Circular plant diagnosis imagery cutout on right */}
             <div className="absolute -right-6 -bottom-6 h-36 w-36 overflow-hidden rounded-full bg-[#DEE8DB] pointer-events-none">
               <img
                 src="https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=400&auto=format&fit=crop&q=80"
-                alt=""
+                alt="Plant diagnosis and health"
                 className="h-full w-full object-cover mix-blend-multiply opacity-85 scale-110 group-hover:scale-125 transition-transform duration-500"
               />
             </div>
 
             <div className="relative z-10 max-w-[65%] space-y-1">
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#55695B]">
+                <Sparkles className="h-3 w-3 text-[#18392B]" />
+                <span>Instant Diagnosis</span>
+              </div>
               <h3 className="font-display text-lg font-bold text-[#183626]">
-                My Garden
+                AI Plant Doctor
               </h3>
               <p className="text-xs text-[#526357] leading-relaxed">
-                {plants.length > 0
-                  ? `${plants.length} plant${plants.length === 1 ? "" : "s"} logged, health records and care history.`
-                  : "Your plants, garden records and service history."}
+                Scan leaves or describe symptoms to instantly detect pests, diseases, and get organic remedies.
               </p>
               <div className="pt-2 flex items-center gap-1.5 text-xs font-semibold text-[#183626] group-hover:underline">
-                <span>View Garden</span>
+                <Camera className="h-3.5 w-3.5" />
+                <span>Diagnose Plant</span>
                 <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
               </div>
             </div>
@@ -324,20 +368,20 @@ function HomePage() {
           </h3>
 
           <div className="grid grid-cols-4 gap-2 text-center">
-            {/* Pod 1: AI Plant Doctor */}
+            {/* Pod 1: My Garden */}
             <Link
-              to="/plant-doctor"
+              to="/garden"
               className="group flex flex-col items-center gap-1.5 press"
             >
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E5ECE5] text-[#18392B] shadow-2xs transition-transform duration-200 group-hover:scale-105 group-hover:bg-[#DBE6DB]">
-                <Camera className="h-5 w-5 stroke-[1.8]" />
+                <Sprout className="h-5 w-5 stroke-[1.8]" />
               </div>
               <div className="space-y-0.5">
                 <p className="text-[11px] font-semibold text-[#183626] leading-tight">
-                  AI Plant Doctor
+                  My Garden
                 </p>
                 <p className="text-[9px] text-[#65796C] leading-none">
-                  Check a Plant
+                  {plants.length > 0 ? `${plants.length} Plants` : "View Garden"}
                 </p>
               </div>
             </Link>
