@@ -204,7 +204,7 @@ function ProfilePage() {
             2. MY GARDEN — PRIMARY FEATURE ENTRY
             ========================================================================= */}
         <section className="px-5 sm:px-6">
-          <div className="relative overflow-hidden rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/[0.08] via-card to-card p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="relative overflow-hidden rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/[0.08] via-card to-card p-5 sm:p-6 shadow-2xs space-y-4 transition-all duration-300 hover:border-primary/40 hover:shadow-soft">
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
                 <div className="flex items-center gap-1.5">
@@ -223,7 +223,7 @@ function ProfilePage() {
                 </p>
               </div>
 
-              <div className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl bg-primary/10 text-primary">
+              <div className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-105">
                 <Sprout className="h-6 w-6" />
               </div>
             </div>
@@ -238,10 +238,10 @@ function ProfilePage() {
                 </div>
                 <Link
                   to="/garden"
-                  className="press inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                  className="group press inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline active:scale-95"
                 >
                   <span>Open Dashboard</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
                 </Link>
               </div>
             ) : (
@@ -254,10 +254,10 @@ function ProfilePage() {
                     <Link
                       to="/services/$slug/book"
                       params={{ slug: "free-garden-check" }}
-                      className="press inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 shadow-2xs"
+                      className="group press inline-flex items-center gap-1 rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 shadow-2xs active:scale-95"
                     >
                       <span>Claim Free Check</span>
-                      <ArrowRight className="h-3 w-3" />
+                      <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
                     </Link>
                   </>
                 ) : (
@@ -265,10 +265,10 @@ function ProfilePage() {
                     <span className="text-xs text-muted-foreground">Ready to log plants</span>
                     <Link
                       to="/garden"
-                      className="press inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                      className="group press inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline active:scale-95"
                     >
                       <span>Explore Garden</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
                     </Link>
                   </>
                 )}

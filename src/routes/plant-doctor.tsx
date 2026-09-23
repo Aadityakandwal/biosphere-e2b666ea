@@ -176,25 +176,28 @@ function PlantDoctor() {
       <input ref={cameraRef} type="file" accept="image/*" capture="environment" hidden onChange={(e) => onPick(e.target.files?.[0])} />
 
       {!image && (
-        <div className="mt-2">
+        <div className="mt-2 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-primary">Botanical AI Engine</span>
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-primary">
+                <Sparkles className="h-3 w-3 text-primary animate-pulse" />
+                Botanical AI Engine
+              </span>
               <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">AI Plant Doctor</h1>
             </div>
             <Link to="/garden" className="text-xs font-semibold text-primary hover:underline">
               My Garden
             </Link>
           </div>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             Take a clear photo of your plant's foliage or stem to generate a Detailed AI Plant Health Analysis.
           </p>
 
           {/* Daily scan allowance */}
           <div
-            className={`mt-4 flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 ${
-              exhausted ? "border-destructive/30 bg-destructive/10" : "border-border bg-card"
-            } shadow-soft`}
+            className={`flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 ${
+              exhausted ? "border-destructive/30 bg-destructive/10" : "border-border/80 bg-card"
+            } shadow-2xs`}
           >
             <div>
               <p className="text-xs font-semibold text-foreground">
@@ -218,36 +221,36 @@ function PlantDoctor() {
           </div>
 
           {/* Optional description */}
-          <div className="mt-4">
+          <div>
             <label className="text-xs font-semibold text-foreground">Describe what you observe (Optional)</label>
             <Textarea
               placeholder="e.g. Yellow leaves on the lower stem, dry brown tips, recent repotting…"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              className="mt-1 resize-none rounded-2xl text-xs"
+              className="mt-1.5 resize-none rounded-2xl text-xs border-border/80"
               maxLength={300}
             />
           </div>
 
           {/* Viewfinder Frame */}
-          <div className="relative mt-4 aspect-[3/4] overflow-hidden rounded-[2rem] bg-[oklch(0.20_0.03_155)] shadow-elevated">
+          <div className="relative mt-2 aspect-[3/4] overflow-hidden rounded-[2rem] bg-[oklch(0.18_0.03_155)] shadow-elevated">
             <img
               src="https://images.unsplash.com/photo-1545241047-6083a3684587?w=800"
               alt=""
               className="h-full w-full object-cover opacity-35"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/70" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/75" />
 
             {/* framing corners */}
             <div className="pointer-events-none absolute inset-8">
               {[
-                "left-0 top-0 border-l-2 border-t-2 rounded-tl-3xl",
-                "right-0 top-0 border-r-2 border-t-2 rounded-tr-3xl",
-                "left-0 bottom-0 border-l-2 border-b-2 rounded-bl-3xl",
-                "right-0 bottom-0 border-r-2 border-b-2 rounded-br-3xl",
+                "left-0 top-0 border-l-2 border-t-2 rounded-tl-2xl",
+                "right-0 top-0 border-r-2 border-t-2 rounded-tr-2xl",
+                "left-0 bottom-0 border-l-2 border-b-2 rounded-bl-2xl",
+                "right-0 bottom-0 border-r-2 border-b-2 rounded-br-2xl",
               ].map((c) => (
-                <span key={c} className={`absolute h-10 w-10 border-primary/90 ${c}`} />
+                <span key={c} className={`absolute h-8 w-8 border-primary/90 transition-all duration-300 ${c}`} />
               ))}
             </div>
 
@@ -259,7 +262,7 @@ function PlantDoctor() {
               Flash {flash ? "On" : "Off"}
             </button>
 
-            <p className="absolute inset-x-0 bottom-24 text-center text-xs font-medium text-white/85">
+            <p className="absolute inset-x-0 bottom-24 text-center text-xs font-medium text-white/90">
               Center the affected leaf or plant inside the frame
             </p>
 
@@ -278,7 +281,7 @@ function PlantDoctor() {
                 className="flex h-16 w-16 items-center justify-center rounded-full bg-white p-1 shadow-glow press disabled:opacity-40"
                 aria-label="Take photo"
               >
-                <span className="flex h-full w-full items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-white">
+                <span className="flex h-full w-full items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-white transition-transform active:scale-95">
                   <Camera className="h-7 w-7" />
                 </span>
               </button>
@@ -286,7 +289,7 @@ function PlantDoctor() {
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 pt-1">
             <Button
               variant="outline"
               disabled={exhausted}
@@ -308,21 +311,40 @@ function PlantDoctor() {
 
       {image && (
         <div ref={resultsRef} className="mt-2 space-y-4">
-          {/* Photo banner */}
-          <div className="relative overflow-hidden rounded-3xl shadow-elevated">
-            <img src={image} alt="Plant specimen" className="h-52 w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          {/* Photo banner with botanical scanning beam */}
+          <div className="relative overflow-hidden rounded-3xl shadow-elevated bg-card">
+            <img src={image} alt="Plant specimen" className="h-56 w-full object-cover" />
+            
+            {/* Real Botanical Laser Scan Beam when analyzing */}
+            {loading && (
+              <>
+                <div className="botanical-scan-beam" />
+                <div className="absolute inset-0 bg-primary/10 backdrop-blur-[0.5px] pointer-events-none" />
+                <div className="pointer-events-none absolute inset-6">
+                  {[
+                    "left-0 top-0 border-l-2 border-t-2 rounded-tl-xl",
+                    "right-0 top-0 border-r-2 border-t-2 rounded-tr-xl",
+                    "left-0 bottom-0 border-l-2 border-b-2 rounded-bl-xl",
+                    "right-0 bottom-0 border-r-2 border-b-2 rounded-br-xl",
+                  ].map((c) => (
+                    <span key={c} className={`absolute h-6 w-6 border-emerald-400/80 animate-pulse ${c}`} />
+                  ))}
+                </div>
+              </>
+            )}
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
             
             {diagnosis && (
               <span
-                className={`absolute right-4 top-4 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold backdrop-blur-md ${
-                  diagnosis.condition === "Healthy" ? "bg-white/90 text-primary" : "bg-white/90 text-destructive"
+                className={`absolute right-4 top-4 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold backdrop-blur-md shadow-xs ${
+                  diagnosis.condition === "Healthy" ? "bg-white/95 text-primary" : "bg-white/95 text-destructive"
                 }`}
               >
                 {diagnosis.condition === "Healthy" ? (
-                  <CheckCircle2 className="h-4 w-4" />
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
                 ) : (
-                  <AlertCircle className="h-4 w-4" />
+                  <AlertCircle className="h-4 w-4 text-destructive" />
                 )}
                 {diagnosis.condition}
               </span>
@@ -345,17 +367,55 @@ function PlantDoctor() {
             </button>
           </div>
 
+          {/* Premium Scientific Botanical Loading Experience */}
           {loading && (
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft">
-                <div className="h-10 w-10 animate-pulse rounded-full bg-primary/20" />
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />
-                  <div className="h-3 w-1/2 animate-pulse rounded bg-muted" />
+            <div className="rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/[0.06] via-card to-card p-5 space-y-4 shadow-soft">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/15 text-primary diagnostic-pulse">
+                  <Leaf className="h-5 w-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-display text-sm font-semibold text-foreground">
+                    Botanical AI Pathology Engine
+                  </h3>
+                  <p className="text-[11px] text-muted-foreground">
+                    Analyzing leaf structure, cellular patterns &amp; stress markers
+                  </p>
                 </div>
               </div>
-              <div className="h-28 animate-pulse rounded-3xl bg-muted" />
-              <div className="h-24 animate-pulse rounded-3xl bg-muted" />
+
+              {/* Progress Bar */}
+              <div className="space-y-1.5">
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                  <div className="h-full rounded-full bg-primary animate-pulse" style={{ width: "75%" }} />
+                </div>
+                <div className="flex justify-between text-[10px] text-muted-foreground">
+                  <span>Diagnostic scan in progress</span>
+                  <span className="font-mono font-semibold text-primary">Running AI Model</span>
+                </div>
+              </div>
+
+              {/* Staged Checklist Indicators */}
+              <div className="space-y-2 border-t border-border/50 pt-3 text-xs text-foreground/80">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <Check className="h-2.5 w-2.5" />
+                  </span>
+                  <span>Foliar venation &amp; surface integrity</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <Check className="h-2.5 w-2.5" />
+                  </span>
+                  <span>Pathogen, pest &amp; fungal screening</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 text-primary animate-pulse">
+                    <Sparkles className="h-2.5 w-2.5" />
+                  </span>
+                  <span>Organic treatment protocol synthesis</span>
+                </div>
+              </div>
             </div>
           )}
 

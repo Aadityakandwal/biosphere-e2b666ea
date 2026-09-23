@@ -36,13 +36,17 @@
   --color-leaf-foreground: var(--leaf-foreground);
   --color-sand: var(--sand);
   --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
-  --shadow-soft: 0 1px 2px oklch(0.22 0.04 155 / 0.04), 0 2px 8px oklch(0.22 0.04 155 / 0.04);
-  --shadow-elevated: 0 2px 4px oklch(0.22 0.04 155 / 0.05), 0 12px 32px -8px oklch(0.22 0.04 155 / 0.12);
-  --shadow-glow: 0 8px 32px -6px oklch(0.42 0.12 155 / 0.28);
-  --gradient-leaf: linear-gradient(135deg, oklch(0.55 0.15 150), oklch(0.42 0.12 155));
-  --gradient-sand: linear-gradient(180deg, oklch(0.98 0.02 95), oklch(0.94 0.03 100));
+  --shadow-soft: 0 1px 3px oklch(0.22 0.04 155 / 0.04), 0 2px 8px oklch(0.22 0.04 155 / 0.04);
+  --shadow-elevated: 0 2px 4px oklch(0.22 0.04 155 / 0.04), 0 8px 24px -4px oklch(0.22 0.04 155 / 0.08);
+  --shadow-glow: 0 6px 24px -4px oklch(0.35 0.085 152 / 0.22);
+  --gradient-leaf: linear-gradient(135deg, oklch(0.48 0.12 150), oklch(0.35 0.085 152));
+  --gradient-sand: linear-gradient(180deg, oklch(0.985 0.015 95), oklch(0.95 0.02 100));
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-botanical: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-tactile: cubic-bezier(0.2, 0.9, 0.25, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 :root {
@@ -110,21 +114,21 @@
   body {
     background-color: var(--color-background);
     background-image:
-      radial-gradient(1000px 500px at 100% -10%, oklch(0.92 0.03 130 / 0.3), transparent 60%),
-      radial-gradient(800px 450px at -10% 15%, oklch(0.94 0.025 85 / 0.35), transparent 55%);
+      radial-gradient(1000px 500px at 100% -10%, oklch(0.92 0.03 130 / 0.22), transparent 60%),
+      radial-gradient(800px 450px at -10% 15%, oklch(0.94 0.025 85 / 0.25), transparent 55%);
     color: var(--color-foreground);
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
   button, a {
-    transition: color 200ms var(--ease-out-soft),
-                background-color 200ms var(--ease-out-soft),
-                border-color 200ms var(--ease-out-soft),
-                box-shadow 250ms var(--ease-out-soft),
-                transform 200ms var(--ease-out-soft),
-                opacity 200ms var(--ease-out-soft);
+    transition: color 180ms var(--ease-botanical),
+                background-color 180ms var(--ease-botanical),
+                border-color 180ms var(--ease-botanical),
+                box-shadow 200ms var(--ease-botanical),
+                transform 180ms var(--ease-tactile),
+                opacity 180ms var(--ease-botanical);
   }
   button:not(:disabled):active, a:active {
-    transform: translateY(0.5px) scale(0.985);
+    transform: scale(0.978);
   }
   :focus-visible {
     outline: 2px solid var(--color-ring);
@@ -144,14 +148,14 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-soft);
-  transition: box-shadow 250ms var(--ease-out-soft), transform 250ms var(--ease-out-soft), border-color 250ms var(--ease-out-soft);
+  transition: box-shadow 220ms var(--ease-botanical), transform 220ms var(--ease-tactile), border-color 220ms var(--ease-botanical);
 }
 
 @utility surface-hover {
   &:hover {
     box-shadow: var(--shadow-elevated);
-    transform: translateY(-2px);
-    border-color: color-mix(in oklch, var(--color-primary) 25%, var(--color-border));
+    transform: translateY(-1.5px);
+    border-color: color-mix(in oklch, var(--color-primary) 22%, var(--color-border));
   }
 }
 
@@ -164,12 +168,9 @@
 }
 
 @utility press {
-  transition: transform 220ms cubic-bezier(0.2, 0.9, 0.25, 1), box-shadow 220ms var(--ease-out-soft), filter 220ms var(--ease-out-soft);
-  &:hover {
-    filter: saturate(1.03);
-  }
+  transition: transform 180ms var(--ease-tactile), box-shadow 180ms var(--ease-botanical), filter 180ms var(--ease-botanical);
   &:active {
-    transform: scale(0.965);
+    transform: scale(0.975);
   }
 }
 
@@ -187,43 +188,91 @@
 }
 
 @utility shimmer {
-  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.5), transparent);
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.35), transparent);
   background-size: 200% 100%;
-  animation: shimmer 1.6s var(--ease-out-soft) infinite;
+  animation: shimmer 1.8s var(--ease-out-soft) infinite;
 }
 
+/* ---------- Botanical Micro-Interactions ---------- */
+@keyframes leaf-sway {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-6deg); }
+  65% { transform: rotate(4deg); }
+  100% { transform: rotate(0deg); }
+}
 
-/* ---------- Page & element motion ---------- */
+@utility leaf-sway {
+  transform-origin: bottom center;
+  animation: leaf-sway 1.4s var(--ease-botanical) 1;
+}
+
+@keyframes botanical-scan {
+  0% { top: 0%; opacity: 0.4; }
+  35% { opacity: 0.95; }
+  65% { opacity: 0.95; }
+  100% { top: 98%; opacity: 0.4; }
+}
+
+@utility botanical-scan-beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, oklch(0.55 0.15 150), oklch(0.72 0.12 150), oklch(0.55 0.15 150), transparent);
+  box-shadow: 0 0 12px oklch(0.55 0.15 150 / 0.6), 0 0 2px oklch(1 0 0 / 0.8);
+  animation: botanical-scan 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes diagnostic-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+
+@utility diagnostic-pulse {
+  animation: diagnostic-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-bump {
+  0% { transform: scale(0.85); }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+@utility badge-bump {
+  animation: badge-bump 260ms var(--ease-spring);
+}
+
+/* ---------- Page & element motion (180–300ms refined) ---------- */
 @keyframes rise-in {
-  0% { opacity: 0; transform: translateY(14px) scale(0.995); }
+  0% { opacity: 0; transform: translateY(8px); }
   100% { opacity: 1; transform: none; }
 }
 
 @utility page-enter {
   & > *:not(.reveal-item):not(.stagger-children) {
-    animation: rise-in 520ms var(--ease-out-soft) both;
+    animation: rise-in 280ms var(--ease-botanical) both;
   }
   & > *:nth-child(1) { animation-delay: 0ms; }
-  & > *:nth-child(2) { animation-delay: 60ms; }
-  & > *:nth-child(3) { animation-delay: 120ms; }
-  & > *:nth-child(4) { animation-delay: 180ms; }
-  & > *:nth-child(5) { animation-delay: 240ms; }
-  & > *:nth-child(6) { animation-delay: 300ms; }
-  & > *:nth-child(n+7) { animation-delay: 340ms; }
+  & > *:nth-child(2) { animation-delay: 35ms; }
+  & > *:nth-child(3) { animation-delay: 70ms; }
+  & > *:nth-child(4) { animation-delay: 105ms; }
+  & > *:nth-child(5) { animation-delay: 140ms; }
+  & > *:nth-child(6) { animation-delay: 175ms; }
+  & > *:nth-child(n+7) { animation-delay: 200ms; }
 }
 
 @utility rise {
-  animation: rise-in 520ms var(--ease-out-soft) both;
+  animation: rise-in 280ms var(--ease-botanical) both;
 }
 
 /* Smooth media zoom inside hover cards */
 @utility media-zoom {
   overflow: hidden;
   & img {
-    transition: transform 600ms var(--ease-out-soft);
+    transition: transform 450ms var(--ease-botanical);
   }
   &:hover img {
-    transform: scale(1.06);
+    transform: scale(1.03);
   }
 }
 

@@ -203,12 +203,12 @@ export function GardenDashboardPage() {
       </Reveal>
 
       {/* Clean Hierarchical Segment Tabs */}
-      <div className="mt-6 grid grid-cols-3 gap-1 rounded-full border border-border/80 bg-muted/50 p-1">
+      <div className="mt-6 grid grid-cols-3 gap-1 rounded-full border border-border/80 bg-muted/50 p-1 select-none">
         <button
           onClick={() => setActiveTab("plants")}
-          className={`press flex items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-semibold transition-all ${
+          className={`press flex items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${
             activeTab === "plants"
-              ? "bg-primary text-primary-foreground shadow-soft"
+              ? "bg-primary text-primary-foreground shadow-xs"
               : "text-muted-foreground hover:text-foreground"
           }`}
         >
@@ -218,9 +218,9 @@ export function GardenDashboardPage() {
 
         <button
           onClick={() => setActiveTab("visits")}
-          className={`press flex items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-semibold transition-all ${
+          className={`press flex items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${
             activeTab === "visits"
-              ? "bg-primary text-primary-foreground shadow-soft"
+              ? "bg-primary text-primary-foreground shadow-xs"
               : "text-muted-foreground hover:text-foreground"
           }`}
         >
@@ -230,9 +230,9 @@ export function GardenDashboardPage() {
 
         <button
           onClick={() => setActiveTab("care")}
-          className={`press flex items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-semibold transition-all ${
+          className={`press flex items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${
             activeTab === "care"
-              ? "bg-primary text-primary-foreground shadow-soft"
+              ? "bg-primary text-primary-foreground shadow-xs"
               : "text-muted-foreground hover:text-foreground"
           }`}
         >

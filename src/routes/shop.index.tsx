@@ -375,7 +375,7 @@ function ShopPage() {
   );
 }
 
-// Clean Editorial Product Card
+// Clean Editorial Product Card with tactile confirmation
 function ProductCard({
   product,
   onAdd,
@@ -383,8 +383,16 @@ function ProductCard({
   product: Product;
   onAdd: (p: Product, e?: React.MouseEvent) => void;
 }) {
+  const [added, setAdded] = useState(false);
+
+  const handleAddClick = (e: React.MouseEvent) => {
+    onAdd(product, e);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 900);
+  };
+
   return (
-    <div className="group rounded-3xl border border-border/60 bg-card p-2.5 sm:p-3 shadow-2xs transition-all hover:border-primary/40 hover:shadow-xs flex flex-col justify-between">
+    <div className="group rounded-3xl border border-border/70 bg-card p-2.5 sm:p-3 shadow-2xs transition-all duration-200 hover:border-primary/40 hover:shadow-soft flex flex-col justify-between">
       <Link
         to="/shop/$productId"
         params={{ productId: product.id }}
@@ -395,7 +403,7 @@ function ProductCard({
             src={product.image}
             alt={product.name}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
           />
           {product.popular && (
             <span className="absolute left-2 top-2 rounded-full bg-[#1A3D2F]/90 px-2 py-0.5 text-[8px] font-bold tracking-wider text-white backdrop-blur-xs">
@@ -431,11 +439,19 @@ function ProductCard({
 
         <button
           type="button"
-          onClick={(e) => onAdd(product, e)}
-          className="press flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors shrink-0 shadow-2xs"
+          onClick={handleAddClick}
+          className={`press flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 shrink-0 shadow-2xs ${
+            added
+              ? "bg-emerald-600 text-white scale-105"
+              : "bg-primary/10 text-primary hover:bg-primary hover:text-white"
+          }`}
           aria-label={`Add ${product.name} to cart`}
         >
-          <Plus className="h-3 w-3" />
+          {added ? (
+            <Check className="h-3.5 w-3.5 animate-in zoom-in duration-150" />
+          ) : (
+            <Plus className="h-3.5 w-3.5" />
+          )}
         </button>
       </div>
     </div>

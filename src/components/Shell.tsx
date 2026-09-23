@@ -39,11 +39,11 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
             <Link
               to="/cart"
               aria-label="Cart"
-              className="relative rounded-full p-2 text-foreground/75 transition hover:bg-primary/5 hover:text-primary press"
+              className="relative rounded-full p-2 text-foreground/75 transition-all duration-200 hover:bg-primary/10 hover:text-primary press active:scale-95"
             >
               <ShoppingCart className="h-5 w-5" />
               {count > 0 && (
-                <Badge className="absolute -right-0.5 -top-0.5 h-4 min-w-4 rounded-full bg-primary px-1 text-[9px] text-primary-foreground shadow-sm ring-2 ring-background animate-in zoom-in">
+                <Badge className="badge-bump absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground shadow-2xs ring-2 ring-background">
                   {count}
                 </Badge>
               )}
@@ -51,7 +51,7 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
             <Link
               to="/profile"
               aria-label="Profile"
-              className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-secondary ring-1 ring-border/80 shadow-sm transition hover:ring-primary/40 press"
+              className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-secondary ring-1 ring-border/80 shadow-2xs transition-all duration-200 hover:ring-primary/40 press active:scale-95"
             >
               {avatar ? (
                 <img alt={name || "Profile"} src={avatar} className="h-full w-full object-cover" />
@@ -71,7 +71,7 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
         <main className="page-enter pt-2 pb-6">{children}</main>
       </div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/40 bg-background/90 backdrop-blur-lg">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/40 bg-background/90 backdrop-blur-lg select-none">
         <div className="mx-auto grid max-w-md grid-cols-5">
           {navItems.map((n) => {
             const active =
@@ -83,21 +83,25 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
               <Link
                 key={n.to}
                 to={n.to}
-                className={`group relative flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors ${
+                className={`group relative flex flex-col items-center gap-1 py-2 text-[10px] font-medium transition-all duration-200 active:scale-95 ${
                   active ? "font-semibold text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {active && (
-                  <span className="absolute inset-x-6 top-0 h-0.5 rounded-full bg-primary" />
+                  <span className="absolute inset-x-6 top-0 h-0.5 rounded-full bg-primary transition-all duration-200" />
                 )}
                 <span
-                  className={`flex h-6 w-6 items-center justify-center rounded-full transition-all duration-200 ${
-                    active ? "bg-primary/10" : ""
+                  className={`flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 ${
+                    active ? "bg-primary/12 scale-105" : "group-hover:bg-muted/60"
                   }`}
                 >
-                  <Icon className={`h-4 w-4 ${active ? "stroke-[2.2]" : "stroke-[1.6]"}`} />
+                  <Icon
+                    className={`h-4 w-4 transition-all duration-200 ${
+                      active ? "stroke-[2.3] text-primary" : "stroke-[1.6]"
+                    }`}
+                  />
                 </span>
-                <span className="tracking-tight">{n.label}</span>
+                <span className="tracking-tight leading-none">{n.label}</span>
               </Link>
             );
           })}

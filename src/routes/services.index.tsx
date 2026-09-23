@@ -105,13 +105,13 @@ function ServicesPage() {
         {/* =========================================================================
             2. PLAN / SERVICE TOGGLE SWITCHER
             ========================================================================= */}
-        <div className="grid grid-cols-2 gap-1 rounded-full border border-border/80 bg-secondary/30 p-1 shadow-2xs">
+        <div className="grid grid-cols-2 gap-1 rounded-full border border-border/80 bg-secondary/30 p-1 shadow-2xs select-none">
           <button
             onClick={() => {
               setMainTab("services");
               navigate({ search: { tab: "services", cat: selectedCat }, replace: true });
             }}
-            className={`press flex items-center justify-center gap-2 rounded-full py-2.5 text-xs font-semibold transition-all ${
+            className={`press flex items-center justify-center gap-2 rounded-full py-2.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${
               mainTab === "services"
                 ? "bg-primary text-primary-foreground shadow-xs"
                 : "text-muted-foreground hover:text-foreground"
@@ -126,7 +126,7 @@ function ServicesPage() {
               setMainTab("plans");
               navigate({ search: { tab: "plans", cat: undefined }, replace: true });
             }}
-            className={`press flex items-center justify-center gap-2 rounded-full py-2.5 text-xs font-semibold transition-all ${
+            className={`press flex items-center justify-center gap-2 rounded-full py-2.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${
               mainTab === "plans"
                 ? "bg-primary text-primary-foreground shadow-xs"
                 : "text-muted-foreground hover:text-foreground"
@@ -141,7 +141,7 @@ function ServicesPage() {
             3. SECTION A: GARDEN CARE PLANS
             ========================================================================= */}
         {mainTab === "plans" && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-in fade-in duration-200">
             {/* Active Plan Card (if subscribed) */}
             {hasActivePlan && (
               <div className="rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-5 sm:p-6 shadow-xs space-y-4">
@@ -316,18 +316,20 @@ function ServicesPage() {
               {filteredServices.map((service) => (
                 <div
                   key={service.slug}
-                  className="rounded-2xl border border-border/70 bg-card p-4 sm:p-5 transition hover:border-primary/40 hover:shadow-soft"
+                  className="group rounded-2xl border border-border/70 bg-card p-4 sm:p-5 transition-all duration-200 hover:border-primary/40 hover:shadow-soft hover:-translate-y-0.5"
                 >
                   <div className="flex items-start gap-3.5">
-                    <img
-                      src={service.image}
-                      alt={service.name}
-                      className="h-20 w-20 flex-none rounded-xl object-cover object-center bg-secondary"
-                    />
+                    <div className="h-20 w-20 flex-none overflow-hidden rounded-xl bg-secondary">
+                      <img
+                        src={service.image}
+                        alt={service.name}
+                        className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
                     <div className="min-w-0 flex-1 space-y-1">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h3 className="font-display text-base font-normal tracking-tight text-foreground">
+                          <h3 className="font-display text-base font-normal tracking-tight text-foreground group-hover:text-primary transition-colors">
                             {service.name}
                           </h3>
                           <p className="text-[11px] text-muted-foreground">{service.duration}</p>
@@ -353,10 +355,10 @@ function ServicesPage() {
                         <Link
                           to="/services/$slug/book"
                           params={{ slug: service.slug }}
-                          className="press inline-flex items-center gap-1 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs transition hover:bg-primary/90"
+                          className="press inline-flex items-center gap-1 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs transition-all duration-200 hover:bg-primary/90 active:scale-95"
                         >
                           <span>{service.price === 0 ? "Book Free Check" : "Book Service"}</span>
-                          <ArrowRight className="h-3 w-3" />
+                          <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
                         </Link>
                       </div>
                     </div>

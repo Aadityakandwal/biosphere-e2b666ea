@@ -115,7 +115,7 @@ function HomePage() {
             <h1 className="font-display text-2xl font-normal tracking-tight text-foreground sm:text-3xl">
               Hello{firstName ? ` ${firstName}` : ""}, {timeGreeting.toLowerCase()} 🌿
             </h1>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               Let's care for your plants and botanical spaces today.
             </p>
           </div>
@@ -125,7 +125,7 @@ function HomePage() {
             1. OFFERS & COMPLIMENTARY CHECKS — SINGLE BOX WITH INTERNAL HORIZONTAL SCROLL
             ========================================================================= */}
         <section className="px-5 sm:px-6">
-          <div className="relative rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/[0.08] via-card to-card p-4 sm:p-5 shadow-xs overflow-hidden">
+          <div className="relative rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/[0.08] via-card to-card p-4 sm:p-5 shadow-2xs overflow-hidden transition-all duration-300 hover:border-primary/40 hover:shadow-soft">
             {/* Scrollable Offers Track (1 slide visible at a time) */}
             <div className="flex gap-4 overflow-x-auto scrollbar-none snap-x snap-mandatory">
               {/* Slide 1: Free Garden Check */}
@@ -154,18 +154,18 @@ function HomePage() {
                     <Link
                       to="/services/$slug/book"
                       params={{ slug: "free-garden-check" }}
-                      className="press inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-primary/90"
+                      className="group press inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground transition-all duration-200 hover:bg-primary/90 shadow-2xs active:scale-95"
                     >
                       <span>Claim Free Check</span>
-                      <ArrowRight className="h-3 w-3" />
+                      <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
                     </Link>
                   ) : (
                     <Link
                       to="/garden"
-                      className="press inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-primary/90"
+                      className="group press inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground transition-all duration-200 hover:bg-primary/90 shadow-2xs active:scale-95"
                     >
                       <span>View Garden</span>
-                      <ArrowRight className="h-3 w-3" />
+                      <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
                     </Link>
                   )}
                   <span className="text-[10px] text-muted-foreground font-medium tracking-wide">
@@ -197,10 +197,10 @@ function HomePage() {
                 <div className="pt-1 flex items-center justify-between">
                   <Link
                     to="/services"
-                    className="press inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-background px-4 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary hover:text-primary-foreground"
+                    className="group press inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-background px-4 py-1.5 text-xs font-semibold text-primary transition-all duration-200 hover:bg-primary hover:text-primary-foreground active:scale-95"
                   >
                     <span>Explore Services</span>
-                    <ArrowRight className="h-3 w-3" />
+                    <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
                   </Link>
                   <span className="text-[10px] text-muted-foreground font-medium tracking-wide">
                     Swipe for more →
@@ -231,10 +231,10 @@ function HomePage() {
                 <div className="pt-1 flex items-center justify-between">
                   <Link
                     to="/shop"
-                    className="press inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-background px-4 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary hover:text-primary-foreground"
+                    className="group press inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-background px-4 py-1.5 text-xs font-semibold text-primary transition-all duration-200 hover:bg-primary hover:text-primary-foreground active:scale-95"
                   >
                     <span>Shop Tonics</span>
-                    <ArrowRight className="h-3 w-3" />
+                    <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
                   </Link>
                   <span className="text-[10px] text-muted-foreground font-medium tracking-wide">
                     1 of 3
@@ -249,10 +249,10 @@ function HomePage() {
             2. AI PLANT DOCTOR — DISTINCTIVE BOTANICAL ANALYSIS
             ========================================================================= */}
         <section className="px-5 sm:px-6">
-          <div className="relative overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-6 sm:p-7 space-y-4">
+          <div className="relative overflow-hidden rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-6 sm:p-7 space-y-4 shadow-2xs transition-all duration-300 hover:border-primary/40 hover:shadow-soft">
             <div className="flex items-center justify-between">
               <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-primary">
-                <Sparkles className="h-3.5 w-3.5" />
+                <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
                 Botanical Diagnostics
               </span>
               <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold text-primary">
@@ -272,11 +272,11 @@ function HomePage() {
             <div className="pt-2">
               <Link
                 to="/plant-doctor"
-                className="press inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
+                className="group press inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground shadow-sm transition-all duration-200 hover:bg-primary/90 active:scale-95"
               >
                 <Camera className="h-3.5 w-3.5" />
                 <span>Check a Plant</span>
-                <ArrowRight className="h-3 w-3" />
+                <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
               </Link>
             </div>
           </div>
