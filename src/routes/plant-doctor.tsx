@@ -31,6 +31,7 @@ import {
   PlusCircle,
   HelpCircle,
   Check,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 

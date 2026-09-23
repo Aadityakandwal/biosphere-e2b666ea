@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { GoogleGenAI } from "@google/genai";
 
 export type PlantCondition = "Healthy" | "Needs Attention" | "Requires Immediate Attention";
 
