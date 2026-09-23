@@ -21,58 +21,60 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
   ] as const;
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20">
       <div className="mx-auto max-w-md pb-24">
-        <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border/40 bg-background/80 px-5 py-3.5 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70">
+        {/* Top Branded Bar matching reference */}
+        <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border/50 bg-background/90 px-5 py-3.5 backdrop-blur-md">
           <Link to="/" className="group press flex items-center gap-2.5">
             <img
               src={logoUrl}
-              alt="My Gardener"
-              className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              alt="My Gardener Logo"
+              className="h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
             />
             <span className="font-display text-xl font-bold tracking-tight text-primary">
               My Gardener
             </span>
           </Link>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <Link
               to="/cart"
               aria-label="Cart"
-              className="relative rounded-full p-2 text-foreground/75 transition-all duration-200 hover:bg-primary/10 hover:text-primary press active:scale-95"
+              className="relative flex h-9 w-9 items-center justify-center rounded-full text-foreground/80 transition-all duration-200 hover:bg-secondary/60 hover:text-primary press active:scale-95"
             >
-              <ShoppingCart className="h-5 w-5" />
+              <ShoppingCart className="h-5 w-5 stroke-[1.8]" />
               {count > 0 && (
-                <Badge className="badge-bump absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground shadow-2xs ring-2 ring-background">
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground shadow-xs ring-2 ring-background">
                   {count}
-                </Badge>
+                </span>
               )}
             </Link>
             <Link
               to="/profile"
               aria-label="Profile"
-              className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-secondary ring-1 ring-border/80 shadow-2xs transition-all duration-200 hover:ring-primary/40 press active:scale-95"
+              className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-border/80 bg-secondary/40 text-foreground/80 shadow-2xs transition-all duration-200 hover:border-primary/50 hover:bg-secondary/80 press active:scale-95"
             >
               {avatar ? (
                 <img alt={name || "Profile"} src={avatar} className="h-full w-full object-cover" />
               ) : (
-                <User className="h-4 w-4 text-muted-foreground" />
+                <User className="h-4 w-4 stroke-[1.8] text-foreground/80" />
               )}
             </Link>
           </div>
         </header>
 
         {title && (
-          <div className="px-5 pt-5 pb-2">
+          <div className="px-5 pt-5 pb-1">
             <h1 className="font-display text-2xl font-normal tracking-tight text-foreground">{title}</h1>
           </div>
         )}
 
-        <main className="page-enter pt-2 pb-6">{children}</main>
+        <main className="page-enter">{children}</main>
       </div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/40 bg-background/90 backdrop-blur-lg select-none">
-        <div className="mx-auto grid max-w-md grid-cols-5">
+      {/* Bottom Navigation matching reference */}
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-background/95 backdrop-blur-md select-none">
+        <div className="mx-auto grid max-w-md grid-cols-5 py-1.5">
           {navItems.map((n) => {
             const active =
               n.to === "/"
@@ -83,25 +85,22 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
               <Link
                 key={n.to}
                 to={n.to}
-                className={`group relative flex flex-col items-center gap-1 py-2 text-[10px] font-medium transition-all duration-200 active:scale-95 ${
+                className={`group relative flex flex-col items-center justify-center gap-1 py-1 text-[10px] transition-all duration-200 active:scale-95 ${
                   active ? "font-semibold text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {active && (
-                  <span className="absolute inset-x-6 top-0 h-0.5 rounded-full bg-primary transition-all duration-200" />
-                )}
                 <span
                   className={`flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 ${
-                    active ? "bg-primary/12 scale-105" : "group-hover:bg-muted/60"
+                    active ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
                   }`}
                 >
                   <Icon
-                    className={`h-4 w-4 transition-all duration-200 ${
-                      active ? "stroke-[2.3] text-primary" : "stroke-[1.6]"
+                    className={`h-5 w-5 transition-all duration-200 ${
+                      active ? "fill-primary/15 stroke-primary stroke-[2.2]" : "stroke-[1.6]"
                     }`}
                   />
                 </span>
-                <span className="tracking-tight leading-none">{n.label}</span>
+                <span className="tracking-tight leading-none text-[11px]">{n.label}</span>
               </Link>
             );
           })}

@@ -15,6 +15,7 @@ import {
   Coins,
   ChevronRight,
   ShieldCheck,
+  Check,
 } from "lucide-react";
 import { SearchBar } from "@/components/SearchBar";
 import { toast } from "sonner";
