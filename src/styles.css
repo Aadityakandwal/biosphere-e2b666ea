@@ -51,29 +51,29 @@
 }
 
 :root {
-  --radius: 1.125rem;
-  --background: oklch(0.978 0.009 90); /* Warm linen cream #F6F4EE */
-  --foreground: oklch(0.22 0.035 152); /* Deep botanical charcoal */
-  --card: oklch(0.995 0.003 90); /* Crisp clean card surface */
-  --card-foreground: oklch(0.22 0.035 152);
-  --popover: oklch(0.995 0.003 90);
-  --popover-foreground: oklch(0.22 0.035 152);
-  --primary: oklch(0.28 0.082 152); /* Deep botanical evergreen #16382B */
-  --primary-foreground: oklch(0.985 0.005 90);
-  --secondary: oklch(0.935 0.022 138); /* Soft pale sage #E5EDE5 */
-  --secondary-foreground: oklch(0.24 0.06 152);
-  --muted: oklch(0.945 0.01 100);
-  --muted-foreground: oklch(0.48 0.022 145);
-  --accent: oklch(0.915 0.03 135);
-  --accent-foreground: oklch(0.22 0.06 152);
+  --radius: 1.25rem;
+  --background: oklch(0.965 0.012 90); /* Authentic warm linen canvas #F4F1EA */
+  --foreground: oklch(0.19 0.038 152); /* Deep botanical charcoal #16281E */
+  --card: oklch(0.985 0.007 88); /* Warm linen card surface #FAF8F3 */
+  --card-foreground: oklch(0.19 0.038 152);
+  --popover: oklch(0.985 0.007 88);
+  --popover-foreground: oklch(0.19 0.038 152);
+  --primary: oklch(0.25 0.078 152); /* Deep botanical heritage forest green #18382B */
+  --primary-foreground: oklch(0.988 0.004 90);
+  --secondary: oklch(0.932 0.024 138); /* Soft pale botanical sage #E4ECE3 */
+  --secondary-foreground: oklch(0.22 0.065 152);
+  --muted: oklch(0.938 0.012 95);
+  --muted-foreground: oklch(0.46 0.025 145); /* Muted slate sage */
+  --accent: oklch(0.915 0.032 135);
+  --accent-foreground: oklch(0.20 0.065 152);
   --destructive: oklch(0.58 0.20 28);
   --destructive-foreground: oklch(0.985 0.005 90);
-  --border: oklch(0.895 0.012 95); /* Subtle warm border */
-  --input: oklch(0.895 0.012 95);
-  --ring: oklch(0.28 0.082 152);
-  --leaf: oklch(0.44 0.11 150);
-  --leaf-foreground: oklch(0.985 0.005 90);
-  --sand: oklch(0.95 0.018 85);
+  --border: oklch(0.89 0.014 92); /* Subtle warm tonal border */
+  --input: oklch(0.89 0.014 92);
+  --ring: oklch(0.25 0.078 152);
+  --leaf: oklch(0.42 0.11 150);
+  --leaf-foreground: oklch(0.988 0.004 90);
+  --sand: oklch(0.945 0.018 85);
   --terracotta: oklch(0.64 0.13 45);
 }
 

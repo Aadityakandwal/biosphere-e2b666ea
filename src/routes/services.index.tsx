@@ -10,6 +10,9 @@ import {
   Check,
   ArrowRight,
   Sparkles,
+  ChevronRight,
+  Clock,
+  CheckCircle2,
 } from "lucide-react";
 
 export const Route = createFileRoute("/services/")({
@@ -86,18 +89,18 @@ function ServicesPage() {
 
   return (
     <Shell>
-      <div className="px-5 sm:px-6 pt-2 pb-10 space-y-6 sm:space-y-8">
+      <div className="px-5 pt-2 pb-12 space-y-5 sm:space-y-6">
         {/* =========================================================================
             1. SERVICES PAGE HERO — EDITORIAL BOTANICAL HEADER
             ========================================================================= */}
-        <section className="space-y-1.5">
-          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
+        <section className="space-y-1">
+          <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-[#556B5C]">
             BOTANICAL SERVICES
           </span>
-          <h1 className="font-display text-2xl sm:text-3xl font-normal leading-[1.2] tracking-tight text-foreground">
+          <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#162A1F]">
             Garden Care &amp; Services
           </h1>
-          <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
+          <p className="text-xs text-[#526357] leading-relaxed">
             Choose between ongoing garden stewardship plans or one-time professional visits.
           </p>
         </section>
@@ -105,16 +108,16 @@ function ServicesPage() {
         {/* =========================================================================
             2. PLAN / SERVICE TOGGLE SWITCHER
             ========================================================================= */}
-        <div className="grid grid-cols-2 gap-1 rounded-full border border-border/80 bg-secondary/30 p-1 shadow-2xs select-none">
+        <div className="grid grid-cols-2 gap-1 rounded-full bg-[#E8ECE5] p-1 border border-[#DCE3D8] shadow-2xs select-none">
           <button
             onClick={() => {
               setMainTab("services");
               navigate({ search: { tab: "services", cat: selectedCat }, replace: true });
             }}
-            className={`press flex items-center justify-center gap-2 rounded-full py-2.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${
+            className={`press flex items-center justify-center gap-1.5 rounded-full py-2 text-xs font-semibold transition-all duration-200 ${
               mainTab === "services"
-                ? "bg-primary text-primary-foreground shadow-xs"
-                : "text-muted-foreground hover:text-foreground"
+                ? "bg-[#18392B] text-white shadow-soft"
+                : "text-[#556B5C] hover:text-[#183626]"
             }`}
           >
             <Wrench className="h-3.5 w-3.5" />
@@ -126,14 +129,14 @@ function ServicesPage() {
               setMainTab("plans");
               navigate({ search: { tab: "plans", cat: undefined }, replace: true });
             }}
-            className={`press flex items-center justify-center gap-2 rounded-full py-2.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${
+            className={`press flex items-center justify-center gap-1.5 rounded-full py-2 text-xs font-semibold transition-all duration-200 ${
               mainTab === "plans"
-                ? "bg-primary text-primary-foreground shadow-xs"
-                : "text-muted-foreground hover:text-foreground"
+                ? "bg-[#18392B] text-white shadow-soft"
+                : "text-[#556B5C] hover:text-[#183626]"
             }`}
           >
             <ShieldCheck className="h-3.5 w-3.5" />
-            <span>Garden Care Plans</span>
+            <span>Care Plans</span>
           </button>
         </div>
 
@@ -141,50 +144,50 @@ function ServicesPage() {
             3. SECTION A: GARDEN CARE PLANS
             ========================================================================= */}
         {mainTab === "plans" && (
-          <div className="space-y-6 animate-in fade-in duration-200">
+          <div className="space-y-5 animate-in fade-in duration-200">
             {/* Active Plan Card (if subscribed) */}
             {hasActivePlan && (
-              <div className="rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-5 sm:p-6 shadow-xs space-y-4">
+              <div className="rounded-[24px] border border-[#CAD8C7] bg-[#EBF0E8] p-5 sm:p-6 shadow-soft space-y-4">
                 <div className="flex items-start justify-between">
                   <div>
-                    <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[10px] font-bold text-primary">
-                      My Active Plan
+                    <span className="rounded-full bg-[#18392B] px-2.5 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider">
+                      Active Plan
                     </span>
-                    <h3 className="mt-1.5 font-display text-xl font-normal tracking-tight text-foreground">
+                    <h3 className="mt-1.5 font-display text-xl font-bold tracking-tight text-[#183626]">
                       {currentPlan.name}
                     </h3>
-                    <p className="text-xs text-muted-foreground">Active Monthly Botanical Stewardship</p>
+                    <p className="text-xs text-[#526357]">Monthly Botanical Stewardship</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-display text-2xl font-normal text-primary">₹{currentPlan.price}</p>
-                    <p className="text-[10px] text-muted-foreground">/ month</p>
+                    <p className="font-display text-2xl font-bold text-[#18392B]">₹{currentPlan.price}</p>
+                    <p className="text-[10px] text-[#65796C]">/ month</p>
                   </div>
                 </div>
 
                 {/* Usage & Visit Counters */}
                 <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                  <div className="rounded-2xl border border-border/70 bg-background/80 p-2.5">
-                    <p className="font-display text-base font-normal text-foreground">{currentPlan.visits}</p>
-                    <p className="text-[10px] text-muted-foreground">Total Visits/mo</p>
+                  <div className="rounded-2xl border border-[#D5DFD2] bg-white/70 p-2.5">
+                    <p className="font-display text-base font-bold text-[#183626]">{currentPlan.visits}</p>
+                    <p className="text-[10px] text-[#65796C]">Total Visits</p>
                   </div>
-                  <div className="rounded-2xl border border-border/70 bg-background/80 p-2.5">
-                    <p className="font-display text-base font-normal text-foreground">{completedVisits}</p>
-                    <p className="text-[10px] text-muted-foreground">Completed</p>
+                  <div className="rounded-2xl border border-[#D5DFD2] bg-white/70 p-2.5">
+                    <p className="font-display text-base font-bold text-[#183626]">{completedVisits}</p>
+                    <p className="text-[10px] text-[#65796C]">Completed</p>
                   </div>
-                  <div className="rounded-2xl border border-border/70 bg-background/80 p-2.5">
-                    <p className="font-display text-base font-normal text-primary">
+                  <div className="rounded-2xl border border-[#D5DFD2] bg-white/70 p-2.5">
+                    <p className="font-display text-base font-bold text-[#18392B]">
                       {Math.max(0, currentPlan.visits - completedVisits)}
                     </p>
-                    <p className="text-[10px] text-muted-foreground">Remaining</p>
+                    <p className="text-[10px] text-[#65796C]">Remaining</p>
                   </div>
                 </div>
 
                 {/* Included Benefits Summary */}
-                <div className="space-y-1.5 border-t border-border/50 pt-3 text-xs text-foreground/85">
-                  <p className="font-semibold text-foreground">Included in your plan:</p>
+                <div className="space-y-1.5 border-t border-[#D5DFD2] pt-3 text-xs text-[#2A4032]">
+                  <p className="font-bold text-[#183626]">Included in your plan:</p>
                   {currentPlan.perks.map((perk, idx) => (
                     <div key={idx} className="flex items-center gap-2">
-                      <Check className="h-3.5 w-3.5 text-primary" />
+                      <Check className="h-3.5 w-3.5 text-[#18392B]" />
                       <span>{perk}</span>
                     </div>
                   ))}
@@ -193,85 +196,85 @@ function ServicesPage() {
             )}
 
             {/* Catalog of Care Plans */}
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               <div>
-                <h2 className="font-display text-xl font-normal tracking-tight text-foreground">
+                <h2 className="font-display text-lg font-bold tracking-tight text-[#183626]">
                   Available Garden Care Plans
                 </h2>
-                <p className="text-xs text-muted-foreground mt-0.5">
+                <p className="text-xs text-[#65796C]">
                   All plans include dedicated visits by My Gardener professionals
                 </p>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 {gardenCarePlans.map((p) => {
                   const isCurrent = plan === p.id;
                   return (
                     <div
                       key={p.id}
-                      className={`relative rounded-3xl border p-5 sm:p-6 transition hover:border-primary/40 hover:shadow-soft ${
+                      className={`relative rounded-[24px] border p-5 sm:p-6 transition-all duration-200 ${
                         isCurrent
-                          ? "border-primary bg-primary/[0.04] ring-1 ring-primary/20"
+                          ? "border-[#18392B] bg-[#EBF0E8] ring-1 ring-[#18392B]"
                           : p.popular
-                          ? "border-primary/40 bg-card shadow-soft"
-                          : "border-border/70 bg-card"
+                          ? "border-[#CAD8C7] bg-[#FAF8F3] shadow-soft"
+                          : "border-[#E5E0D4] bg-[#FAF8F3]"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           {p.badge && (
-                            <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold text-primary">
+                            <span className="rounded-full bg-[#E5ECE5] px-2.5 py-0.5 text-[9px] font-bold text-[#18392B] uppercase tracking-wider">
                               {p.badge}
                             </span>
                           )}
-                          <h3 className="mt-1 font-display text-xl font-normal tracking-tight text-foreground">
+                          <h3 className="mt-1 font-display text-xl font-bold tracking-tight text-[#183626]">
                             {p.name}
                           </h3>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-[#65796C]">
                             {p.visits} on-site professional visit{p.visits > 1 ? "s" : ""} / month
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="font-display text-2xl font-normal text-foreground">₹{p.price}</p>
-                          <p className="text-[10px] text-muted-foreground">/ month</p>
+                          <p className="font-display text-2xl font-bold text-[#183626]">₹{p.price}</p>
+                          <p className="text-[10px] text-[#65796C]">/ month</p>
                         </div>
                       </div>
 
-                      <div className="mt-4 space-y-2 border-t border-border/50 pt-3.5">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                      <div className="mt-4 space-y-2 border-t border-[#EBE6DC] pt-3.5">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#65796C]">
                           Included Care:
                         </p>
-                        <ul className="space-y-1.5 text-xs text-foreground/80">
+                        <ul className="space-y-1.5 text-xs text-[#2A4032]">
                           {p.includedServices.map((inc, idx) => (
                             <li key={idx} className="flex items-start gap-2">
-                              <Check className="mt-0.5 h-3.5 w-3.5 flex-none text-primary" />
+                              <Check className="mt-0.5 h-3.5 w-3.5 flex-none text-[#18392B]" />
                               <span>{inc}</span>
                             </li>
                           ))}
                         </ul>
 
-                        <p className="pt-2 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                        <p className="pt-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#65796C]">
                           Plan Benefits:
                         </p>
-                        <ul className="space-y-1.5 text-xs text-foreground/80">
+                        <ul className="space-y-1.5 text-xs text-[#2A4032]">
                           {p.perks.map((perk, idx) => (
                             <li key={idx} className="flex items-start gap-2">
-                              <Sparkles className="mt-0.5 h-3.5 w-3.5 flex-none text-primary" />
+                              <Sparkles className="mt-0.5 h-3.5 w-3.5 flex-none text-[#18392B]" />
                               <span>{perk}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
 
-                      <div className="mt-5 border-t border-border/50 pt-4">
+                      <div className="mt-5 border-t border-[#EBE6DC] pt-4">
                         {isCurrent ? (
-                          <div className="flex items-center justify-center rounded-full bg-secondary py-2.5 text-xs font-semibold text-muted-foreground">
-                            <Check className="mr-1.5 h-4 w-4 text-primary" /> Current Active Plan
+                          <div className="flex items-center justify-center rounded-full bg-[#E5ECE5] py-2.5 text-xs font-semibold text-[#18392B]">
+                            <Check className="mr-1.5 h-4 w-4 text-[#18392B]" /> Current Active Plan
                           </div>
                         ) : (
                           <Link
                             to="/profile/membership"
-                            className="press flex w-full items-center justify-center rounded-full bg-primary py-3 text-xs font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
+                            className="press flex w-full items-center justify-center rounded-full bg-[#18392B] py-3 text-xs font-semibold text-white shadow-soft transition hover:bg-[#122D22]"
                           >
                             <span>Subscribe to {p.name} · ₹{p.price}/mo</span>
                             <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
@@ -302,8 +305,8 @@ function ServicesPage() {
                   }}
                   className={`press shrink-0 rounded-full px-4 py-1.5 text-xs transition-all ${
                     selectedCat === chip.id
-                      ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                      : "border border-border/70 bg-card text-foreground/80 font-medium hover:border-primary/40"
+                      ? "bg-[#18392B] text-white font-semibold shadow-soft"
+                      : "border border-[#E2DDD2] bg-[#FAF8F3] text-[#556B5C] font-medium hover:border-[#CAD4C5]"
                   }`}
                 >
                   {chip.label}
@@ -316,49 +319,49 @@ function ServicesPage() {
               {filteredServices.map((service) => (
                 <div
                   key={service.slug}
-                  className="group rounded-2xl border border-border/70 bg-card p-4 sm:p-5 transition-all duration-200 hover:border-primary/40 hover:shadow-soft hover:-translate-y-0.5"
+                  className="group rounded-[24px] border border-[#E6E0D4] bg-[#FAF8F3] p-4 sm:p-5 shadow-2xs transition-all duration-200 hover:border-[#CAD4C5]"
                 >
                   <div className="flex items-start gap-3.5">
-                    <div className="h-20 w-20 flex-none overflow-hidden rounded-xl bg-secondary">
+                    <div className="h-22 w-22 flex-none overflow-hidden rounded-2xl bg-[#E5ECE5]">
                       <img
                         src={service.image}
                         alt={service.name}
-                        className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                        className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                     <div className="min-w-0 flex-1 space-y-1">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h3 className="font-display text-base font-normal tracking-tight text-foreground group-hover:text-primary transition-colors">
+                          <h3 className="font-display text-base font-bold tracking-tight text-[#183626] group-hover:text-[#18392B] transition-colors">
                             {service.name}
                           </h3>
-                          <p className="text-[11px] text-muted-foreground">{service.duration}</p>
+                          <p className="text-[10px] text-[#65796C]">{service.duration}</p>
                         </div>
-                        <span className="font-display text-base font-semibold text-primary">
+                        <span className="font-display text-base font-bold text-[#18392B]">
                           {service.price === 0 ? "FREE" : `₹${service.price}`}
                         </span>
                       </div>
 
-                      <p className="line-clamp-2 text-xs leading-relaxed text-foreground/75 font-normal">
+                      <p className="line-clamp-2 text-xs leading-relaxed text-[#526357]">
                         {service.description}
                       </p>
 
-                      <div className="pt-2.5 flex items-center justify-between gap-2 border-t border-border/40">
+                      <div className="pt-2.5 flex items-center justify-between gap-2 border-t border-[#EBE6DC]">
                         <Link
                           to="/services/$slug"
                           params={{ slug: service.slug }}
-                          className="text-xs font-semibold text-primary hover:underline"
+                          className="text-xs font-semibold text-[#18392B] hover:underline"
                         >
-                          View Details
+                          Details
                         </Link>
 
                         <Link
                           to="/services/$slug/book"
                           params={{ slug: service.slug }}
-                          className="press inline-flex items-center gap-1 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs transition-all duration-200 hover:bg-primary/90 active:scale-95"
+                          className="press inline-flex items-center gap-1 rounded-full bg-[#18392B] px-4 py-1.5 text-xs font-semibold text-white shadow-soft transition-all duration-200 hover:bg-[#122D22] active:scale-95"
                         >
                           <span>{service.price === 0 ? "Book Free Check" : "Book Service"}</span>
-                          <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
+                          <ArrowRight className="h-3 w-3" />
                         </Link>
                       </div>
                     </div>
@@ -372,4 +375,5 @@ function ServicesPage() {
     </Shell>
   );
 }
+
 
