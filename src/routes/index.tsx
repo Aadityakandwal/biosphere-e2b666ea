@@ -96,7 +96,7 @@ function HomePage() {
   const { plants, freeCheckClaimed } = useGarden();
   const bookings = useBookings((s) => s.bookings);
   const profileName = useProfile((s) => s.name);
-  const points = useProfile((s) => s.points);
+  const greenPoints = useProfile((s) => s.greenPoints);
   const add = useCart((s) => s.add);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [activeOfferIndex, setActiveOfferIndex] = useState(0);
@@ -335,7 +335,7 @@ function HomePage() {
 
             {/* Tile 2: Green Points */}
             <Link
-              to="/profile"
+              to="/profile/green-points"
               className="group flex flex-col justify-between rounded-[22px] bg-[#F2EFE8] border border-[#E5E0D4] p-4 shadow-2xs transition-all duration-200 hover:border-[#CAD4C5]"
             >
               <div className="flex items-start gap-2.5">
@@ -347,7 +347,7 @@ function HomePage() {
                     Green Points
                   </h4>
                   <p className="font-display text-sm font-bold text-[#183626] mt-0.5">
-                    {points > 0 ? `${points.toLocaleString()} pts` : "1,250 pts"}
+                    {greenPoints > 0 ? `${greenPoints.toLocaleString()} pts` : "0 pts"}
                   </p>
                 </div>
               </div>

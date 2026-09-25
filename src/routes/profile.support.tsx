@@ -11,7 +11,7 @@ export const Route = createFileRoute("/profile/support")({
 function SupportPage() {
   const options = [
     { icon: MessageCircle, label: "WhatsApp chatbot", hint: "Instant help, 24/7", href: "https://wa.me/919999999999", color: "bg-green-500" },
-    { icon: Mail, label: "Email us", hint: "support@mygarden.app", href: "mailto:support@mygarden.app", color: "bg-blue-500" },
+    { icon: Mail, label: "Email us", hint: "support@mygardener.app", href: "mailto:support@mygardener.app", color: "bg-blue-500" },
     { icon: Phone, label: "Call support", hint: "+91 8847 6888 38 · 9am–7pm", href: "tel:+918847688838", color: "bg-primary" },
   ];
 

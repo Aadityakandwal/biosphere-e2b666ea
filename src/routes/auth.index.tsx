@@ -179,7 +179,7 @@ function AuthPage() {
         </form>
 
         <p className="mt-5 text-center text-xs text-muted-foreground">
-          By continuing you agree to My Garden's terms and privacy policy.
+          By continuing you agree to My Gardener's terms and privacy policy.
         </p>
       </div>
     </main>

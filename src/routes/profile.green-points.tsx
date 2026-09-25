@@ -22,10 +22,28 @@ export const Route = createFileRoute("/profile/green-points")({
   component: GreenPointsPage,
 });
 
-type Reward = { id: string; name: string; sub: string; cost: number; image: string };
-
 const rewards: Reward[] = [
-  { id: "neerva", name: "Neerva — Bio Growth Tonic (1L)", sub: "Biovelocity", cost: 2500, image: products.find((x) => x.id === "neerva")!.image },
+  {
+    id: "neerva",
+    name: "Neerva — Bio Growth Tonic (1L)",
+    sub: "BioVelocity Microbial Formula",
+    cost: 2500,
+    image: products.find((x) => x.id === "neerva")?.image || "",
+  },
+  {
+    id: "snake",
+    name: "Snake Plant (Sansevieria)",
+    sub: "Hardy Nursery Plant",
+    cost: 3500,
+    image: products.find((x) => x.id === "snake")?.image || "",
+  },
+  {
+    id: "discount-100",
+    name: "₹100 Off Next Care Booking",
+    sub: "Service Discount Voucher",
+    cost: 1000,
+    image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=600&auto=format&fit=crop&q=80",
+  },
 ];
 
 function GreenPointsPage() {
@@ -116,12 +134,17 @@ function GreenPointsPage() {
         })}
       </div>
 
-      <Card className="mt-6 flex items-start gap-3 rounded-2xl bg-muted/40 p-4">
-        <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-        <p className="text-xs leading-relaxed text-muted-foreground">
-          Points are added automatically after every completed service and order. Redeemed rewards ship with your next visit.
-        </p>
-      </Card>
+      <div className="mt-6 rounded-2xl border border-border/80 bg-card p-4 space-y-2 text-xs shadow-2xs">
+        <div className="flex items-center gap-2 font-semibold text-foreground">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <span>How Green Points Work</span>
+        </div>
+        <ul className="space-y-1 text-muted-foreground leading-relaxed pl-6 list-disc">
+          <li>Earn <strong>50 points</strong> for every ₹100 spent on core garden care services.</li>
+          <li><strong>1 Green Point = ₹0.10</strong> redemption value.</li>
+          <li>Redeem points for service discounts, complimentary nursery plants, or BioVelocity tonics.</li>
+        </ul>
+      </div>
     </Shell>
   );
 }

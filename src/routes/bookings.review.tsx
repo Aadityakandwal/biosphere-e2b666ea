@@ -11,10 +11,10 @@ export const Route = createFileRoute("/bookings/review")({
   validateSearch: z.object({ id: z.string().optional() }),
   head: () => ({
     meta: [
-      { title: "Write a Review — My Garden" },
-      { name: "description", content: "Rate your My Garden service and share photos of your plants." },
-      { property: "og:title", content: "Write a Review — My Garden" },
-      { property: "og:description", content: "Rate your My Garden service and share photos of your plants." },
+      { title: "Write a Review — My Gardener" },
+      { name: "description", content: "Rate your My Gardener service and share photos of your plants." },
+      { property: "og:title", content: "Write a Review — My Gardener" },
+      { property: "og:description", content: "Rate your My Gardener service and share photos of your plants." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

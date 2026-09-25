@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createOrder, verifySignature } from "./razorpay.server";
 
 export const createRazorpayOrder = createServerFn({ method: "POST" })
-  .inputValidator((input) =>
+  .validator((input) =>
     z
       .object({
         amount: z.number().int().min(100).max(100_000_000), // paise
@@ -18,7 +18,7 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
   });
 
 export const verifyRazorpayPayment = createServerFn({ method: "POST" })
-  .inputValidator((input) =>
+  .validator((input) =>
     z
       .object({
         razorpay_order_id: z.string().min(1).max(80),

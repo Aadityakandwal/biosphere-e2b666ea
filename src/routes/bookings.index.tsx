@@ -41,6 +41,7 @@ import {
   calculateDistanceKm,
   formatDistance,
 } from "@/lib/real-places";
+import { getDeviceLocation } from "@/lib/location-bridge";
 
 export const Route = createFileRoute("/bookings/")({
   head: () => ({
@@ -124,57 +125,38 @@ export function MapsDiscoveryPage() {
     [places, selectedPlaceId]
   );
 
-  // 1. Request Real User Geolocation
-  const requestUserLocation = useCallback((forceCenter = true, isManualClick = false) => {
-    if (!navigator.geolocation) {
-      setLocationStatus("denied");
-      setLocationError("Geolocation is not supported by your browser.");
-      if (isManualClick) setShowLocationHelpModal(true);
-      return;
-    }
-
+  // 1. Request Real User Geolocation (Android Native + Web)
+  const requestUserLocation = useCallback(async (forceCenter = true, isManualClick = false) => {
     setLocationStatus("requesting");
     setLocationError(null);
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const coords: UserCoordinates = {
-          lat: position.coords.latitude,
-          lon: position.coords.longitude,
-          accuracy: position.coords.accuracy,
-        };
-        setUserLocation(coords);
-        setMapCenter(coords);
-        setLocationStatus("granted");
-        setShowLocationHelpModal(false);
+    const result = await getDeviceLocation();
 
-        if (mapInstanceRef.current && forceCenter) {
-          mapInstanceRef.current.setView([coords.lat, coords.lon], 14, {
-            animate: true,
-          });
-        }
-      },
-      (error) => {
-        console.warn("Geolocation error:", error);
-        setLocationStatus("denied");
-        if (error.code === error.PERMISSION_DENIED) {
-          setLocationError("Location permission was denied in browser settings.");
-          if (isManualClick) {
-            setShowLocationHelpModal(true);
-          }
-        } else {
-          setLocationError("Could not determine your exact position. Searching default area.");
-          if (isManualClick) {
-            setShowLocationHelpModal(true);
-          }
-        }
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 8000,
-        maximumAge: 0,
+    if (result.status === "granted" && result.coords) {
+      const coords: UserCoordinates = {
+        lat: result.coords.lat,
+        lon: result.coords.lon,
+        accuracy: result.coords.accuracy,
+      };
+      setUserLocation(coords);
+      setMapCenter(coords);
+      setLocationStatus("granted");
+      setShowLocationHelpModal(false);
+
+      if (mapInstanceRef.current && forceCenter) {
+        mapInstanceRef.current.setView([coords.lat, coords.lon], 14, {
+          animate: true,
+        });
       }
-    );
+    } else {
+      setLocationStatus("denied");
+      setLocationError(
+        result.errorMessage || "Could not determine your exact position. Searching current area."
+      );
+      if (isManualClick) {
+        setShowLocationHelpModal(true);
+      }
+    }
   }, []);
 
   // Request location automatically on initial mount

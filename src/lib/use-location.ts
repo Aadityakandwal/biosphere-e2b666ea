@@ -43,25 +43,26 @@ async function reverseGeocode(lat: number, lon: number): Promise<string | null> 
   }
 }
 
-/** Requests browser geolocation and stores a readable label. */
+import { getDeviceLocation } from "@/lib/location-bridge";
+
+/** Requests device geolocation and stores a readable label. */
 export async function requestLocation() {
   const s = useLocationStore.getState();
-  if (typeof navigator === "undefined" || !navigator.geolocation) {
-    s.set({ status: "unavailable" });
-    return;
-  }
   s.set({ status: "asking", askedAt: Date.now() });
-  navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      const label = await reverseGeocode(pos.coords.latitude, pos.coords.longitude);
-      useLocationStore.getState().set({
-        status: "granted",
-        label: label ?? "Current location",
-      });
-    },
-    () => useLocationStore.getState().set({ status: "denied" }),
-    { enableHighAccuracy: false, timeout: 10000, maximumAge: 5 * 60 * 1000 }
-  );
+
+  const result = await getDeviceLocation();
+
+  if (result.status === "granted" && result.coords) {
+    const label = await reverseGeocode(result.coords.lat, result.coords.lon);
+    useLocationStore.getState().set({
+      status: "granted",
+      label: label ?? "Current location",
+    });
+  } else if (result.status === "denied") {
+    useLocationStore.getState().set({ status: "denied" });
+  } else {
+    useLocationStore.getState().set({ status: "unavailable" });
+  }
 }
 
 /** Asks for location once per session on first app use. */
